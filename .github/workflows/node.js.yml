@@ -44,6 +44,8 @@ jobs:
           file: server/Dockerfile
           push: true
           tags: vbonzon/t99-backend:latest
+          secrets: |
+            GIT_AUTH_TOKEN=${{ secrets.MYTOKEN }}
 
 
 
