@@ -41,12 +41,15 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and push
       - uses: actions/checkout@v2
+      - run: cd server/
       - name: create image from repository
-        run: |
-          cd server
-          docker build -t ghcr.io/trivia99-backend .
+        run: docker build -t ghcr.io/vbonzon/trivia99-backend
       - name: push image to GitHub Container Registry
-        run: docker push ghcr.io/trivia99-backend:latest 
+        run: docker push ghcr.io/vbonzon/trivia99-backend:latest 
+
+
+
+
         #uses: docker/build-push-action@v5
         #with:
         #  context: server/
