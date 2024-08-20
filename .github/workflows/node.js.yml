@@ -43,7 +43,7 @@ jobs:
           context: server/
           file: server/Dockerfile
           push: true
-          tags: ghcr.io/vbonzon/t99-backend:latest
+          tags: vbonzon/t99-backend:latest
 
 
 
