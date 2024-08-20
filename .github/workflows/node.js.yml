@@ -12,8 +12,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
     - uses: actions/checkout@v4
     - name: Use Node.js 22.x
@@ -40,12 +38,12 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and push
-      - uses: actions/checkout@v2
-      - run: cd server/
-      - name: create image from repository
-        run: docker build -t ghcr.io/vbonzon/trivia99-backend
-      - name: push image to GitHub Container Registry
-        run: docker push ghcr.io/vbonzon/trivia99-backend:latest 
+        uses: docker/build-push-action@v5
+        with:
+          context: server/
+          file: server/Dockerfile
+          push: ${{github.ref == 'refs/heads/main'}}
+          tags: ghcr.io/vbonzon/t99-backend:latest
 
 
 
