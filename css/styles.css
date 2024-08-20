@@ -8090,7 +8090,7 @@ textarea.form-control-lg {
 
 .text-muted {
   --bs-text-opacity: 1;
-  color: #6c757d !important;
+  color: #4E598C !important;
 }
 
 .text-black-50 {
@@ -10877,7 +10877,7 @@ html {
   height: 100%;
   transition: all 0.4s ease 0s;
   transform: translateX(250px);
-  background: #1D809F;
+  background: #4E598C;
   border-left: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -10958,8 +10958,7 @@ html {
 }
 
 .callout {
-  padding: 15rem 0;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.1) 100%), url("../assets/img/bg-callout.jpg");
+  background: linear-gradient(#4E598C, #f38846);
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -10974,6 +10973,7 @@ html {
 footer.footer {
   padding-top: 5rem;
   padding-bottom: 5rem;
+  background: linear-gradient(#f38846, #FF8C42);
 }
 footer.footer .social-link {
   display: block;
@@ -10982,12 +10982,12 @@ footer.footer .social-link {
   width: 4rem;
   line-height: 4.3rem;
   font-size: 1.5rem;
-  background-color: #1D809F;
+  background-color: #4E598C;
   transition: background-color 0.15s ease-in-out;
   box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.1);
 }
 footer.footer .social-link:hover {
-  background-color: #155d74;
+  background-color: #424c76;
   text-decoration: none;
 }
 
@@ -11112,4 +11112,10 @@ footer.footer .social-link:hover {
 .title-img {
   height: 300px;
   width: 450px;
+}
+
+.mockup-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
