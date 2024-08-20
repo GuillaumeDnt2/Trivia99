@@ -40,11 +40,18 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and push
-        uses: docker/build-push-action@v5
-        with:
-          context: server/
-          file: server/Dockerfile
-          push: ${{github.ref == 'refs/heads/main'}}
-          tags: ghcr.io/vbonzon/t99-backend:latest
+      - uses: actions/checkout@v2
+      - name: create image from repository
+        run: |
+          cd server
+          docker build -t ghcr.io/trivia99-backend .
+      - name: push image to GitHub Container Registry
+        run: docker push ghcr.io/trivia99-backend:latest 
+        #uses: docker/build-push-action@v5
+        #with:
+        #  context: server/
+        #  file: server/Dockerfile
+        #  push: ${{github.ref == 'refs/heads/main'}}
+        #  tags: ghcr.io/vbonzon/t99-backend:latest
 
 
