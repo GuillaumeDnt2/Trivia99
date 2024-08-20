@@ -43,9 +43,8 @@ jobs:
           context: server/
           file: server/Dockerfile
           push: true
-          tags: vbonzon/t99-backend:latest
-          secrets: |
-            GIT_AUTH_TOKEN=${{ secrets.MYTOKEN }}
+          tags: ghcr.io/vbonzon/trivia99-backend:latest
+
 
 
 
