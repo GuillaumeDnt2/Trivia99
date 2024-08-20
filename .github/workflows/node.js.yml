@@ -42,7 +42,7 @@ jobs:
         with:
           context: server/
           file: server/Dockerfile
-          push: ${{github.ref == 'refs/heads/main'}}
+          push: true
           tags: ghcr.io/vbonzon/t99-backend:latest
 
 
