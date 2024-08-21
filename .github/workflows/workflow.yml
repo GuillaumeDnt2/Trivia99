@@ -45,6 +45,6 @@ jobs:
           context: server/backend/
           file: server/backend/Dockerfile
           push: true
-          tags: ghcr.io/trivia99/backend:latest
+          tags: ghcr.io/vbonzon/trivia99-backend:latest
 
 
