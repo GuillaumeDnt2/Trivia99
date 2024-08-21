@@ -78,3 +78,11 @@ function fadeIn(el, display) {
         }
     })();
 };
+
+window.onscroll = function() {
+    var theta = document.documentElement.scrollTop / 50 /*% (2*Math.PI)*/;
+
+    console.log(theta);
+    document.getElementById('logo').style.transform ='rotate(' + theta + 'rad)';
+    document.getElementById('logo').style.opacity = 1 - (theta / (2*Math.PI));
+}

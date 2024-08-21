@@ -487,7 +487,7 @@ progress {
 }
 
 .lead {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 300;
 }
 
@@ -8090,7 +8090,7 @@ textarea.form-control-lg {
 
 .text-muted {
   --bs-text-opacity: 1;
-  color: #4E598C !important;
+  color: #353839 !important;
 }
 
 .text-black-50 {
@@ -11118,4 +11118,37 @@ footer.footer .social-link:hover {
   width: 100%;
   height: 100%;
   object-fit: contain;
+}
+
+.bg-blue  {
+  background-color: #4E598C
+}
+
+.highlight {
+  color: #FCAF58
+}
+
+.text-onyx {
+  color: #353839;
+}
+
+.avatar-img {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+
+.github-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-bottom: 50px;
+}
+
+.github-infos {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  margin-right: 50px;
 }

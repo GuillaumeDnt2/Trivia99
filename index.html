@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -23,28 +23,26 @@
         <nav id="sidebar-wrapper">
             <ul class="sidebar-nav">
                 <li class="sidebar-brand"><a href="#page-top">Trivia 99</a></li>
-                <li class="sidebar-nav-item"><a href="#page-top">Home</a></li>
                 <li class="sidebar-nav-item"><a href="#apropos">À propos</a></li>
-                <li class="sidebar-nav-item"><a href="#specificites">Spécificités</a></li>
-                <li class="sidebar-nav-item"><a href="#portfolio">Portfolio</a></li>
-                <li class="sidebar-nav-item"><a href="#contact">Contact</a></li>
+                <li class="sidebar-nav-item"><a href="#specificites">Pourquoi jouer</a></li>
+                <li class="sidebar-nav-item"><a href="#footer">Créateurs</a></li>
             </ul>
         </nav>
         <!-- Header-->
         <header class="masthead d-flex align-items-center">
             <div class="container px-4 px-lg-5 text-center">
-                <img src="assets/img/Trivia_99.png" class="title-img"></img>
+                <img id='logo' src="assets/img/Trivia_99.png" class="title-img"></img>
             </div>
         </header>
         <!-- About-->
-        <section class="content-section bg-light" id="apropos">
-            <div class="container px-4 px-lg-5 text-center">
+        <section class="content-section bg-blue" id="apropos">
+            <div class="container px-4 px-lg-5 text-center text-white">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-lg-10">
-                        <h2>Le battle royal qui mets tes connaissances à l'épreuve</h2>
+                        <h1>Le battle royale qui met tes connaissances à l'épreuve !</h1>
                         <p class="lead mb-5">
-                            Affronte jusqu'à 98 autres joueurs dans un battle royal ou seul les plus malins survivront.
-                            Garde la taille de ta pile de question sous la limite fatidique et réussi des séries de bonnes réponses pour lancer des attaques sur les autres joueurs !
+                            Affronte jusqu'à <span class="highlight">98</span> autres joueurs dans un <span class="highlight">battle royale</span> où seul les plus malins survivront.
+                            Garde la taille de ta pile de <span class="highlight">questions</span> sous la limite fatidique et réussi des séries de bonnes réponses pour lancer des <span class="highlight">attaques</span> sur les autres joueurs !
                         </p>
                     </div>
                 </div>
@@ -54,31 +52,30 @@
         <section class="content-section bg-primary text-white text-center" id="specificites">
             <div class="container px-4 px-lg-5">
                 <div class="content-section-heading">
-                    <h3 class="text-secondary mb-0">Spécificités</h3>
-                    <h2 class="mb-5">Ces trucs super !</h2>
+                    <h2 class="mb-5">Pourquoi jouer à Trivia 99 ?</h2>
                 </div>
                 <div class="row gx-4 gx-lg-5">
                     <div class="col-lg-3 col-md-6 mb-5 mb-lg-0">
                         <span class="service-icon rounded-circle mx-auto mb-3"><i class="icon-question"></i></span>
-                        <h4><strong>Plus de 4000 questions</strong></h4>
-                        <p class="text-faded mb-0">Prises de <a href="https://opentdb.com/">Open Trivia DB</a> grâce à leur API</p>
+                        <h4><strong>Plus de <span class="highlight">11'000</span> questions</strong></h4>
+                        <p class="text-faded mb-0">provenant de <a href="https://the-trivia-api.com/">The Trivia API.</a></p>
                     </div>
                     <div class="col-lg-3 col-md-6 mb-5 mb-lg-0">
                         <span class="service-icon rounded-circle mx-auto mb-3"><i class="icon-check"></i></span>
-                        <h4><strong>Gratuit</strong></h4>
+                        <h4 class="highlight"><strong>Gratuit</strong></h4>
                         <p class="text-faded mb-0">C'est gratuit, super !</p>
                     </div>
                     <div class="col-lg-3 col-md-6 mb-5 mb-md-0">
                         <span class="service-icon rounded-circle mx-auto mb-3"><i class="icon-trophy"></i></span>
                         <h4><strong>La gloire</strong></h4>
                         <p class="text-faded mb-0">
-                            Montrer votre supériorité intellectuelle !
+                            Montrez votre <span class="highlight">supériorité intellectuelle</span> !
                         </p>
                     </div>
                     <div class="col-lg-3 col-md-6">
                         <span class="service-icon rounded-circle mx-auto mb-3"><i class="icon-game-controller"></i></span>
                         <h4><strong>Fun</strong></h4>
-                        <p class="text-faded mb-0">Amuse-toi avec tes amis</p>
+                        <p class="text-faded mb-0"><span class="highlight">Amuse-toi</span> avec tes amis.</p>
                     </div>
                 </div>
             </div>
@@ -89,99 +86,41 @@
                 <image src="assets/img/mockup.png" class="mockup-img"></image>
             </div>
         </section>
-        <!-- Portfolio-->
-        <!-- <section class="content-section" id="portfolio">
-            <div class="container px-4 px-lg-5">
-                <div class="content-section-heading text-center">
-                    <h3 class="text-secondary mb-0">Portfolio</h3>
-                    <h2 class="mb-5">Recent Projects</h2>
-                </div>
-                <div class="row gx-0">
-                    <div class="col-lg-6">
-                        <a class="portfolio-item" href="#!">
-                            <div class="caption">
-                                <div class="caption-content">
-                                    <div class="h2">Stationary</div>
-                                    <p class="mb-0">A yellow pencil with envelopes on a clean, blue backdrop!</p>
-                                </div>
-                            </div>
-                            <img class="img-fluid" src="assets/img/portfolio-1.jpg" alt="..." />
-                        </a>
-                    </div>
-                    <div class="col-lg-6">
-                        <a class="portfolio-item" href="#!">
-                            <div class="caption">
-                                <div class="caption-content">
-                                    <div class="h2">Ice Cream</div>
-                                    <p class="mb-0">A dark blue background with a colored pencil, a clip, and a tiny ice cream cone!</p>
-                                </div>
-                            </div>
-                            <img class="img-fluid" src="assets/img/portfolio-2.jpg" alt="..." />
-                        </a>
-                    </div>
-                    <div class="col-lg-6">
-                        <a class="portfolio-item" href="#!">
-                            <div class="caption">
-                                <div class="caption-content">
-                                    <div class="h2">Strawberries</div>
-                                    <p class="mb-0">Strawberries are such a tasty snack, especially with a little sugar on top!</p>
-                                </div>
-                            </div>
-                            <img class="img-fluid" src="assets/img/portfolio-3.jpg" alt="..." />
-                        </a>
-                    </div>
-                    <div class="col-lg-6">
-                        <a class="portfolio-item" href="#!">
-                            <div class="caption">
-                                <div class="caption-content">
-                                    <div class="h2">Workspace</div>
-                                    <p class="mb-0">A yellow workspace with some scissors, pencils, and other objects.</p>
-                                </div>
-                            </div>
-                            <img class="img-fluid" src="assets/img/portfolio-4.jpg" alt="..." />
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
-        -->
-        <!-- Call to Action-->
-        <!-- <section class="content-section bg-primary text-white">
-            <div class="container px-4 px-lg-5 text-center">
-                <h2 class="mb-4">The buttons below are impossible to resist...</h2>
-                <a class="btn btn-xl btn-light me-4" href="#!">Click Me!</a>
-                <a class="btn btn-xl btn-dark" href="#!">Look at Me!</a>
-            </div>
-        </section>
-        -->
-        <!-- Map-->
-        <!-- <div class="map" id="contact">
-            <iframe src="https://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Twitter,+Inc.,+Market+Street,+San+Francisco,+CA&amp;aq=0&amp;oq=twitter&amp;sll=28.659344,-81.187888&amp;sspn=0.128789,0.264187&amp;ie=UTF8&amp;hq=Twitter,+Inc.,+Market+Street,+San+Francisco,+CA&amp;t=m&amp;z=15&amp;iwloc=A&amp;output=embed"></iframe>
-            <br />
-            <small><a href="https://maps.google.com/maps?f=q&amp;source=embed&amp;hl=en&amp;geocode=&amp;q=Twitter,+Inc.,+Market+Street,+San+Francisco,+CA&amp;aq=0&amp;oq=twitter&amp;sll=28.659344,-81.187888&amp;sspn=0.128789,0.264187&amp;ie=UTF8&amp;hq=Twitter,+Inc.,+Market+Street,+San+Francisco,+CA&amp;t=m&amp;z=15&amp;iwloc=A"></a></small>
-        </div> 
-        -->
         <!-- Footer-->
-        <footer class="footer text-center">
+        <footer class="footer text-center text-onyx" id="footer">
+            <h3> Les vaillants créateurs : </h3>
             <div class="container px-4 px-lg-5">
-                <!-- <ul class="list-inline mb-5">
-                    <li class="list-inline-item">
-                        <div class="container text-center">
-                            <h4>Guillaume</h4>
-                            <a class="social-link rounded-circle text-white mr-3" href="#!"><i class="icon-social-facebook"></i></a>
+                <div class="container text-center">
+                    <div class="github-flex">
+                        <div class="github-infos">
+                            <h4>Edwin</h4>
+                            <a href="https://github.com/Neroil">
+                                <img class="avatar-img" src="https://avatars.githubusercontent.com/Neroil" alt="Neroil">
+                            </a>
                         </div>
-                    </li>
-                    <li class="list-inline-item">
-                        <a class="social-link rounded-circle text-white mr-3" href="#!"><i class="icon-social-twitter"></i></a>
-                    </li>
-                    <li class="list-inline-item">
-                        <a class="social-link rounded-circle text-white" href="#!"><i class="icon-social-github"></i></a>
-                    </li>
-                </ul>
-                -->
-                
-                <p class="text-muted small mb-0">Copyright &copy; Your Website 2023</p>
+                        <div class="github-infos">
+                            <h4>Guillaume</h4>
+                            <a href="https://github.com/GuillaumeDnt2">
+                                <img class="avatar-img" src="https://avatars.githubusercontent.com/GuillaumeDnt2" alt="GuillaumeDnt2">
+                            </a>
+                        </div>
+                        <div class="github-infos">
+                            <h4>Arthur</h4>
+                            <a href="https://github.com/Tasticoco">
+                                <img class="avatar-img" src="https://avatars.githubusercontent.com/Tasticoco" alt="Tasticoco">
+                            </a>
+                        </div>
+                        <div class="github-infos">
+                            <h4>Valentin</h4>
+                            <a href="https://github.com/vbonzon">
+                                <img class="avatar-img" src="https://avatars.githubusercontent.com/vbonzon" alt="VBonzon">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-muted small mb-0">Copyright &copy; Trivia Team Nonante-Neuf</p>
             </div>
+
         </footer>
         <!-- Scroll to Top Button-->
         <a class="scroll-to-top rounded" href="#page-top"><i class="fas fa-angle-up"></i></a>
