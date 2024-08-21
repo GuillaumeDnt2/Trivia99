@@ -1,10 +1,9 @@
-#### PDG 2024
-#### Auteurs : Edwin Häffner, Guillaume Dunant, Arthur Junod, Valentin Bonzon
-
+#### PDG 2024*
+#### Auteurs : Edwin Häffner, Guillaume Dunant, Arthur Junod, Valentin Bonzon***
 
 # Trivia 99
 
-![Trivia 99 Logo]()
+![Trivia 99 Logo](./Trivia_99.png)
 
 ## Problématique
 Les jeux télévisés de culture générale, qui étaient autrefois majoritairement populaire au sein des EMS et du troisième âge, retrouvent aujourd'hui un second souffle. 
@@ -22,17 +21,17 @@ Pour pimenter la partie, les joueurs qui répondent correctement à plusieurs qu
 ## Processus de travail
 
 ### Description du projet
-#### 1. Exigence Fonctionnelles
+#### 1. Exigences Fonctionnelles
 - **Une seule session de jeu public** : Les joueurs rejoignent une session publique et attendent que la partie commence, il faut au moins 2 joueurs prêts pour lancer la partie.
-- **Système de questions** : Les questions sont tirées aléatoirement d'une API open source de questions de Trivia.
+- **Système de questions** : Les questions sont tirées aléatoirement d'une API open source de questions de culture générale.
 - **Système de pile de questions** : Chaque joueur possède une pile de questions, il doit répondre correctement à une question pour l'éliminer de sa pile, le joueur perd la partie si sa pile est pleine et qu'il reçoit une nouvelle question.
-- **Système d'attaque** : Lorsqu'un joueur répond à plusieurs questions à la suite correctement sans erreurs, il accumule une série. A chaque série, le joueur peut envoyer une question à un autre joueur !
-- **Thèmes aléatoires** : Les questions sont tirées aléatoirement parmi plusieurs thèmes. 
+- **Système d'attaque** : Lorsqu'un joueur répond à plusieurs questions à la suite correctement sans erreurs, il accumule une série. À chaque série, le joueur peut envoyer une question à un autre joueur !
+- **Thèmes aléatoires** : Les questions sont tirées aléatoirement parmi plusieurs thèmes.
 - **Difficulté croissante** : Les questions deviennent de plus en plus difficile au fur et à mesure de la partie.
 - **Session Guest** : Les joueurs peuvent juste choisir un pseudo et rejoindre une partie sans inscription.
 
-#### 2. Exigence Non-Fonctionnelles
-- **Jeu rapide** : Les parties doivent être rapides et dynamiques, les joueurs ne doivent pas attendre trop longtemps entre les questions.
+#### 2. Exigences Non-Fonctionnelles
+- **Jeu rapide** : Les parties doivent être rapides et dynamiques, les joueurs ne doivent pas attendre trop longtemps entre les questions et le site doit pouvoir distribuer rapidement et efficacement les questions à tous les utilisateurs.
 - **Sécurité** : Les joueurs n'auront pas leurs addresses IPs exposées, les données personnelles seront protégées et le site sera en HTTPS.
 - **Responsiveness** : Le site doit être utilisable sur mobile, tablette et ordinateur.
 - **Intuitif** : Le jeu doit être facile à comprendre et à prendre en main pour les nouveaux joueurs.
@@ -50,11 +49,11 @@ Accessible depuis ce lien : https://guillaumednt2.github.io/Trivia99/
 
 ### Description des choix techniques 
 
-Nous avons choisi d'utiliser NodeJS pour le déploiement de notre application vu que c'est une application WEB et que nous avions utilisé NodeJS lors de notre cours de WEB. JavaScript est aussi le language le plus utilisé pour les applications WEB. Donc cela fait sens de l'utiliser ici pour avoir le plus de ressources possibles. 
+Nous avons choisi d'utiliser NodeJS pour le déploiement de notre application. Une grande partie de notre groupe a utilisé NodeJS lors du cours de WEB, ce qui nous permet de mettre en place relativement facilement les serveurs dont nous avons besoin. Nous nous sommes donc tourné également vers JavaScript, car ce language était aussi pratiqué durant le cours WEB. 
 
-Le frontend et backend communiqueront grâce à des websockets ce qui permet une communication simple et rapide. Il ne nous semblait pas pertinent de mettre en place un système de communication plus complexe, car les informations échangées ne consisteront que de questions et de noms/ids d'utilisateurs que nous voulons attaquer. Nous nous sommes donc tournés vers SocketIO.
+Le frontend et backend communiqueront grâce à des websockets (SocketIO) ce qui permet une communication simple et rapide. Il ne nous semblait pas pertinent de mettre en place un système de communication plus complexe, car les informations échangées ne consisteront que de questions, de noms/ids d'utilisateurs que nous voulons attaquer, etc. Donc d'information courte et simple à encoder/décoder.
 
-Pour le choix du fournisseur Cloud, nous nous sommes rabattu sur Google Cloud, car leur offre d'essai nous permet de pouvoir faire beaucoup de chose gratuitement lol. 
+Pour le choix du fournisseur Cloud, nous avons décidé d'utiliser Google Cloud, car leur offre d'essai nous permet de faire plusieurs choses intéressantes. 
 
 Nous nous sommes tournés vers React afin de créer l'interface utilisateur pour sa simplicité d'utilisation et le fait que nous sommes, pour certains, déjà familier avec. 
 ### Description du processus de travail
@@ -72,3 +71,5 @@ La rédaction du rapport se fait en commun.
 Pour la suite du projet, nous allons regarder ensemble les différentes parties sur lesquelles il faut avancer et nous nous répartirons les tâches indépendamment de si elles se trouvent sur le backend ou le frontend. Tout le monde donc agit comme un développeur full stack.
 
 Pour la collaboration dans le code, nous allons créer une nouvelle issue et développer les différentes fonctionnalités dans des branches dédiées. Une fois fonctionnel, nous allons la fusionner avec la branche main grâce à une pull request.
+
+Finalement la pipeline CI/CD nous permet d'automatiser les tests, le build et le déploiement sur DockerHub de l'image du frontend et du backend.
