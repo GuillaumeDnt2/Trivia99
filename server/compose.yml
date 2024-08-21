@@ -10,4 +10,4 @@ services:
         backend:
           condition: service_started
       ports: 
-        - "80:5173"
+        - "80:3000"
