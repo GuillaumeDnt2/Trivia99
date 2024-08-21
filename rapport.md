@@ -23,7 +23,7 @@ Pour pimenter la partie, les joueurs qui répondent correctement à plusieurs qu
 
 ### Description du projet
 #### 1. Exigence Fonctionnelles
-- **Un seul lobby public** : Les joueurs rejoignent un lobby public et attendent que la partie commence, il faut au moins 2 joueurs prêts pour lancer la partie.
+- **Une seule session de jeu public** : Les joueurs rejoignent une session publique et attendent que la partie commence, il faut au moins 2 joueurs prêts pour lancer la partie.
 - **Système de questions** : Les questions sont tirées aléatoirement d'une API open source de questions de Trivia.
 - **Système de pile de questions** : Chaque joueur possède une pile de questions, il doit répondre correctement à une question pour l'éliminer de sa pile, le joueur perd la partie si sa pile est pleine et qu'il reçoit une nouvelle question.
 - **Système d'attaque** : Lorsqu'un joueur répond à plusieurs questions à la suite correctement sans erreurs, il accumule une série. A chaque série, le joueur peut envoyer une question à un autre joueur !
