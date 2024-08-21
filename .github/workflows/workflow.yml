@@ -27,7 +27,7 @@ jobs:
 
   deploy-backend:
     runs-on: ubuntu-latest
-    needs: build
+    needs: build-backend
     permissions: write-all
     steps:
       - uses: actions/checkout@v4
