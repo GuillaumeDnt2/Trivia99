@@ -5,7 +5,6 @@ name: workflow-frontend
 
 on:
   push:
-    branches: [ "main" , "socketIO"]
     paths:
       - server/frontend/**
   pull_request:
