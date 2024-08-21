@@ -80,7 +80,7 @@ function fadeIn(el, display) {
 };
 
 window.onscroll = function() {
-    var theta = document.documentElement.scrollTop / 50 /*% (2*Math.PI)*/;
+    var theta = document.documentElement.scrollTop / 50;
 
     console.log(theta);
     document.getElementById('logo').style.transform ='rotate(' + theta + 'rad)';
