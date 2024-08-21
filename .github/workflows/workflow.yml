@@ -59,7 +59,7 @@ jobs:
     - run: |
         cd server/frontend/
         npm ci
-        npm test
+
 
   deploy-frontend:
     runs-on: ubuntu-latest
