@@ -1,0 +1,13 @@
+services:
+  backend:
+    image: xgcdkr/trivia99-backend:latest
+    ports:
+      - "4000:4000"
+
+  frontend:
+      image: xgcdkr/trivia99-frontend:latest
+      depends_on:
+        backend:
+          condition: service_started
+      ports: 
+        - "80:5173"
