@@ -45,3 +45,40 @@ jobs:
           tags: xgcdkr/trivia99-backend:latest
 
 
+  build-frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js 22.x
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22.x
+        cache: 'npm'
+        cache-dependency-path: server/frontend/package-lock.json
+    - run: |
+        cd server/frontend/
+        npm ci
+        npm test
+
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    needs: build-frontend
+    permissions: write-all
+    steps:
+      - uses: actions/checkout@v4
+      - name: login to docker registry
+        uses: docker/login-action@v3
+        with:
+          username: ${{secrets.DOCKERHUB_USERNAME}}
+          password: ${{secrets.DOCKERHUB_TOKEN}}
+
+      - name: build and push docker image to registry
+        uses: docker/build-push-action@v5
+        with:
+          context: server/frontend
+          push: true
+          tags: xgcdkr/trivia99-frontend:latest
+
+
+
