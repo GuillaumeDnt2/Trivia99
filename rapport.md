@@ -72,4 +72,6 @@ Pour la suite du projet, nous allons regarder ensemble les différentes parties 
 
 Pour la collaboration dans le code, pour chaque fonctionnalité nous allons créer une nouvelle issue et l'implémenter dans une branche dédiée. Une fois fonctionnelle, nous allons la fusionner avec la branche main grâce à une pull request.
 
-Finalement la pipeline CI/CD nous permet d'automatiser les tests, le build et le déploiement sur DockerHub de l'image du frontend et du backend.
+La pipeline CI/CD mise en place nous permet d'automatiser les tests, le build et le déploiement sur DockerHub de l'image du frontend et du backend.
+
+Finalement nous récupérons les deux images dockers sur une VM Google grâce à Google Compute Engine afin de nous permettre de host ces deux images ce qui nous permet (une fois les règles du FireWall de l'instance changées) d'accéder à notre site depuis toute machine.
