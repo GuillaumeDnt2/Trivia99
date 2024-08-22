@@ -70,6 +70,6 @@ La rédaction du rapport se fait en commun.
 
 Pour la suite du projet, nous allons regarder ensemble les différentes parties sur lesquelles il faut avancer et nous nous répartirons les tâches indépendamment de si elles se trouvent sur le backend ou le frontend. Tout le monde donc agit comme un développeur full stack.
 
-Pour la collaboration dans le code, nous allons créer une nouvelle issue et développer les différentes fonctionnalités dans des branches dédiées. Une fois fonctionnel, nous allons la fusionner avec la branche main grâce à une pull request.
+Pour la collaboration dans le code, pour chaque fonctionnalité nous allons créer une nouvelle issue et l'implémenter dans une branche dédiée. Une fois fonctionnelle, nous allons la fusionner avec la branche main grâce à une pull request.
 
 Finalement la pipeline CI/CD nous permet d'automatiser les tests, le build et le déploiement sur DockerHub de l'image du frontend et du backend.
