@@ -11150,6 +11150,23 @@ footer.footer .social-link:hover {
   margin-right: 50px;
 }
 
+
+#logo {
+  width: 45%;
+  height: auto;
+}
+
+.d-block.w-100 {
+  width: 50% !important;
+  height: auto;
+  display: block;
+  margin: auto;
+}
+
+#githublogo {
+  width: 100px;
+}
+
 /* CSS for small screens */
 @media (max-width: 768px) {
   .github-flex {
@@ -11161,21 +11178,17 @@ footer.footer .social-link:hover {
     margin-right: 0;
     margin-bottom: 20px;
   }
-}
-
-#logo {
-  width: 45%;
-  height: auto;
-}
-
-/* CSS for small screens */
-@media (max-width: 768px) {
   #logo {
     width: 80%;
     height: auto;
   }
+  .d-block.w-100 {
+    width: 90% !important;
+    height: auto;
+    display: block;
+    margin: auto;
+  }
 }
 
-#githublogo {
-  width: 100px;
-}
+
+
