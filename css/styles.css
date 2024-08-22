@@ -11162,3 +11162,16 @@ footer.footer .social-link:hover {
     margin-bottom: 20px;
   }
 }
+
+#logo {
+  width: 45%;
+  height: auto;
+}
+
+/* CSS for small screens */
+@media (max-width: 768px) {
+  #logo {
+    width: 80%;
+    height: auto;
+  }
+}
