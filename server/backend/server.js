@@ -1,3 +1,4 @@
+/*
 const express = require('express');
 const app = express();
 const http = require('http');
@@ -22,12 +23,12 @@ server.listen(4000, () => {
   console.log('listening on :4000');
 });
 
-
-/*import { Server } from "socket.io";
+*/
+import { Server } from "socket.io";
 
 const io = new Server({
     cors: {
-      origin: "http://localhost:3000"
+      origin: "http://localhost"
     }
 });
 
@@ -35,4 +36,4 @@ io.on("connection", (socket) => {
   console.log("Connection");
 });
   
-io.listen(4000);*/
+io.listen(4000);
