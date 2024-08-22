@@ -1,13 +1,16 @@
 services:
   backend:
-    image: xgcdkr/trivia99-backend:latest 
+    #image: xgcdkr/trivia99-backend:latest 
+    build : backend/
+
     labels:
       - traefik.http.routers.backend.rule=Host(`localhost`) && PathPrefix(`/api`)
       - "traefik.http.routers.backend.middlewares=backend-stripprefix"
       - "traefik.http.middlewares.backend-stripprefix.stripprefix.prefixes=/api"
 
   frontend:
-    build: xgcdkr/trivia99-frontend:latest 
+    #build: xgcdkr/trivia99-frontend:latest 
+    build : frontend/
     depends_on:
       backend:
         condition: service_started

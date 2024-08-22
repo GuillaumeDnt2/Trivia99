@@ -1,17 +1,21 @@
 services:
   backend:
-    image: xgcdkr/trivia99-backend:latest
-    #build: backend/    
+    #image: xgcdkr/trivia99-backend:latest
+    build: backend/    
     ports:
       - "4000:4000"
+    environment:
+      - CORS_URL=http://34.77.164.212
   frontend:
-    image: xgcdkr/trivia99-frontend:latest
-    #build: frontend/
+    #image: xgcdkr/trivia99-frontend:latest
+    build: frontend/
     depends_on:
       backend:
         condition: service_started
     ports:
       - "80:3000"
+    environment:
+      - NODE_ENV=production
 
 
 
