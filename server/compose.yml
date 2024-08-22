@@ -5,7 +5,7 @@ services:
     ports:
       - "4000:4000"
     environment:
-      - CORS_URL=http://34.77.164.212
+      - CORS_URL=http://34.77.164.212,http://trivia99.zapto.org
   frontend:
     image: xgcdkr/trivia99-frontend:latest
     #build: frontend/
