@@ -1,9 +1,13 @@
-#### PDG 2024*
-#### Auteurs : Edwin Häffner, Guillaume Dunant, Arthur Junod, Valentin Bonzon***
-
+___
+#### *PDG 2024*
+#### ***Auteurs : Edwin Häffner, Guillaume Dunant, Arthur Junod, Valentin Bonzon***
+___
 # Trivia 99
 
-![Trivia 99 Logo](./Trivia_99.png)
+<img src="./Trivia_99.png" width="500">
+
+___
+# Description du projet
 
 ## Problématique
 Les jeux télévisés de culture générale, qui étaient autrefois majoritairement populaire au sein des EMS et du troisième âge, retrouvent aujourd'hui un second souffle. 
@@ -18,36 +22,35 @@ Notre jeu **Trivia 99** permettra aux joueurs d'affronter d'autres joueurs sur l
 
 Pour pimenter la partie, les joueurs qui répondent correctement à plusieurs questions à la suite pourront envoyer une nouvelle question à un autre joueur, augmentant la taille de sa pile. Les joueurs ciblés devront faire face aux questions supplémentaires en plus des questions habituelles. Ils devront faire preuve de rapidité et de bonne connaissance pour ne pas se laisser submerger par les questions.
 
-## Processus de travail
+# Processus de travail
 
-### Description du projet
-#### 1. Exigences Fonctionnelles
+## Exigences Fonctionnelles
 - **Une seule session de jeu public** : Les joueurs rejoignent une session publique et attendent que la partie commence, il faut au moins 2 joueurs prêts pour lancer la partie.
 - **Système de questions** : Les questions sont tirées aléatoirement d'une API open source de questions de culture générale.
 - **Système de pile de questions** : Chaque joueur possède une pile de questions, il doit répondre correctement à une question pour l'éliminer de sa pile, le joueur perd la partie si sa pile est pleine et qu'il reçoit une nouvelle question.
-- **Système d'attaque** : Lorsqu'un joueur répond à plusieurs questions à la suite correctement sans erreurs, il accumule une série. À chaque série, le joueur peut envoyer une question à un autre joueur !
+- **Système d'attaque** : Lorsqu'un joueur répond à plusieurs questions à la suite correctement sans erreurs, il accumule une série. À chaque série, le joueur peut envoyer une question à un autre joueur en l'attaquant.
 - **Thèmes aléatoires** : Les questions sont tirées aléatoirement parmi plusieurs thèmes.
 - **Difficulté croissante** : Les questions deviennent de plus en plus difficile au fur et à mesure de la partie.
 - **Session Guest** : Les joueurs peuvent juste choisir un pseudo et rejoindre une partie sans inscription.
 
-#### 2. Exigences Non-Fonctionnelles
+## Exigences Non-Fonctionnelles
 - **Jeu rapide** : Les parties doivent être rapides et dynamiques, les joueurs ne doivent pas attendre trop longtemps entre les questions et le site doit pouvoir distribuer rapidement et efficacement les questions à tous les utilisateurs.
-- **Sécurité** : Les joueurs n'auront pas leurs addresses IPs exposées, les données personnelles seront protégées et le site sera en HTTPS.
+- **Sécurité** : Les joueurs n'auront pas leurs addresses IPs exposées, les données personnelles seront protégées et le protocole du site est en HTTPS.
 - **Responsiveness** : Le site doit être utilisable sur mobile, tablette et ordinateur.
 - **Intuitif** : Le jeu doit être facile à comprendre et à prendre en main pour les nouveaux joueurs.
 
-### Description de l'architecture 
+## Description de l'architecture 
 
 ![Architecture](Trivia99Architecture.png)
 
-### Mockups
+## Mockups
 
 [Cliquez ici](https://www.figma.com/proto/isvynhVr1etaen0j4LjXOz/Trivia99?node-id=37-1763&t=nFKCpC0W7mNDkQ5C-1&scaling=min-zoom&content-scaling=fixed&page-id=37%3A621&starting-point-node-id=37%3A622)
 
-### Landing Page
+## Landing Page
 Accessible depuis ce lien : https://guillaumednt2.github.io/Trivia99/
 
-### Description des choix techniques 
+## Description des choix techniques 
 
 Nous avons choisi d'utiliser NodeJS pour le déploiement de notre application. Une grande partie de notre groupe a utilisé NodeJS lors du cours de WEB, ce qui nous permet de mettre en place relativement facilement les serveurs dont nous avons besoin. Nous nous sommes donc tourné également vers JavaScript, car ce language était aussi pratiqué durant le cours WEB. 
 
@@ -56,7 +59,8 @@ Le frontend et backend communiqueront grâce à des websockets (SocketIO) ce qui
 Pour le choix du fournisseur Cloud, nous avons décidé d'utiliser Google Cloud, car leur offre d'essai nous permet de faire plusieurs choses intéressantes. 
 
 Nous nous sommes tournés vers React afin de créer l'interface utilisateur pour sa simplicité d'utilisation et le fait que nous sommes, pour certains, déjà familier avec. 
-### Description du processus de travail
+
+## Description du processus de travail
 
 Nous nous sommes répartis le travail dès le début du projet. 
 
@@ -70,8 +74,9 @@ La rédaction du rapport se fait en commun.
 
 Pour la suite du projet, nous allons regarder ensemble les différentes parties sur lesquelles il faut avancer et nous nous répartirons les tâches indépendamment de si elles se trouvent sur le backend ou le frontend. Tout le monde donc agit comme un développeur full stack.
 
-Pour la collaboration dans le code, pour chaque fonctionnalité nous allons créer une nouvelle issue et l'implémenter dans une branche dédiée. Une fois fonctionnelle, nous allons la fusionner avec la branche main grâce à une pull request.
+Pour la collaboration dans le code, pour chaque fonctionnalité, nous allons créer une nouvelle issue et l'implémenter dans une branche dédiée. Une fois fonctionnelle, nous allons la fusionner avec la branche main grâce à une pull request.
 
 La pipeline CI/CD mise en place nous permet d'automatiser les tests, le build et le déploiement sur DockerHub de l'image du frontend et du backend.
 
-Finalement nous récupérons les deux images dockers sur une VM Google grâce à Google Compute Engine afin de nous permettre de host ces deux images ce qui nous permet (une fois les règles du FireWall de l'instance changées) d'accéder à notre site depuis toute machine.
+Finalement, nous récupérons les deux images dockers sur une VM Google grâce à Google Compute Engine afin de nous permettre d'héberger ces deux images ce qui nous permet (une fois les règles du FireWall de l'instance changées) d'accéder à notre site depuis l'extérieur.
+
