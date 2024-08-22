@@ -41,7 +41,7 @@ Pour pimenter la partie, les joueurs qui répondent correctement à plusieurs qu
 
 ## Description de l'architecture 
 
-![Architecture](Trivia99Architecture.png)
+![Architecture](Trivia99Architecture.svg)
 
 ## Mockups
 
