@@ -25,10 +25,11 @@ server.listen(4000, () => {
 
 */
 import { Server } from "socket.io";
-
+const cors = process.env.CORS_URL != undefined ? process.env.CORS_URL : "http://localhost";
+console.log(cors);
 const io = new Server({
     cors: {
-      origin: "http://localhost"
+      origin: cors
     }
 });
 
