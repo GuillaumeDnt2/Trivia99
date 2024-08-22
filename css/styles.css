@@ -11175,3 +11175,7 @@ footer.footer .social-link:hover {
     height: auto;
   }
 }
+
+#githublogo {
+  width: 100px;
+}
