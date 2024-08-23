@@ -100,7 +100,13 @@ Pour les premiers jours, voici la répartition :
 
 La rédaction du rapport se fait en commun.
 
-Pour la suite du projet, nous allons regarder ensemble les différentes parties sur lesquelles il faut avancer et nous nous répartirons les tâches indépendamment de si elles se trouvent sur le backend ou le frontend. Tout le monde donc agit comme un développeur full stack.
+Pour la suite du projet, nous allons nous répartir ainsi :
+- **Arthur** : Dev frontend
+- **Edwin** : Dev backend et frontend
+- **Guillaume** : Dev côté frontend
+- **Valentin** : Dev backend et maintient du déployement
+  
+Cette répartition du travail peut légèrement changer au cours des prochaines semaines.
 
 Pour la collaboration dans le code, pour chaque fonctionnalité, nous allons créer une nouvelle issue et l'implémenter dans une branche dédiée. Une fois fonctionnelle, nous allons la fusionner avec la branche main grâce à une pull request.
 
