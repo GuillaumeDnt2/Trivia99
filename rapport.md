@@ -49,21 +49,11 @@ Le frontend ne gérera que l'interface qui réagit dynamiquement aux information
 
 Le frontend et backend communiqueront grâce à des websockets ce qui permet une communication simple et rapide. Le canal bidirectionnel ouvert, quand une connection entre websocket est établie, est adaptée à notre échange d'informations présenté plus haut.
 
-Frontend composé de:
-- React
-- NodeJS
-- SocketIO
-
-Backend composé de:
-- NestJS
-- NodeJS
-- SocketIO
-
 Docker nous permet d'avoir deux images différentes une pour le backend et une pour le frontend qui tourneront dans deux container différent.
 
-Ces deux containers tourneront sur une instance Google Compute Engine qui aura une IP statique et des règles de pare-feu qui autoriseront les accès HTTP.
+Ces deux containers tourneront sur une instance Google Compute Engine qui aura une IP statique et des règles de pare-feu qui autoriseront les accès HTTP et au Websocket du backend.
 
-Le Reverse Proxy traefik nous permettra de ne passer que par le port HTTP pour accéder au frontend et permettre la communication avec le backend ensuite.
+Une fois intégré le reverse proxy traefik nous permettra de ne passer que par le port HTTP pour accéder au frontend et permettre la communication avec le backend.
 
 ![Architecture](Trivia99Architecture.svg)
 
