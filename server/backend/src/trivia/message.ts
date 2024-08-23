@@ -1,30 +1,48 @@
-class Message {
-    constructor(public message: string) {
-        this.message = message;
+export class Message {
+    constructor(public data: JSON) {
+        this.data = data;
     }
 }
 
-class LoginMessage extends Message {
-    constructor(public message: string) {
-        super(message);
+export class LoginMessage extends Message {
+    constructor(public data: JSON) {
+        super(data);
     }
 }
 
-class SendQuestionMessage extends Message {
-    constructor(public message: string) {
-        super(message);
+export class ReadyMessage extends Message {
+    constructor(public data: JSON) {
+        super(data);
     }
 }
 
-class SendAttackQuestionMessage extends SendQuestionMessage {
-    constructor(public message: string) {
-        super(message);
+export class AmountReadyMessage extends Message {
+    constructor(public data: JSON) {
+        super(data);
     }
 }
 
-class SendAnswerMessage extends Message {
-    constructor(public message: string) {
-        super(message);
+export class StartGameMessage extends Message {
+    constructor(public data: JSON) {
+        super(data);
+    }
+}
+
+export class QuestionMessage extends Message {
+    constructor(public data: JSON) {
+        super(data);
+    }
+}
+
+export class AttackQuestionMessage extends QuestionMessage {
+    constructor(public data: JSON) {
+        super(data);
+    }
+}
+
+export class AnswerMessage extends Message {
+    constructor(public data: JSON) {
+        super(data);
     }
 }
 
@@ -32,30 +50,27 @@ class SendAnswerMessage extends Message {
  * Message to send to the user when they answer a question correctly
  * Will either be 0 for incorrect or 1 for correct
  */
-class SendResultMessage extends Message {
-    constructor(public message: string) {
-        super(message);
+export class ResultMessage extends Message {
+    constructor(public data: JSON) {
+        super(data);
     }
 }
 
-class SendUserInfoMessage extends Message {
-    constructor(public message: string) {
-        super(message);
+export class UserInfoMessage extends Message {
+    constructor(public data: JSON) {
+        super(data);
     }
 }
 
-class SendGameInfoMessage extends Message {
-    constructor(public message: string) {
-        super(message);
+export class GameInfoMessage extends Message {
+    constructor(public data: JSON) {
+        super(data);
     }
 }
 
 //To be broadcasted to all users
-class SendDeathUserMessage extends Message {
-    constructor(public message: string) {
-        super(message);
+export class DeathUserMessage extends Message {
+    constructor(public data: JSON) {
+        super(data);
     }
 }
-
-
-export default Message;
