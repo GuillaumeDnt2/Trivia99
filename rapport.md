@@ -41,6 +41,30 @@ Pour pimenter la partie, les joueurs qui répondent correctement à plusieurs qu
 
 ## Description de l'architecture 
 
+Notre site est séparé entre un backend et un frontend. 
+
+Le backend va communiquer avec l'API qui nous permet de récupérer les questions de culture générale et gérer la logique du jeu en s'occupant d'envoyer les questions aux joueurs/utilisateurs, éliminer les joueurs, suivre l'évolution des séries des joueurs, ...
+
+Le frontend ne gérera que l'interface qui réagit dynamiquement aux informations qu'envoie le backend et notifiera en retour des actions de son joueur.
+
+Le frontend et backend communiqueront grâce à des websockets ce qui permet une communication simple et rapide. Le canal bidirectionnel ouvert, quand une connection entre websocket est établie, est adaptée à notre échange d'informations présenté plus haut.
+
+Frontend composé de:
+- React
+- NodeJS
+- SocketIO
+
+Backend composé de:
+- NestJS
+- NodeJS
+- SocketIO
+
+Docker nous permet d'avoir deux images différentes une pour le backend et une pour le frontend qui tourneront dans deux container différent.
+
+Ces deux containers tourneront sur une instance Google Compute Engine qui aura une IP statique et des règles de pare-feu qui autoriseront les accès HTTP.
+
+Le Reverse Proxy traefik nous permettra de ne passer que par le port HTTP pour accéder au frontend et permettre la communication avec le backend ensuite.
+
 ![Architecture](Trivia99Architecture.svg)
 
 ## Mockups
@@ -52,13 +76,17 @@ Accessible depuis ce lien : https://guillaumednt2.github.io/Trivia99/
 
 ## Description des choix techniques 
 
-Nous avons choisi d'utiliser NodeJS pour le déploiement de notre application. Une grande partie de notre groupe a utilisé NodeJS lors du cours de WEB, ce qui nous permet de mettre en place relativement facilement les serveurs dont nous avons besoin. Nous nous sommes donc tourné également vers JavaScript, car ce language était aussi pratiqué durant le cours WEB. 
+Nous avons décidé d'utiliser NestJS car ce framework nous a été recommandé et nous voulions expérimenter avec cette nouvelle technologie. En plus, après quelques recherche il s'est avéré que la mise ne place de websocket avec NestJS est simplifié.
 
-Le frontend et backend communiqueront grâce à des websockets (SocketIO) ce qui permet une communication simple et rapide. Il ne nous semblait pas pertinent de mettre en place un système de communication plus complexe, car les informations échangées ne consisteront que de questions, de noms/ids d'utilisateurs que nous voulons attaquer, etc. Donc d'information courte et simple à encoder/décoder.
+SocketIo à été choisi pour la technologie WebSocket car elle est compatible avec NestJS et est une version des websockets que nous n'avions pas encore utilisée.
 
-Pour le choix du fournisseur Cloud, nous avons décidé d'utiliser Google Cloud, car leur offre d'essai nous permet de faire plusieurs choses intéressantes. 
+Nous utilisons Docker pour faire tourner notre backend et frontend sur l'Instance Google Compute Engine. Nous avons tous dans le groupe utiliser auparavant Docker donc nous savions comment le mettre en place et cela semblait être la solution la plus simple pour faire tourner notre site sur l'instance.
 
-Nous nous sommes tournés vers React afin de créer l'interface utilisateur pour sa simplicité d'utilisation et le fait que nous sommes, pour certains, déjà familier avec. 
+Watchtower nous permet de facilement récupérer les images de notre site s'il y a une nouvelle version en surveillant les repos de nos deux images Docker.
+
+Pour le choix du fournisseur Cloud, nous avons décidé d'utiliser Google Compute Engine car leur offres d'essai nous permet d'utiliser cette technologie sans coûts.
+
+Nous nous sommes tournés vers React afin de créer l'interface utilisateur pour sa simplicité d'utilisation et le fait que nous sommes, pour certains, déjà familier avec.
 
 ## Description du processus de travail
 
@@ -78,5 +106,5 @@ Pour la collaboration dans le code, pour chaque fonctionnalité, nous allons cr�
 
 La pipeline CI/CD mise en place nous permet d'automatiser les tests, le build et le déploiement sur DockerHub de l'image du frontend et du backend.
 
-Finalement, nous récupérons les deux images dockers sur une VM Google grâce à Google Compute Engine afin de nous permettre d'héberger ces deux images ce qui nous permet (une fois les règles du FireWall de l'instance changées) d'accéder à notre site depuis l'extérieur.
+Finalement, nous récupérons automatiquement, grâce à Watchtower, les deux images dockers depuis DockerHub sur une VM Google Compute Engine afin de nous permettre de les héberger.
 
