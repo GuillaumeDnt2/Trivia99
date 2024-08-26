@@ -53,7 +53,7 @@ export class TriviaGateway implements OnModuleInit {
       this.server.emit("onReady", {
           msg: "Ready"
       });
-  }
+  } 
 
   @SubscribeMessage("unready")
     onUnready(@MessageBody() body: any, @ConnectedSocket() socket: any) {

@@ -1,12 +1,14 @@
 import { Player } from './player';
+import { QuestionManager} from './questionManager';
 
 export class Game{
     private nbReady: number;
     private players: Map<string,Player>;
-
+    private qManager: QuestionManager;
     constructor() {
         this.nbReady = 0;
         this.players = new Map<string,Player>();
+        this.qManager = new QuestionManager();
     }
 
     public addPlayer(id: string, name: string) {
