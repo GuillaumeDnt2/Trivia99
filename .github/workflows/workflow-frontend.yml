@@ -44,7 +44,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: server/frontend
-          push: true
+          push: ${{github.ref == 'refs/heads/main'}}
           tags: xgcdkr/trivia99-frontend:latest
 
 
