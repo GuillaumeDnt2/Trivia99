@@ -23,6 +23,10 @@ export class Player {
         }
     }
 
+    public getNbQuestions() {
+        return this.queue.length;
+    }
+
     public kill() {
         this.isAlive = false;
     }

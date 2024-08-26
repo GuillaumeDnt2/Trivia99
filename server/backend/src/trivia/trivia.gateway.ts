@@ -72,19 +72,12 @@ export class TriviaGateway implements OnModuleInit {
     }
 
     @SubscribeMessage("unready")
-    onUnready(@MessageBody() body: any, @ConnectedSocket() socket: any) {
-        if (this.game.getPlayers().has(socket.id) && !this.game.getPlayers().get(socket.id).isReady) {
+    onUnready(@ConnectedSocket() socket: any) {
+        if (this.game.getPlayers().has(socket.id) && this.game.getPlayers().get(socket.id).isReady) {
             this.game.getPlayers().get(socket.id).isReady = false;
         }
         --this.game.nbReady;
         this.sendReadyInfo();
-    }
-
-    @SubscribeMessage("start")
-    onStart(@MessageBody() body: any, @ConnectedSocket() socket: any) {
-        this.server.emit("onStart", {
-            msg: "Start"
-        });
     }
 
     /**

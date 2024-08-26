@@ -16,12 +16,12 @@ export class Game{
         this.qManager = new QuestionManager();
         this.hasStarted = false;
         this.server = server;
-        let qiq = this.qManager.newQuestion(false);
+        //let qiq = this.qManager.newQuestion(false);
         //console.log(qiq);
-        let qq = this.qManager.get(qiq);
-        console.log("Question to send: ");
-        console.log(qq);
-        console.log(this.qManager.check(qiq, 1)); 
+        //let qq = this.qManager.get(qiq);
+        //console.log("Question to send: ");
+        //console.log(qq);
+        //console.log(this.qManager.check(qiq, 1));
     }
 
     public checkAndStartGame() {
