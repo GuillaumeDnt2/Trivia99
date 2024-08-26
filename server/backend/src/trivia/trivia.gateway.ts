@@ -13,9 +13,6 @@ import {Game} from "./game";
 const cors =
     process.env.CORS_URL != undefined ? process.env.CORS_URL : "http://localhost:3000";
 
-
-const game = new Game();
-
 @WebSocketGateway({
     cors: {
         origin: cors,
@@ -25,8 +22,15 @@ const game = new Game();
 export class TriviaGateway implements OnModuleInit {
     @WebSocketServer()
     server: Server;
+    game: Game;
 
     onModuleInit() {
+
+        //Create a new game if it doesn't exist
+        if (this.game == undefined) {
+            this.game = new Game(this.server);
+        }
+
         this.server.on("connection", (socket) => {
             console.log(socket.id);
             console.log("Connected");
@@ -34,65 +38,52 @@ export class TriviaGateway implements OnModuleInit {
             socket.on("disconnect", () => {
                 console.log(socket.id);
                 console.log("Disconnected");
-                if (game.getPlayers().has(socket.id)) {
-                    if(game.getPlayers().get(socket.id).isReady) {
-                        --game.nbReady;
+                if (this.game.getPlayers().has(socket.id)) {
+                    if (this.game.getPlayers().get(socket.id).isReady) {
+                        --this.game.nbReady;
                     }
-                    game.getPlayers().delete(socket.id);
+                    this.game.getPlayers().delete(socket.id);
                 }
             });
         });
     }
 
-
-    @SubscribeMessage("message")
-    onNewMessage(@MessageBody() body: any) {
-        console.log(body);
-        this.server.emit("onMessage", {
-            msg: "New Message",
-            content: body,
-        });
-    }
-
     @SubscribeMessage("login")
     onLogin(@MessageBody() name: any, @ConnectedSocket() socket: any) {
-        game.addPlayer(socket.id, name);
-        socket.send("Number of ready users: " + game.getNbReady()); //Placeholder
+        this.game.addPlayer(socket.id, name);
+        socket.send("Number of ready users: " + this.game.getNbReady()); //Placeholder
+    }
+
+    sendReadyInfo(){
+        this.server.emit("playersConnected", {
+            nbReady: this.game.getNbReady(),
+            nbPlayers: this.game.getNbPlayers()
+        });
     }
 
     @SubscribeMessage("ready")
-    onReady(@MessageBody() body: any, @ConnectedSocket() socket: any) {
-        if(game.getPlayers().has(socket.id) && !game.getPlayers().get(socket.id).isReady) {
-            game.getPlayers().get(socket.id).isReady = true;
+    onReady(@ConnectedSocket() socket: any) {
+        if (this.game.getPlayers().has(socket.id) && !this.game.getPlayers().get(socket.id).isReady) {
+            this.game.getPlayers().get(socket.id).isReady = true;
         }
-        ++game.nbReady;
-        this.server.emit("onReady", {
-            msg: "Ready"
-        });
+        ++this.game.nbReady;
+        this.sendReadyInfo();
+        this.game.checkAndStartGame();
     }
 
     @SubscribeMessage("unready")
     onUnready(@MessageBody() body: any, @ConnectedSocket() socket: any) {
-        if(game.getPlayers().has(socket.id) && !game.getPlayers().get(socket.id).isReady) {
-            game.getPlayers().get(socket.id).isReady = false;
+        if (this.game.getPlayers().has(socket.id) && !this.game.getPlayers().get(socket.id).isReady) {
+            this.game.getPlayers().get(socket.id).isReady = false;
         }
-        --game.nbReady;
-        this.server.emit("onUnready", {
-            msg: "Unready"
-        });
+        --this.game.nbReady;
+        this.sendReadyInfo();
     }
 
     @SubscribeMessage("start")
     onStart(@MessageBody() body: any, @ConnectedSocket() socket: any) {
         this.server.emit("onStart", {
             msg: "Start"
-        });
-    }
-
-    @SubscribeMessage("amountReady")
-    onAmountReady(@MessageBody() body: any, @ConnectedSocket() socket: any) {
-        this.server.emit("onAmountReady", {
-            msg: game.getNbReady()
         });
     }
 
@@ -114,16 +105,22 @@ export class TriviaGateway implements OnModuleInit {
      */
     @SubscribeMessage("attack")
     onAttack(@ConnectedSocket() socket: any) {
-      const connectedSockets = Array.from(this.server.sockets.sockets.values());
-      const otherSockets = connectedSockets.filter(s => s.id !== socket.id);
+        //Get the streak of the player to determine how many attacks are sent
+        const streak = this.game.getPlayerById(socket.id).getStreak();
 
-      if (otherSockets.length > 0) {
-        const randomSocket = otherSockets[Math.floor(Math.random() * otherSockets.length)];
-        randomSocket.emit("onAttack", {
-          //Send the question t
-          msg: "AttackQuestion!!" //Todo: Send a question from the attack question list
-        });
-      }
+        const connectedSockets = Array.from(this.server.sockets.sockets.values());
+        const otherSockets = connectedSockets.filter(s => s.id !== socket.id);
+
+        if (otherSockets.length > 0) {
+            //Send the attack to the other players
+            for(let i = 0; i < streak - 2; i++) {
+                const randomSocket = otherSockets[Math.floor(Math.random() * otherSockets.length)];
+                randomSocket.emit("onAttack", {
+                    //Send the question t
+                    msg: "AttackQuestion!!" //Todo: Send a question from the attack question list
+                });
+            }
+        }
     }
 
     /**
@@ -134,7 +131,7 @@ export class TriviaGateway implements OnModuleInit {
     @SubscribeMessage("answer")
     onAnswer(@MessageBody() body: any, @ConnectedSocket() socket: any) {
         //Get the player that answered the question
-        const player = game.getPlayers().get(socket.id);
+        const player = this.game.getPlayers().get(socket.id);
         //Check if the answer is correct
         const question = player.getCurrentQuestion();
         //Todo: Logic of the answer handling, can only do it once the question class is done
@@ -151,12 +148,21 @@ export class TriviaGateway implements OnModuleInit {
     @SubscribeMessage("deathUpdate")
     onDeathUpdate(@MessageBody() body: any, @ConnectedSocket() socket: any) {
         //Get the player that died
-        const player = game.getPlayers().get(socket.id);
+        const player = this.game.getPlayerById(socket.id);
         player.kill();
         //Tell everyone that the player died
         this.server.emit("onDeath", {
             msg: "Player died",
             id: socket.id
-    });
+        });
+    }
+
+    @SubscribeMessage("getStreak")
+    getStreak(@ConnectedSocket() socket: any) {
+        //Get the player that asked for the streak
+        const player = this.game.getPlayerById(socket.id);
+        socket.emit("streak", {
+            streak: player.getStreak()
+        });
     }
 }

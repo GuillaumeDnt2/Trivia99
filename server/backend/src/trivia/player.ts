@@ -27,4 +27,38 @@ export class Player {
         this.isAlive = false;
     }
 
+    public resetStreak() {
+        this.streak = 0;
+    }
+
+    public incrementStreak() {
+        ++this.streak;
+    }
+
+    public getStreak() {
+        return this.streak;
+    }
+
+    public addQuestion(question: any) {
+        this.queue.push(question);
+    }
+
+    public removeQuestion() {
+        this.queue.shift();
+    }
+
+    public getUserInfo() : object {
+        let info = {
+            streak: this.streak,
+            isAlive: this.isAlive,
+            nbBadAnswers: this.nbBadAnswers,
+            nbGoodAnswers: this.nbGoodAnswers,
+            questions: []
+        };
+        this.queue.forEach((question: any) => {
+            info.questions.push(question);
+        });
+
+        return info;
+    }
 }
