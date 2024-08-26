@@ -25,6 +25,7 @@ jobs:
     - run: |
         cd server/frontend/
         npm ci
+        npm run test
 
 
   deploy-frontend:
