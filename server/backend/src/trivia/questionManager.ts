@@ -31,24 +31,24 @@ export class QuestionManager {
 
     }
 
-    private fetchQuestions(limit:number){
+    private fetchQuestions(limit: number) {
+        const fs = require('fs');
+        let questions: any[] = [];
 
-
-        var fs = require('fs');
-        let questions : any;
-        let n = 0;
-        fs.readFile('../../json/questions.json', 'utf-8', function (err, data) {
-            if (err) throw err;
-            n++;
+        try {
+            const data = fs.readFileSync('../../json/questions.json', 'utf-8');
             questions = JSON.parse(data);
-            console.log(n);
-            
-            
-        });
-        console.log(n);
-        /*for(var q in questions ){
-            console.log(q);
-        }*/
-        
+
+            // Limit the number of questions if necessary
+            questions = questions.slice(0, limit);
+
+            // Print the questions
+            questions.forEach((question: any) => {
+                console.log(question);
+            });
+
+        } catch (err) {
+            console.error('Error reading or parsing questions:', err);
+        }
     }
 }
