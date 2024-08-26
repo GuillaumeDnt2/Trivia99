@@ -39,7 +39,7 @@ export default function App() {
       <Events events={ fooEvents } />
       <ConnectionManager />
       <MyForm />
-      <p>J'adore l'informatique (c fo)</p>
+      <p>Bienvenue à notre super présentation !!!!!!</p>
     </div>
   );
 }
