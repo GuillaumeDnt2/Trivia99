@@ -14,7 +14,6 @@ function shuffle(array) {
     }
   }
 
-
 export class Question {
     
     id: string;

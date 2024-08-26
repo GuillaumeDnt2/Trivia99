@@ -1,6 +1,8 @@
+import {QuestionInQueue} from "./questionInQueue";
+
 export class Player {
     private name: string;
-    private queue: any[];
+    private queue: QuestionInQueue[];
     private streak: number;
     private isAlive: boolean;
     public isReady: boolean;
@@ -21,6 +23,10 @@ export class Player {
         if(this.queue.length > 0) {
             return this.queue[0];
         }
+    }
+
+    public getNbQuestions() {
+        return this.queue.length;
     }
 
     public kill() {
