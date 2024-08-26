@@ -16,18 +16,19 @@ export class Game{
         this.qManager = new QuestionManager();
         this.hasStarted = false;
         this.server = server;
+        let qiq = this.qManager.newQuestion(false);
+        //console.log(qiq);
+        let qq = this.qManager.get(qiq);
+        console.log("Question to send: ");
+        console.log(qq);
+        console.log(this.qManager.check(qiq, 1)); 
     }
 
     public checkAndStartGame() {
         if (this.getNbReady() >= 2 && this.getNbReady() >= this.players.size*0.8){
             this.startGame();
         }
-        let qiq = this.qManager.newQuestion(false);
-        //console.log(qiq);
-        let qq = this.qManager.get(qiq);
-        console.log("Question to send: ");
-        console.log(qq);
-        console.log(this.qManager.check(qiq, 1));  
+         
     }
 
     public addPlayer(id: string, name: string) {   
