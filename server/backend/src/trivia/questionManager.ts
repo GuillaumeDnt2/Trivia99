@@ -43,7 +43,6 @@ export class QuestionManager {
       if (this.qList.length < QUESTION_MIN) {
         await this.fetchQuestions(Q_FETCH_SIZE);
       }
-
       q = this.qList.shift();
     } while (this.questionPool.has(q.id));
 
@@ -51,7 +50,8 @@ export class QuestionManager {
   }
 
   private async fetchQuestions(limit: number) {
-    const fs = require("fs");
+
+      const fs = require("fs");
     let questions: any[] = [];
     let data: any;
     try {

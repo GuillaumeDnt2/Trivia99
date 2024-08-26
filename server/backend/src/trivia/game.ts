@@ -18,9 +18,8 @@ export class Game {
     this.hasStarted = false;
     this.server = server;
     // qList est vide à se moment donc erreur
-    let qiq = this.qManager.newQuestion(false);
-    console.log(qiq);
-
+    //let qiq = this.qManager.newQuestion(false);
+    //console.log(qiq);
     /*let qq = this.qManager.get(qiq);
         console.log("Question to send: ");
         console.log(qq);*/
