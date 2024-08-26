@@ -1,7 +1,7 @@
 import { Player } from './player';
 
 export class Game{
-    private nbReady: number;
+    public nbReady: number;
     private players: Map<string,Player>;
 
     constructor() {

@@ -1,6 +1,6 @@
 export class Player {
     private name: string;
-    private queue: [];
+    private queue: any[];
     private streak: number;
     private isAlive: boolean;
     public isReady: boolean;
@@ -15,6 +15,16 @@ export class Player {
         this.isReady = false;
         this.nbBadAnswers = 0;
         this.nbGoodAnswers = 0;
+    }
+
+    public getCurrentQuestion() {
+        if(this.queue.length > 0) {
+            return this.queue[0];
+        }
+    }
+
+    public kill() {
+        this.isAlive = false;
     }
 
 }
