@@ -52,7 +52,9 @@ describe("TriviaGateway", () => {
     gateway.game.addPlayer(socket.id, "Player1");
     const spy = jest.spyOn(server, "emit");
     gateway.game.startGame();
-    expect(spy).toHaveBeenCalledWith("startGame", { msg: "The game has started" });
+    expect(spy).toHaveBeenCalledWith("startGame", {
+      msg: "The game has started",
+    });
   });
 
   it("should send a question every 10000ms", async () => {
@@ -64,7 +66,9 @@ describe("TriviaGateway", () => {
 
     gateway.game.startGame();
 
-    expect(gateway.game.getPlayerById(socket.id).getCurrentQuestion()).toBeUndefined();
+    expect(
+      gateway.game.getPlayerById(socket.id).getCurrentQuestion(),
+    ).toBeUndefined();
 
     // Clear previous calls
     spy.mockClear();
@@ -73,7 +77,9 @@ describe("TriviaGateway", () => {
     jest.advanceTimersByTime(10000);
     await Promise.resolve(); // Allow any pending Promises to resolve
 
-    expect(gateway.game.getPlayerById(socket.id).getCurrentQuestion()).toBeDefined();
+    expect(
+      gateway.game.getPlayerById(socket.id).getCurrentQuestion(),
+    ).toBeDefined();
     //expect(spySocket).toHaveBeenCalledWith("userInfo", expect.any(Object));
 
     // Clear previous calls
@@ -87,5 +93,4 @@ describe("TriviaGateway", () => {
 
     jest.useRealTimers();
   });
-
 });
