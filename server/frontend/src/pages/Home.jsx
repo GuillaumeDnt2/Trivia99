@@ -5,6 +5,17 @@ import {Link, useNavigate} from "react-router-dom"
 import logo from '../assets/Trivia99.png'
 import github from '../assets/github-mark.svg'
 
+/**
+ * React file for the home page of Trivia99
+ *
+ * @author Arthur Junod
+ * @author Guillaume Dunant
+ * @author Valentin Bonzon
+ * @author Edwin Haeffner
+ * @returns {JSX.Element}
+ * @constructor
+ */
+
 export default function Home(){
 
     const [name, setName] = useState("");
@@ -15,12 +26,14 @@ export default function Home(){
     const handleSubmit = (e) => {
         e.preventDefault()
         if(name.length !== 0){
+            // Message 'login' that send the name chosen by the user
             socket.emit(
                 'login',
                 {name: name}
             )
             navigate('/waiting')
         }else {
+            // Set the colour of the placeholder to red and change text
             document.querySelector("input").style.setProperty("--c", "red");
             setPlaceholder("You must enter a name...")
         }
