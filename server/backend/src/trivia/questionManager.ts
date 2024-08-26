@@ -12,22 +12,34 @@ export class QuestionManager {
     constructor(){
         this.questionPool = new Map<string,Question>;
         this.questionList = new Queue();
-        let q = new Question();
+        
         this.fetchQuestions(Q_FETCH_SIZE);
     }
-
-    public get(id:string){
-        return this.questionPool.get(id);
+    public check(q:QuestionInQueue, answer:number){
+        if(!this.questionPool.has(q.id)){
+            throw new Error('Question is not yet present in the game');
+        }
+        let question = this.questionPool.get(q.id);
+        return question.correctAnsw == answer;
     }
 
-    public newQuestion(){
+    public get(q:QuestionInQueue){
+        return new QuestionToSend(this.questionPool.get(q.id), q.isAttack);
+    }
+
+    public newQuestion(isAttack:boolean){
         let question: Question;
-        q_InQueue: QuestionInQueue;
-        if (this.questionList.size <= QUESTION_MIN){
-            this.fetchQuestions(Q_FETCH_SIZE);
-        }
-        question = this.questionList.get();
-        return new QuestionInQueue(question);
+        
+        do{
+            if (this.questionList.size <= QUESTION_MIN){
+                this.fetchQuestions(Q_FETCH_SIZE);
+            }
+            question = this.questionList.get();
+        }while(this.questionPool.has(question.id))
+        
+        this.questionPool.set(question.id, question);
+  
+        return new QuestionInQueue(question,isAttack);
 
     }
 
@@ -44,7 +56,7 @@ export class QuestionManager {
 
             // Print the questions
             questions.forEach((question: any) => {
-                console.log(question);
+                this.questionList.add(new Question(question));
             });
 
         } catch (err) {
