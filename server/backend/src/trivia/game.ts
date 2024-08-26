@@ -2,7 +2,7 @@ import { Player } from './player';
 import { QuestionManager} from './questionManager';
 
 export class Game{
-    private nbReady: number;
+    public nbReady: number;
     private players: Map<string,Player>;
     private qManager: QuestionManager;
     constructor() {

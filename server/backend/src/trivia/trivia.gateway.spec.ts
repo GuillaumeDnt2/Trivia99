@@ -12,7 +12,9 @@ describe("TriviaGateway", () => {
     gateway = module.get<TriviaGateway>(TriviaGateway);
   });
 
+  //Todo: Add actual tests
   it("should be defined", () => {
     expect(gateway).toBeDefined();
   });
+
 });
