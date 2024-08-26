@@ -14,14 +14,18 @@ export class Game{
         this.nbReady = 0;
         this.players = new Map<string,Player>();
         this.qManager = new QuestionManager();
+        this.qManager.init();
         this.hasStarted = false;
         this.server = server;
+        // qList est vide à se moment donc erreur
         let qiq = this.qManager.newQuestion(false);
-        //console.log(qiq);
-        let qq = this.qManager.get(qiq);
+        console.log(qiq);
+
+
+        /*let qq = this.qManager.get(qiq);
         console.log("Question to send: ");
-        console.log(qq);
-        console.log(this.qManager.check(qiq, 1)); 
+        console.log(qq);*/
+        //console.log(this.qManager.check(qiq, 1)); 
     }
 
     public checkAndStartGame() {
