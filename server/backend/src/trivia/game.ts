@@ -62,7 +62,7 @@ export class Game{
 
         // Send the question to everyone every 10 seconds
         setInterval(() => {
-            let question = this.qManager.newQuestion();
+            let question = this.qManager.newQuestion(false);
             this.players.forEach((player: Player, id: string) => {
                 player.addQuestion(question);
                 let info = player.getUserInfo();
