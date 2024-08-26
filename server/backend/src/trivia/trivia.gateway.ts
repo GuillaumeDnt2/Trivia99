@@ -100,18 +100,17 @@ export class TriviaGateway implements OnModuleInit {
     onAttack(@ConnectedSocket() socket: any) {
         //Get the streak of the player to determine how many attacks are sent
         const streak = this.game.getPlayerById(socket.id).getStreak();
+        //If the streak is less than 3, don't send any attacks
+        if(streak < 3) return;
 
         const connectedSockets = Array.from(this.server.sockets.sockets.values());
         const otherSockets = connectedSockets.filter(s => s.id !== socket.id);
 
         if (otherSockets.length > 0) {
             //Send the attack to the other players
-            for(let i = 0; i < streak - 2; i++) {
+            for(let i = 0; i < streak - 3; i++) {
                 const randomSocket = otherSockets[Math.floor(Math.random() * otherSockets.length)];
-                randomSocket.emit("onAttack", {
-                    //Send the question t
-                    msg: "AttackQuestion!!" //Todo: Send a question from the attack question list
-                });
+                this.game.addAttackQuestionToPlayer(randomSocket.id);
             }
         }
     }

@@ -1,6 +1,8 @@
+import {QuestionInQueue} from "./questionInQueue";
+
 export class Player {
     private name: string;
-    private queue: any[];
+    private queue: QuestionInQueue[];
     private streak: number;
     private isAlive: boolean;
     public isReady: boolean;
