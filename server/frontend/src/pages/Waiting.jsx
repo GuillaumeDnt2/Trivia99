@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"
 import { socket } from "../utils/socket.js";
+import logo from "../assets/Trivia99.png";
 import './Waiting.css';
 
 export default function Waiting(){
@@ -35,7 +36,7 @@ export default function Waiting(){
 
     return <>
             <div className="vertical">
-                <img src="../assets/Trivia99.png" alt="Trivia 99 logo"/>
+                <img src={logo} alt="Trivia 99 logo"/>
                 <div className="rounded-box">
                     <p>{playersInfo.nbReady}/{playersInfo.nbPlayers} player(s) ready</p>
                     <button id="readyBtn" onClick={onClick} disabled={ready}>Ready?</button>
