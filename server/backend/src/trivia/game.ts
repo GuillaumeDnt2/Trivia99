@@ -8,8 +8,9 @@ import {ConfigService} from "@nestjs/config";
 
 @Injectable()
 export class Game {
-  private intervalTime: number;
-
+  private TIME_BETWEEN_QUESTION: number;
+  private READY_PLAYERS_THRESHOLD: number;
+  private NB_READY_PLAYERS: number;
   public nbReady: number;
   private players: Map<string, Player>;
   private hasStarted: boolean;
@@ -21,9 +22,9 @@ export class Game {
     this.players = new Map<string, Player>();
     this.hasStarted = false;
     this.server = server;
-    this.configService = configService;
-    this.intervalTime = parseInt(this.configService.get<string>("TIME_BETWEEN_QUESTION")) * 1000;
-
+    this.TIME_BETWEEN_QUESTION = parseInt(this.configService.get<string>("TIME_BETWEEN_QUESTION")) * 1000;
+    this.READY_PLAYERS_THRESHOLD = parseInt(this.configService.get<string>("READY_PLAYERS_THRESHOLD"));
+    this.NB_READY_PLAYERS = parseInt(this.configService.get<string>("NB_READY_PLAYERS"));
     // qList est vide à se moment donc erreur
     //let qiq = this.qManager.newQuestion(false);
     //console.log(qiq);
@@ -44,8 +45,8 @@ export class Game {
   public checkAndStartGame() {
     if (!this.hasStarted) {
       if (
-        this.getNbReady() >= 2 &&
-        this.getNbReady() >= this.players.size * 0.8
+        this.getNbReady() >= this.NB_READY_PLAYERS &&
+        this.getNbReady() >= this.players.size * this.READY_PLAYERS_THRESHOLD
       ) {
         this.startGame().then(() => console.log("Game started"));
       }
@@ -71,7 +72,7 @@ export class Game {
   public async startGame() {
     this.hasStarted = true;
 
-    this.qManager = new QuestionManager(this.configService);
+    this.qManager = new QuestionManager();
     await this.qManager.initializeQuestions();
 
     this.server.emit("startGame", {
@@ -90,7 +91,7 @@ export class Game {
       this.players.forEach((_player: Player, id: string) => {
         this.addQuestionToPlayer(id, question);
       });
-    }, this.intervalTime);
+    }, this.TIME_BETWEEN_QUESTION);
   }
 
   public checkDeadPlayers() {
