@@ -1,11 +1,9 @@
-export default function Home(){
-    return <h1>Home</h1>
-}import "./Home.css"
+//import "./Home.css"
 import {socket} from "../utils/socket.js"
 import {useState} from "react";
 import {Link, useNavigate} from "react-router-dom"
-import logo from '../assets/Trivia99.png'
-import github from '../assets/github-mark.svg'
+//import logo from '../assets/Trivia99.png'
+//import github from '../assets/github-mark.svg'
 
 /**
  * React file for the home page of Trivia99
@@ -43,7 +41,6 @@ export default function Home(){
     return (
         <div className="center-inside-div">
             <div className="content-column-box">
-                <img src={logo} alt="Trivia99" className="logo" />
                 <form onSubmit={handleSubmit} className="content-column-box">
                     <label>Username
                         <input
@@ -54,7 +51,7 @@ export default function Home(){
                     </label>
                     <button type="submit">Click to play!</button>
                     <Link to="https://github.com/GuillaumeDnt2/Trivia99/tree/main" >
-                        <button type="button">GitHub<img src={github} alt="GitHub" /></button>
+                        <button type="button">GitHub</button>
                     </Link>
                 </form>
             </div>
