@@ -13,7 +13,6 @@ import github from '../assets/github-mark.svg'
  * @author Valentin Bonzon
  * @author Edwin Haeffner
  * @returns {JSX.Element}
- * @constructor
  */
 
 export default function Home(){
