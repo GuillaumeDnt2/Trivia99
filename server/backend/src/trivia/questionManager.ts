@@ -16,10 +16,9 @@ export class QuestionManager {
   private Q_FETCH_SIZE: number;
   private API_URL: string;
   constructor(private configService: ConfigService) {
-    this.qPool = new Map<string, Question>();
- 
-    this.qList = [];
 
+    this.qPool = new Map<string, Question>();
+    this.qList = [];
  
     //Env variables
     this.QUESTION_MIN = parseInt(this.configService.get<string>("QUESTION_MIN"));
@@ -30,6 +29,7 @@ export class QuestionManager {
   async initializeQuestions() {
     await this.fetchQuestions(this.Q_FETCH_SIZE);
     console.log("length " + this.qList.length);
+    console.log(this.newQuestion(false));
   }
 
   
@@ -64,16 +64,15 @@ export class QuestionManager {
     let data: any;
     try {
       await fetch(this.API_URL)
-        .then((response) => response.text())
-        .then((text) => {
-          questions = JSON.parse(text);
+        .then((response) => response.json())
+        .then((json) => {
+          questions = json;
           questions.forEach((question: any) => {
-            console.log(new Question(question));
-            //this.questionList.add(new Question(question));
             this.qList.push(new Question(question));
-            console.log(this.qList.length);
+            
           });
         });
+  
     } catch (err) {
       console.error("Error reading or parsing questions:", err);
     }

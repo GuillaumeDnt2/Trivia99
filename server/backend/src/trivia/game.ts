@@ -28,6 +28,11 @@ export class Game {
     this.READY_PLAYERS_THRESHOLD = parseInt(this.configService.get<string>("READY_PLAYERS_THRESHOLD"));
     this.NB_READY_PLAYERS = parseInt(this.configService.get<string>("NB_READY_PLAYERS"));
     this.SIZE_OF_QUESTION_QUEUE = parseInt(this.configService.get<string>("SIZE_OF_QUESTION_QUEUE"));
+
+
+    let qManager = new QuestionManager(configService);
+    qManager.initializeQuestions();
+    console.log("l:" + qManager.qList.length)
     // qList est vide à se moment donc erreur
     //let qiq = this.qManager.newQuestion(false);
     //console.log(qiq);
