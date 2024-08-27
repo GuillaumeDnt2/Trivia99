@@ -8,12 +8,12 @@ const Q_FETCH_SIZE = 50;
 const API_URL = "https://the-trivia-api.com/v2/questions?limit=50";
 
 export class QuestionManager {
-  private questionPool: Map<string, Question>;
+  private qPool: Map<string, Question>;
   private questionList: Queue;
   public qList: Question[];
 
   constructor() {
-    this.questionPool = new Map<string, Question>();
+    this.qPool = new Map<string, Question>();
     this.questionList = new Queue();
     this.qList = [];
 
@@ -26,15 +26,15 @@ export class QuestionManager {
   }
 
   public check(q: QuestionInQueue, answer: number) {
-    if (!this.questionPool.has(q.id)) {
+    if (!this.qPool.has(q.id)) {
       throw new Error("Question is not yet present in the game");
     }
-    let question = this.questionPool.get(q.id);
+    let question = this.qPool.get(q.id);
     return question.correctAnsw == answer;
   }
 
   public get(q: QuestionInQueue) {
-    return new QuestionToSend(this.questionPool.get(q.id), q.isAttack);
+    return new QuestionToSend(this.qPool.get(q.id), q.isAttack);
   }
 
   public async newQuestion(isAttack: boolean) {
@@ -44,7 +44,7 @@ export class QuestionManager {
         await this.fetchQuestions(Q_FETCH_SIZE);
       }
       q = this.qList.shift();
-    } while (this.questionPool.has(q.id));
+    } while (this.qPool.has(q.id));
 
     return new QuestionInQueue(q, isAttack);
   }

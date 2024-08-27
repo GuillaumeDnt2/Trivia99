@@ -2,6 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { TriviaGateway } from "./trivia.gateway";
 import { Server } from "socket.io";
 import { Game } from "./game";
+import { QuestionManager } from "./questionManager";
 
 describe("TriviaGateway", () => {
   let gateway: TriviaGateway;
@@ -99,4 +100,12 @@ describe("TriviaGateway", () => {
     await gateway.game.startGame();
     expect(gateway.game.getNbQuestions()).toBe(50);
   });
+  //QuestionManager
+  it("should have qList defined"), () => {
+    let qManager = new QuestionManager();
+    expect(qManager.qList).toBeDefined();
+  };
+  
+
+
 });
