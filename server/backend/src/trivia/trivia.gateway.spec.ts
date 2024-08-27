@@ -26,6 +26,11 @@ describe("TriviaGateway", () => {
     gateway.game = new Game(server, configService);
   });
 
+  afterEach(() => {
+    jest.clearAllTimers();
+    gateway.game.stopGame();
+  })
+
   it("should read from the .env file", () => {
     expect(configService.get("ENV_CONFIG_TRUE")).toBe("42");
   });

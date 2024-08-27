@@ -21,6 +21,7 @@ export class Game {
   private server: Server;
   private questionLoaded: boolean;
   private eventEmitter: any;
+  private intervalId: NodeJS.Timeout;
 
   constructor(server: Server, private configService: ConfigService) {
     this.nbReady = 0;
@@ -46,6 +47,12 @@ export class Game {
 
   public hasGameStarted() {
     return this.hasStarted;
+  }
+
+  public stopGame() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
   }
 
   public getNbQuestions() {
@@ -97,7 +104,7 @@ export class Game {
 
   public async sendTimedQuestionToEveryone() {
     console.log("Sending questions to everyone!");
-    setInterval(async () => {
+    this.intervalId = setInterval(async () => {
       console.log("Interval triggered");
       let question = await this.qManager.newQuestion(false);
       console.log("Question fetched");
