@@ -125,6 +125,8 @@ export class TriviaGateway implements OnModuleInit {
         this.game.addAttackQuestionToPlayer(randomSocket.id);
       }
     }
+    //Then reset the streak
+    this.game.getPlayerById(socket.id).resetStreak();
   }
 
   /**
