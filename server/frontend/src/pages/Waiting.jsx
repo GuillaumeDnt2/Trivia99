@@ -38,7 +38,7 @@ export default function Waiting(){
                 <img src="../../Trivia_99.png" alt="Trivia 99 logo"/>
                 <div className="rounded-box">
                     <p>{playersInfo.nbReady}/{playersInfo.nbPlayers} player(s) ready</p>
-                    <button onClick={onClick} disabled={ready}>Ready?</button>
+                    <button id="readyBtn" onClick={onClick} disabled={ready}>Ready?</button>
                 </div>
             </div>
         </>
