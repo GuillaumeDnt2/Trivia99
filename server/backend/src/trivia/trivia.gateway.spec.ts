@@ -109,7 +109,7 @@ describe("TriviaGateway", () => {
 
   //QuestionManager
   it("should have qList defined", () => {
-    let qManager = new QuestionManager();
+    let qManager = new QuestionManager(configService);
     expect(qManager.qList).toBeDefined();
   });
   
