@@ -3,11 +3,13 @@ import { QuestionToSend } from "./questionToSend";
 import { QuestionInQueue } from "./questionInQueue";
 import { Queue } from "./queue";
 import {ConfigService} from "@nestjs/config";
+import {Injectable} from "@nestjs/common";
 
 const QUESTION_MIN = 3;
 const Q_FETCH_SIZE = 50;
 const API_URL = "https://the-trivia-api.com/v2/questions?limit=50";
 
+@Injectable()
 export class QuestionManager {
   private qPool: Map<string, Question>;
   private questionList: Queue;
