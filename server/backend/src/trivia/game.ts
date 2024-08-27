@@ -11,6 +11,7 @@ export class Game {
   private TIME_BETWEEN_QUESTION: number;
   private READY_PLAYERS_THRESHOLD: number;
   private NB_READY_PLAYERS: number;
+  private SIZE_OF_QUESTION_QUEUE: number;
   public nbReady: number;
   private players: Map<string, Player>;
   private hasStarted: boolean;
@@ -26,6 +27,7 @@ export class Game {
     this.TIME_BETWEEN_QUESTION = parseInt(this.configService.get<string>("TIME_BETWEEN_QUESTION")) * 1000;
     this.READY_PLAYERS_THRESHOLD = parseInt(this.configService.get<string>("READY_PLAYERS_THRESHOLD"));
     this.NB_READY_PLAYERS = parseInt(this.configService.get<string>("NB_READY_PLAYERS"));
+    this.SIZE_OF_QUESTION_QUEUE = parseInt(this.configService.get<string>("SIZE_OF_QUESTION_QUEUE"));
     // qList est vide à se moment donc erreur
     //let qiq = this.qManager.newQuestion(false);
     //console.log(qiq);
@@ -96,7 +98,12 @@ export class Game {
   }
 
   public checkDeadPlayers() {
-
+    this.players.forEach((player: Player, id: string) => {
+      if (player.getNbQuestions() > 0) {
+      } else {
+        player.kill();
+      }
+    });
   }
 
   public addQuestionToPlayer(id: string, question: QuestionInQueue) {
@@ -117,9 +124,18 @@ export class Game {
   }
 
   public sendRankingInfo(){
+    let ranking = [];
+    for(let [key, value] of this.players){
+        ranking.push({
+            name: value.getName(),
+            score: value.getScore()
+        });
+    }
 
     this.server.emit("ranking", {
-
+      ranking: ranking,
     })
   }
+
+
 }

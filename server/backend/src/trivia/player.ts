@@ -67,4 +67,12 @@ export class Player {
 
     return info;
   }
+
+  public getName() {
+    return this.name;
+  }
+
+  public getScore() {
+    return this.nbGoodAnswers;
+  }
 }

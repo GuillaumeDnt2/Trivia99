@@ -5,8 +5,10 @@ import { Queue } from "./queue";
 import {ConfigService} from "@nestjs/config";
 import { parse } from "dotenv";
 
+import {Injectable} from "@nestjs/common";
 
 
+@Injectable()
 export class QuestionManager {
   private qPool: Map<string, Question>;
   private questionList: Queue;
