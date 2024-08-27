@@ -95,11 +95,12 @@ describe("TriviaGateway", () => {
     await gateway.game.startGame();
     expect(gateway.game.getNbQuestions()).toBe(50);
   });
+
   //QuestionManager
-  it("should have qList defined"), () => {
+  it("should have qList defined", () => {
     let qManager = new QuestionManager();
     expect(qManager.qList).toBeDefined();
-  };
+  });
   
 
 

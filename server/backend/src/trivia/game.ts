@@ -3,7 +3,9 @@ import { QuestionManager } from "./questionManager";
 import { Server } from "socket.io";
 import { QuestionToSend } from "./questionToSend";
 import { QuestionInQueue } from "./questionInQueue";
+import { Injectable } from "@nestjs/common";
 
+@Injectable()
 export class Game {
   public nbReady: number;
   private players: Map<string, Player>;

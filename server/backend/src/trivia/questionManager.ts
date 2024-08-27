@@ -25,6 +25,8 @@ export class QuestionManager {
     console.log("length " + this.qList.length);
   }
 
+  
+
   public check(q: QuestionInQueue, answer: number) {
     if (!this.qPool.has(q.id)) {
       throw new Error("Question is not yet present in the game");
