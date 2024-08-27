@@ -75,4 +75,8 @@ export class Player {
   public getScore() {
     return this.nbGoodAnswers;
   }
+
+  getAlive() {
+    return this.isAlive;
+  }
 }
