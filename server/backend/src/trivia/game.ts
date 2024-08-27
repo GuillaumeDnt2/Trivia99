@@ -14,7 +14,6 @@ export class Game {
   constructor(server: any) {
     this.nbReady = 0;
     this.players = new Map<string, Player>();
-    this.qManager = new QuestionManager();
     this.hasStarted = false;
     this.server = server;
     // qList est vide à se moment donc erreur
@@ -24,6 +23,10 @@ export class Game {
         console.log("Question to send: ");
         console.log(qq);*/
     //console.log(this.qManager.check(qiq, 1));
+  }
+
+  public getNbQuestions() {
+    return this.qManager.qList.length;
   }
 
   public checkAndStartGame() {
@@ -53,8 +56,12 @@ export class Game {
     return this.nbReady;
   }
 
-  public startGame() {
+  public async startGame() {
     this.hasStarted = true;
+
+    this.qManager = new QuestionManager();
+    await this.qManager.initializeQuestions();
+
     this.server.emit("startGame", {
       msg: "The game has started",
     });

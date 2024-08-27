@@ -47,11 +47,11 @@ describe("TriviaGateway", () => {
     expect(gateway.game.getNbReady()).toBe(0);
   });
 
-  it("should emit start message on start", () => {
+  it("should emit start message on start", async () => {
     const socket = { id: "1", emit: jest.fn() };
     gateway.game.addPlayer(socket.id, "Player1");
     const spy = jest.spyOn(server, "emit");
-    gateway.game.startGame();
+    await gateway.game.startGame();
     expect(spy).toHaveBeenCalledWith("startGame", {
       msg: "The game has started",
     });
@@ -64,7 +64,7 @@ describe("TriviaGateway", () => {
     const spy = jest.spyOn(server, "emit");
     const spySocket = jest.spyOn(socket, "emit");
 
-    gateway.game.startGame();
+    await gateway.game.startGame();
 
     expect(
       gateway.game.getPlayerById(socket.id).getCurrentQuestion(),
@@ -87,10 +87,16 @@ describe("TriviaGateway", () => {
 
     // Advance time by another 10000ms
     jest.advanceTimersByTime(10000);
-    //await Promise.resolve(); // Allow any pending Promises to resolve
+
+    await Promise.resolve(); // Allow any pending Promises to resolve
 
     expect(gateway.game.getPlayerById(socket.id).getNbQuestions()).toBe(2);
 
     jest.useRealTimers();
+  });
+
+  it("should have 50 questions in the question list", async () => {
+    await gateway.game.startGame();
+    expect(gateway.game.getNbQuestions()).toBe(50);
   });
 });

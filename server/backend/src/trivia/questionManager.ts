@@ -17,10 +17,10 @@ export class QuestionManager {
     this.questionList = new Queue();
     this.qList = [];
 
-    this.initializeQuestions();
+    //this.initializeQuestions();
   }
 
-  private async initializeQuestions() {
+  async initializeQuestions() {
     await this.fetchQuestions(Q_FETCH_SIZE);
     console.log("length " + this.qList.length);
   }
@@ -50,8 +50,7 @@ export class QuestionManager {
   }
 
   private async fetchQuestions(limit: number) {
-
-      const fs = require("fs");
+    const fs = require("fs");
     let questions: any[] = [];
     let data: any;
     try {
