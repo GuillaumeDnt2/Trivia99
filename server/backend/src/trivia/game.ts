@@ -22,6 +22,7 @@ export class Game {
     this.players = new Map<string, Player>();
     this.hasStarted = false;
     this.server = server;
+    this.configService = configService;
     this.TIME_BETWEEN_QUESTION = parseInt(this.configService.get<string>("TIME_BETWEEN_QUESTION")) * 1000;
     this.READY_PLAYERS_THRESHOLD = parseInt(this.configService.get<string>("READY_PLAYERS_THRESHOLD"));
     this.NB_READY_PLAYERS = parseInt(this.configService.get<string>("NB_READY_PLAYERS"));
@@ -72,7 +73,7 @@ export class Game {
   public async startGame() {
     this.hasStarted = true;
 
-    this.qManager = new QuestionManager();
+    this.qManager = new QuestionManager(this.configService);
     await this.qManager.initializeQuestions();
 
     this.server.emit("startGame", {
