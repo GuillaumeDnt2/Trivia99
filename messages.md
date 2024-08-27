@@ -67,6 +67,9 @@ Sends to one user his information in this form :
 Sends a new question to the user in this form :
 ```json
 {
+    "id": "asdhjakjdhaskdhsajkdamogusakdasdasdoashdoa",
+    "difficulty": "hard",
+    "isAttack": "false",
     "category": "Gaming",
     "answers": ["Mario", "Sonic", "Pikachu", "Zelda"],
     "question": "Who is the only character that aren't owned by Nintendo?"
