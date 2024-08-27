@@ -15,9 +15,9 @@ describe("AppController", () => {
   });
 
   //Todo: Add actual tests
-   describe("root", () => {
-     it("should be defined", () => {
-       expect(appController).toBeDefined();
-     });
-   });
+  describe("root", () => {
+    it("should be defined", () => {
+      expect(appController).toBeDefined();
+    });
+  });
 });
