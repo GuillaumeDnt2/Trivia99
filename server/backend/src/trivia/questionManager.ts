@@ -1,7 +1,6 @@
 import { Question } from "./question";
 import { QuestionToSend } from "./questionToSend";
 import { QuestionInQueue } from "./questionInQueue";
-import { Queue } from "./queue";
 import {ConfigService} from "@nestjs/config";
 import { parse } from "dotenv";
 
@@ -11,14 +10,14 @@ import {Injectable} from "@nestjs/common";
 @Injectable()
 export class QuestionManager {
   private qPool: Map<string, Question>;
-  private questionList: Queue;
+
   public qList: Question[];
   private QUESTION_MIN: number;
   private Q_FETCH_SIZE: number;
   private API_URL: string;
   constructor(private configService: ConfigService) {
     this.qPool = new Map<string, Question>();
-    this.questionList = new Queue();
+ 
     this.qList = [];
 
  

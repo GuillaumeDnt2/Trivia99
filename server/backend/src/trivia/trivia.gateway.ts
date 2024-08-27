@@ -26,8 +26,10 @@ export class TriviaGateway implements OnModuleInit {
   @WebSocketServer()
   server: Server;
   game: Game;
-
-  constructor(private configService: ConfigService) {}
+  private STREAK: number;
+  constructor(private configService: ConfigService) {
+    this.STREAK = parseInt(this.configService.get<string>("STREAK"));
+  }
   onModuleInit() {
     //Create a new game if it doesn't exist
     if (this.game == undefined) {
@@ -110,14 +112,14 @@ export class TriviaGateway implements OnModuleInit {
     //Get the streak of the player to determine how many attacks are sent
     const streak = this.game.getPlayerById(socket.id).getStreak();
     //If the streak is less than 3, don't send any attacks
-    if (streak < 3) return;
+    if (streak < this.STREAK) return;
 
     const connectedSockets = Array.from(this.server.sockets.sockets.values());
     const otherSockets = connectedSockets.filter((s) => s.id !== socket.id);
 
     if (otherSockets.length > 0) {
       //Send the attack to the other players
-      for (let i = 0; i < streak - 3; i++) {
+      for (let i = 0; i < streak - this.STREAK; i++) {
         const randomSocket =
           otherSockets[Math.floor(Math.random() * otherSockets.length)];
         this.game.addAttackQuestionToPlayer(randomSocket.id);
