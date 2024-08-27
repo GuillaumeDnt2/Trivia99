@@ -30,6 +30,5 @@ export default function Ranking(){
                         </ul>
                     </div>
                 </div>
-                <button onClick={() => socket.emit('test')}>Test</button>
             </div>
 }
