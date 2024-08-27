@@ -92,18 +92,6 @@ export class TriviaGateway implements OnModuleInit {
   }
 
   /**
-   * Will send a question to everyone
-   * @param socket
-   */
-  @SubscribeMessage("question")
-  onQuestion(@ConnectedSocket() socket: any) {
-    this.server.emit("onQuestion", {
-      //Send the question to everyone
-      msg: "Question",
-    });
-  }
-
-  /**
    * Attack another player randomly
    * @param socket
    */
@@ -138,17 +126,28 @@ export class TriviaGateway implements OnModuleInit {
   onAnswer(@MessageBody() body: any, @ConnectedSocket() socket: any) {
     //Get the player that answered the question
     const player = this.game.getPlayers().get(socket.id);
+    const answer = body;
     //Check if the answer is correct
-    const question = player.getCurrentQuestion();
+    if(this.game.checkPlayerAnswer(player, answer)){
+        //Send correct answer msg
+        socket.emit("onResult",{
+          msg: "Correct"
+        });
+    }
+    else{
+        //If the answer is incorrect
+        socket.emit("onResult", {
+        msg: "Incorrect",
+    });
+    }
+    
     //Todo: Logic of the answer handling, can only do it once the question class is done
+
     //If the answer is correct
     socket.emit("onResult", {
       msg: "Correct",
     });
-    //If the answer is incorrect
-    socket.emit("onResult", {
-      msg: "Incorrect",
-    });
+    
   }
 
   @SubscribeMessage("deathUpdate")

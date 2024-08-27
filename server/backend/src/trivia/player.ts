@@ -6,10 +6,11 @@ export class Player {
   private streak: number;
   private isAlive: boolean;
   public isReady: boolean;
-  private nbBadAnswers: number;
-  private nbGoodAnswers: number;
+  public nbBadAnswers: number;
+  public nbGoodAnswers: number;
+  private socket: string;
 
-  constructor(name: string) {
+  constructor(name: string, socket:string) {
     this.name = name;
     this.queue = [];
     this.streak = 0;
@@ -17,6 +18,11 @@ export class Player {
     this.isReady = false;
     this.nbBadAnswers = 0;
     this.nbGoodAnswers = 0;
+    this.socket = socket;
+  }
+
+  public getSocket(){
+    return this.socket;
   }
 
   public getCurrentQuestion() {

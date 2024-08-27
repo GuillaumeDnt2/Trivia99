@@ -64,7 +64,7 @@ export class Game {
   }
 
   public addPlayer(id: string, name: string) {
-    this.players.set(id, new Player(name));
+    this.players.set(id, new Player(name, id));
   }
 
   public getPlayers() {
@@ -96,13 +96,11 @@ export class Game {
   }
 
   public async sendTimedQuestionToEveryone() {
-    console.log("Sending questions to everyone!");
+    
     setInterval(async () => {
-      console.log("Interval triggered");
       let question = await this.qManager.newQuestion(false);
-      console.log("Question fetched");
       this.players.forEach((_player: Player, id: string) => {
-        console.log("About to send");
+        
         this.addQuestionToPlayer(id, question);
       });
     }, this.TIME_BETWEEN_QUESTION);
@@ -130,6 +128,10 @@ export class Game {
     this.server.to(id).emit("userInfo", {
       info: info,
     });
+    //Send question to player if queue was empty before
+    if(player.getNbQuestions() == 1){
+      this.server.to(id).emit("newQuestion",this.qManager.get(question));
+    }
   }
 
   public async addAttackQuestionToPlayer(id: string) {
@@ -152,6 +154,26 @@ export class Game {
     this.server.emit("ranking", {
       ranking,
     })
+  }
+
+  public checkPlayerAnswer(player:Player, answer:number){
+    if(this.qManager.check(player.getCurrentQuestion(),answer)){
+        //Correct answer
+        player.removeQuestion();
+        player.nbGoodAnswers += 1;
+        player.incrementStreak();
+        if(player.getNbQuestions() > 0){
+            const qToSend = this.qManager.get(player.getCurrentQuestion());
+            this.server.to(player.getSocket()).emit("newQuestion",qToSend);
+        }
+        return true;
+    }
+    else{
+        //Bad answer
+        player.nbBadAnswers += 1;
+        player.resetStreak();
+        return false;
+    }
   }
 
 
