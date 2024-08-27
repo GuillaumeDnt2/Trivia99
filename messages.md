@@ -17,6 +17,13 @@ Tells the backend that the user is dead. (Not sure if we need this one)
 #### 'getStreak'
 Tells the backend to send the streak of the user.
 
+#### 'answer'
+```
+{
+    "answer": 3
+}
+```
+
 ### Send by the backend to the frontend
 #### 'playersConnected'
 Tells the frontend how many players are connected in this form :
@@ -67,6 +74,9 @@ Sends to one user his information in this form :
 Sends a new question to the user in this form :
 ```json
 {
+    "id": "asdhjakjdhaskdhsajkdamogusakdasdasdoashdoa",
+    "difficulty": "hard",
+    "isAttack": false,
     "category": "Gaming",
     "answers": ["Mario", "Sonic", "Pikachu", "Zelda"],
     "question": "Who is the only character that aren't owned by Nintendo?"
