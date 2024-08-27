@@ -19,11 +19,6 @@ describe("TriviaGateway", () => {
     gateway.game = new Game(server);
   });
 
-  //Todo: Add actual tests
-  it("should be defined", () => {
-    expect(gateway).toBeDefined();
-  });
-
   it("should add a player on login", () => {
     const socket = { id: "1", send: jest.fn() };
     const name = "Player1";
@@ -107,5 +102,28 @@ describe("TriviaGateway", () => {
   };
   
 
+
+  it("should launch the game if there's two players ready", async() => {
+    const socket = { id: "1", send: jest.fn() };
+    gateway.game.addPlayer(socket.id, "Player1");
+    gateway.onReady(socket);
+    expect(gateway.game.hasGameStarted()).toBe(false);
+    const socket2 = { id: "2", send: jest.fn() };
+    gateway.game.addPlayer(socket2.id, "Player2");
+    gateway.onReady(socket2);
+
+    await Promise.resolve(); // Allow any pending Promises to resolve
+
+    expect(gateway.game.hasGameStarted()).toBe(true);
+  });
+
+  /*
+  it("should kill the player", () =>{
+    const socket = { id: "1", send: jest.fn() };
+    gateway.game.addPlayer(socket.id, "Player1");
+    gateway.onReady(socket);
+    expect(gateway.game.getPlayers().get(socket.id).isAlive).toBe(false);
+  });
+   */
 
 });

@@ -25,6 +25,10 @@ export class Game {
     //console.log(this.qManager.check(qiq, 1));
   }
 
+  public hasGameStarted() {
+    return this.hasStarted;
+  }
+
   public getNbQuestions() {
     return this.qManager.qList.length;
   }
