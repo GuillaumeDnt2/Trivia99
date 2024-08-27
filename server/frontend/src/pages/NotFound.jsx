@@ -1,3 +1,7 @@
 export default function NotFound(){
-    return <h1>This page does not exist X﹏X</h1>
+    return (
+        <div className="center-inside-div">
+            <img src="../assets/Trivia99.png" alt="Trivia 99 logo"/>
+        </div>
+    );
 }
