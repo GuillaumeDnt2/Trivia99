@@ -1,0 +1,44 @@
+.content-column-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.background {
+    height: 100vh;
+    background-image: linear-gradient(#4f598c, #f18847);
+}
+
+.rounded-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 1px solid;
+    border-radius: 8px;
+    width: auto;
+    height: auto;
+    align-self: center;
+    background-color: white;
+}
+
+.logo {
+    align-self: center;
+    height: 150px;
+    width: 200px;
+    margin-bottom: 20px;
+}
+
+.orange-button {
+    background-color: #fcae59;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    align-self: center;
+    color: white;
+}
+
+.orange-button:disabled {
+    background-color: #fcad599a;
+}
+
