@@ -29,7 +29,7 @@ export class QuestionManager {
   async initializeQuestions() {
     await this.fetchQuestions(this.Q_FETCH_SIZE);
     console.log("length " + this.qList.length);
-    console.log(this.newQuestion(false));
+ 
   }
 
   
