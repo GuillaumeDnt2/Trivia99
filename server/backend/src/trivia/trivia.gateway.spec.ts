@@ -3,20 +3,31 @@ import { TriviaGateway } from "./trivia.gateway";
 import { Server } from "socket.io";
 import { Game } from "./game";
 import { QuestionManager } from "./questionManager";
+import {ConfigModule, ConfigService} from "@nestjs/config";
+import {config} from "rxjs";
 
 describe("TriviaGateway", () => {
   let gateway: TriviaGateway;
   let server: Server;
+  let configService: ConfigService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [TriviaGateway],
+      imports: [ConfigModule.forRoot({
+        isGlobal: true,
+      })],
+      providers: [TriviaGateway, ConfigService],
     }).compile();
 
     gateway = module.get<TriviaGateway>(TriviaGateway);
     server = new Server();
+    configService = module.get<ConfigService>(ConfigService);
     gateway.server = server;
-    gateway.game = new Game(server);
+    gateway.game = new Game(server, configService);
+  });
+
+  it("should read from the .env file", () => {
+    expect(configService.get("ENV_CONFIG_TRUE")).toBe("42");
   });
 
   it("should add a player on login", () => {
@@ -119,12 +130,13 @@ describe("TriviaGateway", () => {
   });
 
   /*
-  it("should kill the player", () =>{
+  it("should kill the player when their stack is full", () =>{
     const socket = { id: "1", send: jest.fn() };
     gateway.game.addPlayer(socket.id, "Player1");
     gateway.onReady(socket);
     expect(gateway.game.getPlayers().get(socket.id).isAlive).toBe(false);
   });
    */
+
 
 });

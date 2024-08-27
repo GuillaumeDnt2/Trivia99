@@ -4,20 +4,25 @@ import { Server } from "socket.io";
 import { QuestionToSend } from "./questionToSend";
 import { QuestionInQueue } from "./questionInQueue";
 import { Injectable } from "@nestjs/common";
+import {ConfigService} from "@nestjs/config";
 
 @Injectable()
 export class Game {
+  private intervalTime: number;
+
   public nbReady: number;
   private players: Map<string, Player>;
   private hasStarted: boolean;
   private qManager: QuestionManager;
   private server: Server;
 
-  constructor(server: any) {
+  constructor(server: Server, private configService: ConfigService) {
     this.nbReady = 0;
     this.players = new Map<string, Player>();
     this.hasStarted = false;
     this.server = server;
+    this.intervalTime = parseInt(this.configService.get<string>("TIME_BETWEEN_QUESTION")) * 1000;
+
     // qList est vide à se moment donc erreur
     //let qiq = this.qManager.newQuestion(false);
     //console.log(qiq);
@@ -41,7 +46,7 @@ export class Game {
         this.getNbReady() >= 2 &&
         this.getNbReady() >= this.players.size * 0.8
       ) {
-        this.startGame();
+        this.startGame().then(() => console.log("Game started"));
       }
     }
   }
@@ -84,7 +89,11 @@ export class Game {
       this.players.forEach((_player: Player, id: string) => {
         this.addQuestionToPlayer(id, question);
       });
-    }, 10000);
+    }, this.intervalTime);
+  }
+
+  public checkDeadPlayers() {
+
   }
 
   public addQuestionToPlayer(id: string, question: QuestionInQueue) {

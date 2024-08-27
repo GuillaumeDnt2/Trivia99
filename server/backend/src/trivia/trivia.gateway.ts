@@ -9,6 +9,7 @@ import {
 import { Server } from "socket.io";
 import { OnModuleInit } from "@nestjs/common";
 import { Game } from "./game";
+import {ConfigService} from "@nestjs/config";
 
 const cors =
   process.env.CORS_URL != undefined
@@ -20,15 +21,17 @@ const cors =
     origin: cors,
   },
 })
+
 export class TriviaGateway implements OnModuleInit {
   @WebSocketServer()
   server: Server;
   game: Game;
 
+  constructor(private configService: ConfigService) {}
   onModuleInit() {
     //Create a new game if it doesn't exist
     if (this.game == undefined) {
-      this.game = new Game(this.server);
+      this.game = new Game(this.server, this.configService);
     }
 
     this.server.on("connection", (socket) => {
