@@ -129,14 +129,55 @@ describe("TriviaGateway", () => {
     expect(gateway.game.hasGameStarted()).toBe(true);
   });
 
-  /*
-  it("should kill the player when their stack is full", () =>{
+  it("should give questions to players after the game has started", async () => {
+
+    jest.useFakeTimers();
+
+    const socket = { id: "1", emit: jest.fn() };
+    gateway.game.addPlayer(socket.id, "Player1");
+    gateway.onReady(socket);
+    const socket2 = { id: "2", emit: jest.fn() };
+    gateway.game.addPlayer(socket2.id, "Player2");
+    gateway.onReady(socket2);
+
+    expect(
+        gateway.game.getPlayerById(socket.id).getCurrentQuestion(),
+    ).toBeUndefined();
+
+    await gateway.game.waitForTheGameToBeStarted();
+
+
+    expect(gateway.game.getNbQuestions()).toBe(50);
+
+    // Advance time by another 10000ms
+    jest.advanceTimersByTime(20000);
+    await Promise.resolve(); // Allow any pending Promises to resolve
+
+    expect(gateway.game.getPlayerById(socket.id).getNbQuestions()).toBe(2);
+
+    jest.useRealTimers();
+  });
+
+
+  it("should kill the player when their stack is full", async () =>{
+    jest.useFakeTimers();
     const socket = { id: "1", send: jest.fn() };
     gateway.game.addPlayer(socket.id, "Player1");
     gateway.onReady(socket);
-    expect(gateway.game.getPlayers().get(socket.id).isAlive).toBe(false);
-  });
-   */
+    const socket2 = { id: "2", send: jest.fn() };
+    gateway.game.addPlayer(socket2.id, "Player2");
+    gateway.onReady(socket2);
 
+    await gateway.game.waitForTheGameToBeStarted();
+
+    // Advance time by 80000ms
+    jest.advanceTimersByTime(80000);
+    await Promise.resolve();
+
+    expect(gateway.game.getPlayerById(socket.id).getNbQuestions()).toBe(8);
+    expect(gateway.game.getPlayerById(socket.id).getAlive()).toBe(false);
+
+    jest.useRealTimers();
+  });
 
 });

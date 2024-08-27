@@ -68,10 +68,10 @@ export class QuestionManager {
         .then((text) => {
           questions = JSON.parse(text);
           questions.forEach((question: any) => {
-            console.log(new Question(question));
+            //console.log(new Question(question));
             //this.questionList.add(new Question(question));
             this.qList.push(new Question(question));
-            console.log(this.qList.length);
+            //console.log(this.qList.length);
           });
         });
     } catch (err) {
