@@ -21,6 +21,7 @@ export class Game {
     this.players = new Map<string, Player>();
     this.hasStarted = false;
     this.server = server;
+    this.configService = configService;
     this.intervalTime = parseInt(this.configService.get<string>("TIME_BETWEEN_QUESTION")) * 1000;
 
     // qList est vide à se moment donc erreur
@@ -70,7 +71,7 @@ export class Game {
   public async startGame() {
     this.hasStarted = true;
 
-    this.qManager = new QuestionManager();
+    this.qManager = new QuestionManager(this.configService);
     await this.qManager.initializeQuestions();
 
     this.server.emit("startGame", {
@@ -111,5 +112,12 @@ export class Game {
 
   public getPlayerById(id: string) {
     return this.players.get(id);
+  }
+
+  public sendRankingInfo(){
+
+    this.server.emit("ranking", {
+
+    })
   }
 }

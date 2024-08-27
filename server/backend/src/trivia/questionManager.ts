@@ -2,6 +2,7 @@ import { Question } from "./question";
 import { QuestionToSend } from "./questionToSend";
 import { QuestionInQueue } from "./questionInQueue";
 import { Queue } from "./queue";
+import {ConfigService} from "@nestjs/config";
 
 const QUESTION_MIN = 3;
 const Q_FETCH_SIZE = 50;
@@ -12,7 +13,7 @@ export class QuestionManager {
   private questionList: Queue;
   public qList: Question[];
 
-  constructor() {
+  constructor(private configService: ConfigService) {
     this.qPool = new Map<string, Question>();
     this.questionList = new Queue();
     this.qList = [];
