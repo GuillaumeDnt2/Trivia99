@@ -8,6 +8,7 @@ export class Player {
   public isReady: boolean;
   private nbBadAnswers: number;
   private nbGoodAnswers: number;
+  public isInTimeOut: NodeJS.Timeout;
 
   constructor(name: string) {
     this.name = name;
