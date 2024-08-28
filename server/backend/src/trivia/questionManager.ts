@@ -2,7 +2,6 @@ import { Question } from "./question";
 import { QuestionToSend } from "./questionToSend";
 import { QuestionInQueue } from "./questionInQueue";
 import {ConfigService} from "@nestjs/config";
-import { parse } from "dotenv";
 
 import {Injectable} from "@nestjs/common";
 
@@ -15,6 +14,7 @@ export class QuestionManager {
   private QUESTION_MIN: number;
   private Q_FETCH_SIZE: number;
   private API_URL: string;
+
   constructor(private configService: ConfigService) {
 
     this.qPool = new Map<string, Question>();
@@ -26,39 +26,59 @@ export class QuestionManager {
     this.API_URL = this.configService.get<string>("API_URL");
   }
 
-  async initializeQuestions() {
+  /**
+   * Fetch trivia questions from API for the 1st time
+   */
+  async initializeQuestions() : Promise<void>{
     await this.fetchQuestions();
     console.log("length " + this.qList.length);
- 
   }
 
   
-
-  public check(q: QuestionInQueue, answer: number) {
-    if (!this.qPool.has(q.id)) {
+  /**
+   * Check the answer from a player
+   * @param q : Question to check the answer
+   * @param answer : Answer given by the player
+   * @returns : if the answer is correct or not
+   */
+  public check(q: QuestionInQueue, answer: number) : boolean{
+    if (!this.qPool.has(q.getId())) {
       throw new Error("Question is not yet present in the game");
     }
-    let question = this.qPool.get(q.id);
-    return question.correctAnsw == answer;
+    let question = this.qPool.get(q.getId());
+    return question.getCorrectAnswer() == answer;
   }
 
-  public get(q: QuestionInQueue) {
-    return new QuestionToSend(this.qPool.get(q.id), q.isAttack);
+  /**
+   * Obtain information about a question which will be send
+   * @param q : The question for which we would like full information
+   * @returns : QuestionToSend object (question text + 4 answers) 
+   */
+  public get(q: QuestionInQueue) : QuestionToSend{
+    return new QuestionToSend(this.qPool.get(q.getId()), q.getIsAttack());
   }
 
-  public async newQuestion(isAttack: boolean) {
+  /**
+   * Ask a new question to question Manager 
+   * @param isAttack : if the new question is triggered by an attack
+   * @returns : the new question without question text and answers (to be stored in player's queue)
+   */
+  public async newQuestion(isAttack: boolean) : Promise<QuestionInQueue>{
     let q: Question;
     do {
       if (this.qList.length < this.QUESTION_MIN) {
         await this.fetchQuestions();
       }
       q = this.qList.shift();
-    } while (this.qPool.has(q.id));
+    } while (this.qPool.has(q.getId()));
 
     return new QuestionInQueue(q, isAttack);
   }
 
-  private async fetchQuestions() {
+  /**
+   * Call the trivia api and fetch the questions to store them in the question list
+   */
+  private async fetchQuestions() : Promise<void>{
     const fs = require("fs");
     let questions: any[] = [];
     let data: any;
