@@ -85,7 +85,7 @@ export class Game {
    * @param name : name chosen by the player
    */
   public addPlayer(id: string, name: string) : void {
-    this.players.set(id, new Player(name));
+    this.players.set(id, new Player(name,id));
   }
 
   /**
@@ -193,6 +193,33 @@ export class Game {
    */
   public async addAttackQuestionToPlayer(id: string) : Promise<void> {
     this.addQuestionToPlayer(id, await this.qManager.newQuestion(true));
+  }
+
+  /**
+   * Check if the answer is correct and send a new question to player (if possible)
+   * @param player : player who send the answer
+   * @param answer : the answer number
+   * @returns if the answer is correct or not
+   */
+  public checkPlayerAnswer(player:Player, answer:number){
+    if(this.qManager.check(player.getCurrentQuestion(),answer)){
+        //Correct answer
+        player.removeQuestion();
+        player.addGoodAnswer();
+        player.incrementStreak();
+        if(player.getNbQuestions() > 0){
+            const qToSend = this.qManager.get(player.getCurrentQuestion());
+            this.server.to(player.getId()).emit("newQuestion",qToSend);
+            player.addAnsweredQuestion();
+        }
+        return true;
+    }
+    else{
+        //Bad answer
+        player.addBadAnswer();
+        player.resetStreak();
+        return false;
+    }
   }
 
   /**

@@ -8,9 +8,11 @@ export class Player {
   public isReady: boolean;
   private nbBadAnswers: number;
   private nbGoodAnswers: number;
+  private nbAnsweredQuestions: number;
   public isInTimeOut: NodeJS.Timeout;
+  private id: string;
 
-  constructor(name: string) {
+  constructor(name: string, id:string) {
     this.name = name;
     this.queue = [];
     this.streak = 0;
@@ -18,6 +20,16 @@ export class Player {
     this.isReady = false;
     this.nbBadAnswers = 0;
     this.nbGoodAnswers = 0;
+    this.nbAnsweredQuestions = 0;
+    this.id = id;
+  }
+
+  /**
+   * 
+   * @returns Player id
+   */
+  public getId() : string{
+    return this.id;
   }
 
   /**
@@ -123,5 +135,28 @@ export class Player {
    */
   public alive() {
     return this.isAlive;
+  }
+
+  public getAnsweredQuestion() : number {
+    return this.nbAnsweredQuestions;
+  }
+
+  public getGoodAnswers() : number {
+    return this.nbGoodAnswers;
+  }
+
+  public getBadAnswers() : number {
+    return this.nbBadAnswers;
+  }
+
+  public addAnsweredQuestion() : void {
+    this.nbAnsweredQuestions ++;
+  }
+  public addBadAnswer() : void {
+    this.nbBadAnswers++;
+  }
+
+  public addGoodAnswer() : void {
+    this.nbGoodAnswers++;
   }
 }
