@@ -10,6 +10,7 @@ import { Server } from "socket.io";
 import { OnModuleInit } from "@nestjs/common";
 import { Game } from "./game";
 import {ConfigService} from "@nestjs/config";
+import { parse } from 'cookie';
 
 const cors =
   process.env.CORS_URL != undefined
@@ -53,18 +54,42 @@ export class TriviaGateway implements OnModuleInit {
     });
   }
 
-  @SubscribeMessage("login")
-  onLogin(@MessageBody() name: any, @ConnectedSocket() socket: any) {
-    this.game.addPlayer(socket.id, name);
-    socket.send("Number of ready users: " + this.game.getNbReady()); //Placeholder
-  }
-
   sendReadyInfo() {
     this.server.emit("playersConnected", {
       nbReady: this.game.getNbReady(),
       nbPlayers: this.game.getNbPlayers(),
     });
   }
+
+  getIdFromCookieGatheredFromTheSocket(socket: any): string | null {
+    const cookie = socket.handshake.headers.cookie;
+
+    if(!cookie){
+      return null;
+    }
+
+    const parsedCookie = parse(cookie);
+
+    return parsedCookie['userId'] || null;
+  }
+
+  @SubscribeMessage("isUserLogged")
+  onIsUserLogged(@ConnectedSocket() socket: any){
+    let loggedInInfo = this.game.getPlayers().has(this.getIdFromCookieGatheredFromTheSocket(socket));
+    this.server.to(socket.id).emit("loggedInfo",
+        {
+          loggedInInfo
+        })
+  }
+
+  @SubscribeMessage("login")
+  onLogin(@MessageBody() name: any, @ConnectedSocket() socket: any) {
+    this.game.addPlayer(socket.id, name);
+    //socket.send("Number of ready users: " + this.game.getNbReady()); //Placeholder
+    this.sendReadyInfo();
+  }
+
+
 
   @SubscribeMessage("ready")
   onReady(@ConnectedSocket() socket: any) {
@@ -73,10 +98,10 @@ export class TriviaGateway implements OnModuleInit {
       !this.game.getPlayers().get(socket.id).isReady
     ) {
       this.game.getPlayers().get(socket.id).isReady = true;
+      ++this.game.nbReady;
+      this.sendReadyInfo();
+      this.game.checkAndStartGame();
     }
-    ++this.game.nbReady;
-    this.sendReadyInfo();
-    this.game.checkAndStartGame();
   }
 
   @SubscribeMessage("unready")
@@ -86,9 +111,9 @@ export class TriviaGateway implements OnModuleInit {
       this.game.getPlayers().get(socket.id).isReady
     ) {
       this.game.getPlayers().get(socket.id).isReady = false;
+      --this.game.nbReady;
+      this.sendReadyInfo();
     }
-    --this.game.nbReady;
-    this.sendReadyInfo();
   }
 
   /**
