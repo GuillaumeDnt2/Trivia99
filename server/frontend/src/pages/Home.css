@@ -22,3 +22,7 @@
 ::placeholder {
     color: var(--c, #000000);
 }
+
+button:disabled {
+    background-color: #fcad599a;
+}

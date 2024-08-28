@@ -14,7 +14,8 @@ const routes = [
     },
     {
         path: "/waiting",
-        element: <Waiting />     },
+        element: <Waiting />
+    },
     {
         path: "/game",
         element: <Game />
