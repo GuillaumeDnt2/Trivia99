@@ -92,6 +92,7 @@ export class TriviaGateway implements OnModuleInit {
     const cookie = socket.handshake.headers.cookie;
 
     if(!cookie){
+      console.log("No cookie found");
       return null;
     }
 
