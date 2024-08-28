@@ -157,6 +157,13 @@ export class Game {
     })
   }
 
+
+  /**
+   * Check if the answer is correct and send a new question to player (if possible)
+   * @param player : player who send the answer
+   * @param answer : the answer number
+   * @returns if the answer is correct or not
+   */
   public checkPlayerAnswer(player:Player, answer:number){
     if(this.qManager.check(player.getCurrentQuestion(),answer)){
         //Correct answer
