@@ -8,6 +8,7 @@ export class Player {
   public isReady: boolean;
   private nbBadAnswers: number;
   private nbGoodAnswers: number;
+  public isInTimeOut: NodeJS.Timeout;
 
   constructor(name: string) {
     this.name = name;
@@ -18,6 +19,7 @@ export class Player {
     this.nbBadAnswers = 0;
     this.nbGoodAnswers = 0;
   }
+
 
   public getCurrentQuestion() {
     if (this.queue.length > 0) {
