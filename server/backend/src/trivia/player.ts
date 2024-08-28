@@ -6,10 +6,12 @@ export class Player {
   private streak: number;
   private isAlive: boolean;
   public isReady: boolean;
-  public nbBadAnswers: number;
-  public nbGoodAnswers: number;
-  public nbAnsweredQuestions: number;
+  private nbBadAnswers: number;
+  private nbGoodAnswers: number;
+  private nbAnsweredQuestions: number;
   private socket: string;
+  public isInTimeOut: NodeJS.Timeout;
+
 
   constructor(name: string, socket:string) {
     this.name = name;
@@ -27,40 +29,72 @@ export class Player {
     return this.socket;
   }
 
+  /**
+   * Return the 1st question in the question queue
+   * @returns 
+   */
   public getCurrentQuestion() {
     if (this.queue.length > 0) {
       return this.queue[0];
     }
   }
 
+  /**
+   * Return the nb of question in the question queue
+   * @returns 
+   */
   public getNbQuestions() {
     return this.queue.length;
   }
 
+  /**
+   * Unalive the player
+   */
   public kill() {
     this.isAlive = false;
   }
 
+  /**
+   * Reset the good answer streak to zero
+   */
   public resetStreak() {
     this.streak = 0;
   }
 
+  /**
+   * Increment the value of the streak
+   */
   public incrementStreak() {
     ++this.streak;
   }
 
+  /**
+   * Return the value of the streak
+   * @returns 
+   */
   public getStreak() {
     return this.streak;
   }
 
+  /**
+   * Add a new question to the question queue
+   * @param question 
+   */
   public addQuestion(question: any) {
     this.queue.push(question);
   }
 
+  /**
+   * Remove the first question from the question queue 
+   */
   public removeQuestion() {
     this.queue.shift();
   }
 
+  /**
+   * Get player statistics and question queue
+   * @returns 
+   */
   public getUserInfo(): object {
     let info = {
       streak: this.streak,
@@ -77,15 +111,27 @@ export class Player {
     return info;
   }
 
+  /**
+   * Get player's name
+   * @returns 
+   */
   public getName() {
     return this.name;
   }
 
+  /**
+   * Return player's number of good answers
+   * @returns 
+   */
   public getScore() {
     return this.nbGoodAnswers;
   }
 
-  getAlive() {
+  /**
+   * Return the state of the player 
+   * @returns 
+   */
+  public alive() {
     return this.isAlive;
   }
 

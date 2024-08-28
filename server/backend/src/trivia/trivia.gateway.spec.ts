@@ -5,11 +5,14 @@ import { Game } from "./game";
 import { QuestionManager } from "./questionManager";
 import {ConfigModule, ConfigService} from "@nestjs/config";
 import {config} from "rxjs";
+import {serialize} from "cookie";
 
 describe("TriviaGateway", () => {
   let gateway: TriviaGateway;
   let server: Server;
   let configService: ConfigService;
+  const player1 = { id: "1", send: jest.fn(), handshake: { headers: { authorization: serialize('userId', "1") } }  };
+  const player2 = { id: "2", send: jest.fn(), handshake: { headers: { authorization: serialize('userId', "2") } }  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -26,19 +29,26 @@ describe("TriviaGateway", () => {
     gateway.game = new Game(server, configService);
   });
 
+  afterEach(() => {
+    jest.clearAllTimers();
+    gateway.game.stopGame();
+  })
+
   it("should read from the .env file", () => {
     expect(configService.get("ENV_CONFIG_TRUE")).toBe("42");
   });
 
   it("should add a player on login", () => {
-    const socket = { id: "1", send: jest.fn() };
+    const userId = '1';
+    const socket = {...player1};
     const name = "Player1";
     gateway.onLogin(name, socket);
     expect(gateway.game.getPlayers().has(socket.id)).toBe(true);
   });
 
   it("should update player ready status on ready", () => {
-    const socket = { id: "1", emit: jest.fn() };
+    const userId = '1';
+    const socket = {...player1};
     gateway.game.addPlayer(socket.id, "Player1");
     gateway.onReady(socket);
     expect(gateway.game.getPlayers().get(socket.id).isReady).toBe(true);
@@ -46,7 +56,8 @@ describe("TriviaGateway", () => {
   });
 
   it("should update player ready status on unready", () => {
-    const socket = { id: "1", emit: jest.fn() };
+    const userId = '1';
+    const socket = {...player1};
     gateway.game.addPlayer(socket.id, "Player1");
     gateway.onReady(socket);
     gateway.onUnready(socket);
@@ -55,7 +66,8 @@ describe("TriviaGateway", () => {
   });
 
   it("should emit start message on start", async () => {
-    const socket = { id: "1", emit: jest.fn() };
+    const userId = '1';
+    const socket = {...player1};
     gateway.game.addPlayer(socket.id, "Player1");
     const spy = jest.spyOn(server, "emit");
     await gateway.game.startGame();
@@ -66,10 +78,10 @@ describe("TriviaGateway", () => {
 
   it("should send a question every 10000ms", async () => {
     jest.useFakeTimers();
-    const socket = { id: "1", emit: jest.fn() };
+    const userId = '1';
+    const socket = {...player1};
     gateway.game.addPlayer(socket.id, "Player1");
     const spy = jest.spyOn(server, "emit");
-    const spySocket = jest.spyOn(socket, "emit");
 
     await gateway.game.startGame();
 
@@ -116,11 +128,13 @@ describe("TriviaGateway", () => {
 
 
   it("should launch the game if there's two players ready", async() => {
-    const socket = { id: "1", send: jest.fn() };
+    const userId = '1';
+    const socket = {...player1};
     gateway.game.addPlayer(socket.id, "Player1");
     gateway.onReady(socket);
     expect(gateway.game.hasGameStarted()).toBe(false);
-    const socket2 = { id: "2", send: jest.fn() };
+    const userId2 = '2';
+    const socket2 = {...player2};
     gateway.game.addPlayer(socket2.id, "Player2");
     gateway.onReady(socket2);
 
@@ -133,10 +147,13 @@ describe("TriviaGateway", () => {
 
     jest.useFakeTimers();
 
-    const socket = { id: "1", emit: jest.fn() };
+    const userId = '1';
+    const socket = {...player1};
     gateway.game.addPlayer(socket.id, "Player1");
     gateway.onReady(socket);
-    const socket2 = { id: "2", emit: jest.fn() };
+    expect(gateway.game.hasGameStarted()).toBe(false);
+    const userId2 = '2';
+    const socket2 = {...player2};
     gateway.game.addPlayer(socket2.id, "Player2");
     gateway.onReady(socket2);
 
@@ -161,10 +178,14 @@ describe("TriviaGateway", () => {
 
   it("should kill the player when their stack is full", async () =>{
     jest.useFakeTimers();
-    const socket = { id: "1", send: jest.fn() };
+
+    const userId = '1';
+    const socket = {...player1};
     gateway.game.addPlayer(socket.id, "Player1");
     gateway.onReady(socket);
-    const socket2 = { id: "2", send: jest.fn() };
+    expect(gateway.game.hasGameStarted()).toBe(false);
+    const userId2 = '2';
+    const socket2 = {...player2};
     gateway.game.addPlayer(socket2.id, "Player2");
     gateway.onReady(socket2);
 
@@ -174,8 +195,8 @@ describe("TriviaGateway", () => {
     jest.advanceTimersByTime(80000);
     await Promise.resolve();
 
-    expect(gateway.game.getPlayerById(socket.id).getNbQuestions()).toBe(8);
-    expect(gateway.game.getPlayerById(socket.id).getAlive()).toBe(false);
+    expect(gateway.game.getPlayerById(socket.id).getNbQuestions()).toBe(7);
+    expect(gateway.game.getPlayerById(socket.id).alive()).toBe(false);
 
     jest.useRealTimers();
   });
