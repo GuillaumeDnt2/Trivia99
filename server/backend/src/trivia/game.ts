@@ -131,6 +131,7 @@ export class Game {
     //Send question to player if queue was empty before
     if(player.getNbQuestions() == 1){
       this.server.to(id).emit("newQuestion",this.qManager.get(question));
+      player.addAnsweredQuestion();
     }
   }
 
@@ -160,17 +161,18 @@ export class Game {
     if(this.qManager.check(player.getCurrentQuestion(),answer)){
         //Correct answer
         player.removeQuestion();
-        player.nbGoodAnswers += 1;
+        player.addGoodAnswer();
         player.incrementStreak();
         if(player.getNbQuestions() > 0){
             const qToSend = this.qManager.get(player.getCurrentQuestion());
             this.server.to(player.getSocket()).emit("newQuestion",qToSend);
+            player.addAnsweredQuestion();
         }
         return true;
     }
     else{
         //Bad answer
-        player.nbBadAnswers += 1;
+        player.addBadAnswer();
         player.resetStreak();
         return false;
     }

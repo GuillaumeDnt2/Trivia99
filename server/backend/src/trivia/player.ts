@@ -8,6 +8,7 @@ export class Player {
   public isReady: boolean;
   public nbBadAnswers: number;
   public nbGoodAnswers: number;
+  public nbAnsweredQuestions: number;
   private socket: string;
 
   constructor(name: string, socket:string) {
@@ -18,6 +19,7 @@ export class Player {
     this.isReady = false;
     this.nbBadAnswers = 0;
     this.nbGoodAnswers = 0;
+    this.nbAnsweredQuestions = 0;
     this.socket = socket;
   }
 
@@ -65,6 +67,7 @@ export class Player {
       isAlive: this.isAlive,
       nbBadAnswers: this.nbBadAnswers,
       nbGoodAnswers: this.nbGoodAnswers,
+      nbAnsweredQuestions: this.nbAnsweredQuestions,
       questions: [],
     };
     this.queue.forEach((question: any) => {
@@ -84,5 +87,28 @@ export class Player {
 
   getAlive() {
     return this.isAlive;
+  }
+
+  public getAnsweredQuestion() : number {
+    return this.nbAnsweredQuestions;
+  }
+
+  public getGoodAnswers() : number {
+    return this.nbGoodAnswers;
+  }
+
+  public getBadAnswers() : number {
+    return this.nbBadAnswers;
+  }
+
+  public addAnsweredQuestion() : void {
+    this.nbAnsweredQuestions ++;
+  }
+  public addBadAnswer() : void {
+    this.nbBadAnswers++;
+  }
+
+  public addGoodAnswer() : void {
+    this.nbGoodAnswers++;
   }
 }
