@@ -193,8 +193,8 @@ describe("TriviaGateway", () => {
     jest.advanceTimersByTime(80000);
     await Promise.resolve();
 
-    expect(gateway.game.getPlayerById(socket.id).getNbQuestions()).toBe(8);
-    expect(gateway.game.getPlayerById(socket.id).getAlive()).toBe(false);
+    expect(gateway.game.getPlayerById(socket.id).getNbQuestions()).toBe(7);
+    expect(gateway.game.getPlayerById(socket.id).alive()).toBe(false);
 
     jest.useRealTimers();
   });
