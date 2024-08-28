@@ -6,11 +6,11 @@ import {
   ConnectedSocket,
 } from "@nestjs/websockets";
 
-import { Server } from "socket.io";
+import { Server, Socket } from "socket.io";
 import { OnModuleInit } from "@nestjs/common";
 import { Game } from "./game";
 import {ConfigService} from "@nestjs/config";
-import { parse } from 'cookie';
+import { parse, serialize } from 'cookie';
 
 const cors =
   process.env.CORS_URL != undefined
@@ -31,7 +31,8 @@ export class TriviaGateway implements OnModuleInit {
   constructor(private configService: ConfigService) {
     this.STREAK = parseInt(this.configService.get<string>("STREAK"));
   }
-  onModuleInit() {
+
+  onModuleInit(): void {
     //Create a new game if it doesn't exist
     if (this.game == undefined) {
       this.game = new Game(this.server, this.configService);
@@ -40,6 +41,15 @@ export class TriviaGateway implements OnModuleInit {
     this.server.on("connection", (socket) => {
       console.log(socket.id);
       console.log("Connected");
+
+      let userId = this.getIdFromCookieGatheredFromTheSocket(socket);
+
+      if (!userId) {
+        userId = this.generateAndSetCookie(socket);
+        console.log("New user connected. Generated userId:", userId);
+      } else {
+        console.log("Existing user connected. UserId:", userId);
+      }
 
       socket.on("disconnect", () => {
         console.log(socket.id);
@@ -54,7 +64,24 @@ export class TriviaGateway implements OnModuleInit {
     });
   }
 
-  sendReadyInfo() {
+  private generateAndSetCookie(socket: Socket): string {
+    const userId = socket.id;
+    const cookieOptions = {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60, // 1 hour
+      sameSite: 'strict' as const,
+      path: '/',
+    };
+
+    const serializedCookie = serialize('userId', userId, cookieOptions);
+    socket.handshake.headers.cookie = serializedCookie;
+
+    socket.emit('setCookie', serializedCookie);
+
+    return userId;
+  }
+
+  sendReadyInfo(): void {
     this.server.emit("playersConnected", {
       nbReady: this.game.getNbReady(),
       nbPlayers: this.game.getNbPlayers(),
