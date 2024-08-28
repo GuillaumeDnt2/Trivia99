@@ -14,7 +14,7 @@ export default function QuestAndAnsw(props){
                 <>
                 <h3>{props.q}</h3>
                 <div className='answers-grid orange-border'>
-                    {props.a.map((answer, key) =>
+                    {props.a?.map((answer, key) =>
                                 <div className='answer-cell' key={'Answ'+key} 
                                 onClick={() => sendAnswer(key)}>{answer}</div>
                     )}

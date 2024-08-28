@@ -5,6 +5,8 @@ import PlayerList from "../components/PlayerList";
 import BaseLayout from "../components/BaseLayout";
 import Stack from "../components/Stack";
 import Stats from "../components/Stats";
+import QuestAndAnsw from "../components/QuestAndAnsw";
+import "../styles/common.css";
 
 export default function Game(){
     const [playersLeft, setPlayersLeft] = useState([]);
@@ -12,14 +14,16 @@ export default function Game(){
 
     const [stack, setStack] = useState([]);
     const [streak, setStreak] = useState(0);
-    const [accuracy, setAccuracy] = useState(0)
-    const [nbResponse, setNbResponse] = useState(0)
+    const [accuracy, setAccuracy] = useState(0);
+    const [nbResponse, setNbResponse] = useState(0);
+    const [isAlive, setAlive] = useState(true);
 
     const [question, setQuestion] = useState({});
 
     useEffect(() => {
 
         function onUserInfo(userInfo) {
+            setAlive(userInfo.isAlive);
             setStreak(userInfo.streak);
             setAccuracy(userInfo.nbGoodAnswers / (userInfo.nbGoodAnswers + userInfo.nbBadAnswers));
             setNbResponse(userInfo.nbGoodAnswers);
@@ -48,18 +52,15 @@ export default function Game(){
 
     return (
         <BaseLayout>
-              <PlayerList props={playersLeft}/>
-              <div id="center-content">
-                  <Stack state={stack} />
-                  <Stats streak={streak} accuracy={accuracy} nbReponse={nbResponse}/>
-                  <p id="question">
-                      {question}
-                  </p>
-                  <div id="responses">
-
-                  </div>
-              </div>
-              <PlayerList props={playersRight}/>
+            <div className="content-row-box">
+                <PlayerList players={playersLeft}/>
+                <div id="content-column-box">
+                    <Stack state={stack} />
+                    <Stats streak={streak} accuracy={accuracy} nbReponse={nbResponse}/>
+                    <QuestAndAnsw isAlive={isAlive} q={question.question} a={question.answers}/>
+                </div>
+                <PlayerList players={playersRight}/>
+            </div>   
         </BaseLayout>
     );
 }
