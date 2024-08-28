@@ -4,12 +4,13 @@ import Game from "../pages/Game";
 import Ranking from "../pages/Ranking";
 import React from "react";
 import NotFound from "../pages/NotFound";
+import ProtectedRoute from "./ProtectedRoute";
 
 
 const routes = [
     {
         path: "/",
-        element: <Home />,
+        element: <ProtectedRoute Component={Home} />,
         errorElement: <NotFound/>,
     },
     {
@@ -18,11 +19,11 @@ const routes = [
     },
     {
         path: "/game",
-        element: <Game />
+        element: <ProtectedRoute Component={Game} />
     },
     {
         path: "/ranking",
-        element: <Ranking />
+        element: <ProtectedRoute Component={Ranking} />
     }
 ];
 
