@@ -1,13 +1,15 @@
 import { Player } from "./player";
 import { QuestionManager } from "./questionManager";
 import { Server } from "socket.io";
-import { QuestionToSend } from "./questionToSend";
 import { QuestionInQueue } from "./questionInQueue";
-import { Injectable } from "@nestjs/common";
 import {ConfigService} from "@nestjs/config";
 import { EventEmitter } from 'events';
 
-@Injectable()
+/**
+ * Game class
+ * Handles the game's logic and state
+ * @class
+ */
 export class Game {
   private TIME_BETWEEN_QUESTION: number;
   private READY_PLAYERS_THRESHOLD: number;
@@ -23,6 +25,12 @@ export class Game {
   private eventEmitter: any;
   private intervalId: NodeJS.Timeout;
 
+    /**
+     * Game constructor
+     * @constructor
+     * @param server the server all the sockets are connected to
+     * @param configService the configuration service to enable us to use the .env file
+     */
   constructor(server: Server, private configService: ConfigService) {
     this.nbReady = 0;
     this.nbPlayerAlive = 0;
@@ -31,46 +39,81 @@ export class Game {
     this.server = server;
     this.configService = configService;
     this.questionLoaded = false;
+    this.eventEmitter = new EventEmitter();
+
+    // Load the configuration values from the .env file
     this.TIME_BETWEEN_QUESTION = parseInt(this.configService.get<string>("TIME_BETWEEN_QUESTION")) * 1000;
     this.READY_PLAYERS_THRESHOLD = parseInt(this.configService.get<string>("READY_PLAYERS_THRESHOLD"));
     this.NB_MIN_READY_PLAYERS = parseInt(this.configService.get<string>("NB_MIN_READY_PLAYERS"));
     this.SIZE_OF_QUESTION_QUEUE = parseInt(this.configService.get<string>("SIZE_OF_QUESTION_QUEUE"));
-    this.eventEmitter = new EventEmitter();
-    // qList est vide à se moment donc erreur
-    //let qiq = this.qManager.newQuestion(false);
-    //console.log(qiq);
-    /*let qq = this.qManager.get(qiq);
-        console.log("Question to send: ");
-        console.log(qq);*/
-    //console.log(this.qManager.check(qiq, 1));
   }
 
-  public hasGameStarted() {
-    return this.hasStarted;
+  /**
+   * Start the game and tells every connected socket that the game has started
+   */
+  public async startGame():Promise<void> {
+    this.hasStarted = true;
+
+    //Initialize the question manager
+    this.qManager = new QuestionManager(this.configService);
+    await this.qManager.initializeQuestions();
+    this.questionLoaded = true;
+    this.eventEmitter.emit("loaded");
+
+    this.nbPlayerAlive = this.players.size;
+    //Tell everyone the game has started
+    this.server.emit("startGame", {
+      msg: "The game has started",
+    });
+    //Starts the game loop
+    await this.sendTimedQuestionToEveryone();
   }
 
-  public stopGame() {
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-    }
-  }
-
-  public getNbQuestions() {
-    return this.qManager.qList.length;
-  }
-
+  /**
+   * Check if the game can start and start it if it can
+   * The game can start if the number of ready players is greater than the threshold
+   */
   public checkAndStartGame() {
     if (!this.hasStarted) {
       if (
-        this.getNbReady() >= this.NB_MIN_READY_PLAYERS &&
-        //this.getNbReady() >= this.players.size * this.READY_PLAYERS_THRESHOLD
-        this.getNbReady() == this.getNbPlayers()
+          this.getNbReady() >= this.NB_MIN_READY_PLAYERS &&
+          //this.getNbReady() >= this.players.size * this.READY_PLAYERS_THRESHOLD
+          this.getNbReady() == this.getNbPlayers()
       ) {
         this.startGame().then(() => console.log("Game started"));
       }
     }
   }
 
+  /**
+   * Check if the game has started
+   * @returns {boolean} true if the game has started, false otherwise
+   */
+  public hasGameStarted(): boolean {
+    return this.hasStarted;
+  }
+
+  /**
+   * Stops the game and stops the game loop
+   */
+  public stopGame() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
+  }
+
+  /**
+   * Get the number of questions in the question list
+   */
+  public getNbQuestions() {
+    return this.qManager.qList.length;
+  }
+
+  /**
+   * Add a player to the game
+   * @param id the id of the player
+   * @param name the name of the player
+   */
   public addPlayer(id: string, name: string) {
     this.players.set(id, new Player(name));
   }
@@ -87,21 +130,7 @@ export class Game {
     return this.nbReady;
   }
 
-  public async startGame() {
-    this.hasStarted = true;
 
-    this.qManager = new QuestionManager(this.configService);
-    await this.qManager.initializeQuestions();
-    this.questionLoaded = true;
-    this.eventEmitter.emit("loaded");
-
-    this.nbPlayerAlive = this.players.size;
-    this.server.emit("startGame", {
-      msg: "The game has started",
-    });
-
-    await this.sendTimedQuestionToEveryone();
-  }
 
   public async sendTimedQuestionToEveryone() {
     console.log("Sending questions to everyone!");
