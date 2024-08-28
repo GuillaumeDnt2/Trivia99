@@ -55,3 +55,9 @@
     background-color: #fcad599a;
 }
 
+.orange-border {
+    border: 10px;
+    border-style: solid;
+    border-radius: 6px;
+    border-color: #f18847;
+}
