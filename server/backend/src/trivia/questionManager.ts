@@ -27,7 +27,7 @@ export class QuestionManager {
   }
 
   async initializeQuestions() {
-    await this.fetchQuestions(this.Q_FETCH_SIZE);
+    await this.fetchQuestions();
     console.log("length " + this.qList.length);
  
   }
@@ -50,7 +50,7 @@ export class QuestionManager {
     let q: Question;
     do {
       if (this.qList.length < this.QUESTION_MIN) {
-        await this.fetchQuestions(this.Q_FETCH_SIZE);
+        await this.fetchQuestions();
       }
       q = this.qList.shift();
     } while (this.qPool.has(q.id));
@@ -58,12 +58,12 @@ export class QuestionManager {
     return new QuestionInQueue(q, isAttack);
   }
 
-  private async fetchQuestions(limit: number) {
+  private async fetchQuestions() {
     const fs = require("fs");
     let questions: any[] = [];
     let data: any;
     try {
-      await fetch(this.API_URL)
+      await fetch(this.API_URL+"?limit=" + this.Q_FETCH_SIZE)
         .then((response) => response.json())
         .then((json) => {
           questions = json;
