@@ -10,7 +10,8 @@
     justify-content: left;
     align-items: center;
     height: 80px;
-    width: 400px
+    width: 400px;
+    background-color: var(--light-orange);
 }
 
 .red {

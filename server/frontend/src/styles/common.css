@@ -1,3 +1,8 @@
+:root {
+    --strong-orange: #f18847;
+    --light-orange: #f9efe6;
+}
+
 .content-column-box {
     display: flex;
     flex-direction: column;
@@ -19,7 +24,7 @@
 
 .background {
     height: 100vh;
-    background-image: linear-gradient(#4f598c, #f18847);
+    background-image: linear-gradient(#4f598c, var(--strong-orange));
 }
 
 .rounded-box {
@@ -43,7 +48,7 @@
 }
 
 .orange-button {
-    background-color: #fcae59;
+    background-color: var(--strong-orange);
     padding: 10px;
     border-radius: 6px;
     border: none;
@@ -59,5 +64,5 @@
     border: 10px;
     border-style: solid;
     border-radius: 6px;
-    border-color: #f18847;
+    border-color: var(--strong-orange);
 }
