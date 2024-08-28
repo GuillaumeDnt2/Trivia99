@@ -36,30 +36,38 @@ export class Game {
     this.NB_MIN_READY_PLAYERS = parseInt(this.configService.get<string>("NB_MIN_READY_PLAYERS"));
     this.SIZE_OF_QUESTION_QUEUE = parseInt(this.configService.get<string>("SIZE_OF_QUESTION_QUEUE"));
     this.eventEmitter = new EventEmitter();
-    // qList est vide à se moment donc erreur
-    //let qiq = this.qManager.newQuestion(false);
-    //console.log(qiq);
-    /*let qq = this.qManager.get(qiq);
-        console.log("Question to send: ");
-        console.log(qq);*/
-    //console.log(this.qManager.check(qiq, 1));
+ 
   }
 
-  public hasGameStarted() {
+  /**
+   * Ask if game has started
+   * @returns : true/false
+   */
+  public hasGameStarted() : boolean {
     return this.hasStarted;
   }
 
-  public stopGame() {
+  /**
+   * Stop sending question to players
+   */
+  public stopGame() : void{
     if (this.intervalId) {
       clearInterval(this.intervalId);
     }
   }
 
-  public getNbQuestions() {
+  /**
+   * Get how many questions have not yet been used
+   * @returns nb of question
+   */
+  public getNbQuestions() : number {
     return this.qManager.qList.length;
   }
 
-  public checkAndStartGame() {
+  /**
+   * Check how many players are ready to start the game, starts game if the nb of players is satisfied
+   */
+  public checkAndStartGame() : void {
     if (!this.hasStarted) {
       if (
         this.getNbReady() >= this.NB_MIN_READY_PLAYERS &&
@@ -71,23 +79,43 @@ export class Game {
     }
   }
 
-  public addPlayer(id: string, name: string) {
+  /**
+   * Add a new player to players list
+   * @param id : id of the player
+   * @param name : name chosen by the player
+   */
+  public addPlayer(id: string, name: string) : void {
     this.players.set(id, new Player(name));
   }
 
-  public getPlayers() {
+  /**
+   * Return the players map
+   * @returns Map of players
+   */
+  public getPlayers() : Map<string, Player> {
     return this.players;
   }
 
-  public getNbPlayers() {
+  /**
+   * Get how many players connected to the game (empêcher de faire gagner un joueur qui n'a pas joué (quitté après ready))
+   * @returns 
+   */
+  public getNbPlayers() : number {
     return this.players.size;
   }
 
-  public getNbReady() {
+  /**
+   * Get how many players are ready to start the game
+   * @returns : how many ready players
+   */
+  public getNbReady() : number {
     return this.nbReady;
   }
 
-  public async startGame() {
+  /**
+   * Starting game procedure : create the question manager and fetch new questions
+   */
+  public async startGame() : Promise<void>{
     this.hasStarted = true;
 
     this.qManager = new QuestionManager(this.configService);
@@ -103,7 +131,10 @@ export class Game {
     await this.sendTimedQuestionToEveryone();
   }
 
-  public async sendTimedQuestionToEveryone() {
+  /**
+   * Starts a loop that add a new question to player's queue every x seconds
+   */
+  public async sendTimedQuestionToEveryone() : Promise<void> {
     console.log("Sending questions to everyone!");
     this.intervalId = setInterval(async () => {
       console.log("Interval triggered");
@@ -116,39 +147,68 @@ export class Game {
     }, this.TIME_BETWEEN_QUESTION);
   }
 
-  public checkDeadPlayer(player: Player) {
-    if (player.getNbQuestions() > this.SIZE_OF_QUESTION_QUEUE) {
+  /**
+   * Check if the player has to be eliminated from the game
+   * @param player : player to verify 
+   * @returnes if the player is eleminated
+   */
+  public checkQuestionQueue(player: Player) : boolean {
+    if (player.getNbQuestions() >= this.SIZE_OF_QUESTION_QUEUE) {
       player.kill();
       if(--this.nbPlayerAlive === 1){
         this.endGame();
       }
+      return true;
     }
   }
 
-  public endGame(){
+  /**
+   * Ending game procedure : send the ranking to all players
+   */
+  public endGame() : void {
     this.sendRankingInfo();
   }
 
-  public addQuestionToPlayer(id: string, question: QuestionInQueue) {
+  /**
+   * Add a new question to the player's question queue
+   * @param id : player id
+   * @param question : question to add
+   */
+  public addQuestionToPlayer(id: string, question: QuestionInQueue) : void {
     let player = this.players.get(id);
-    player.addQuestion(question);
-    this.checkDeadPlayer(player);
-    console.log("Question added to " + player.getName());
-    let info = player.getUserInfo();
-    this.server.to(id).emit("userInfo", {
-      info: info,
-    });
+    if(!this.checkQuestionQueue(player)){
+      player.addQuestion(question);
+      console.log("Question added to " + player.getName());
+      let info = player.getUserInfo();
+      this.server.to(id).emit("userInfo", {
+        info: info,
+      });
+    }
+    
   }
 
-  public async addAttackQuestionToPlayer(id: string) {
+  /**
+   * Add a new question to player triggered by an attack
+   * @param id : player id
+   */
+  public async addAttackQuestionToPlayer(id: string) : Promise<void> {
     this.addQuestionToPlayer(id, await this.qManager.newQuestion(true));
   }
 
-  public getPlayerById(id: string) {
+  /**
+   * Return a player object by the id
+   * @param id : player id
+   * @returns Player object
+   */
+  public getPlayerById(id: string) : Player {
     return this.players.get(id);
   }
 
-  public sendRankingInfo(){
+  /**
+   * Make the ranking and send it to all players
+   */
+  public sendRankingInfo() : void {
+    //TODO ranking trié du 1er au dernier joueur
     let ranking = [];
     for(let [key, value] of this.players){
         ranking.push({
@@ -157,16 +217,14 @@ export class Game {
         });
     }
 
-    this.server.emit("ranking", {
-      ranking,
-    })
+    this.server.emit("ranking", ranking);
   }
 
 
   /**
    * Wait for the questionLoaded flag to be set to true
    */
-  public async waitForTheGameToBeStarted() {
+  public async waitForTheGameToBeStarted() : Promise<boolean>{
     if (this.questionLoaded) return true;
     return new Promise((resolve) => {
       this.eventEmitter.once('loaded', () => resolve(true));
