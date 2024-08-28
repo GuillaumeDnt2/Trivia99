@@ -12,17 +12,16 @@ Tells the backend if the user is not ready to play.
 Tells the backend that the user wants to attack random players.
 #### 'answer'
 Gives an answer to the backend with the answer (0,1,2 or 3) in the body of the message.
-#### 'deathUpdate'
-Tells the backend that the user is dead. (Not sure if we need this one)
-#### 'getStreak'
-Tells the backend to send the streak of the user.
-
-#### 'answer'
 ```
 {
     "answer": 3
 }
 ```
+#### 'deathUpdate'
+Tells the backend that the user is dead. (Not sure if we need this one)
+#### 'getStreak'
+Tells the backend to send the streak of the user.
+
 
 ### Send by the backend to the frontend
 #### 'playersConnected'
@@ -55,6 +54,7 @@ Sends to one user his information in this form :
   "isAlive": true,
   "nbBadAnswers": 2,
   "nbGoodAnswers": 3,
+  "nbAnsweredQuestions":3,
   "questions": [
     {
       "id": 1,
