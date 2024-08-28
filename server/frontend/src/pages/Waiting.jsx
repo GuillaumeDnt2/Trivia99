@@ -22,6 +22,8 @@ export default function Waiting(){
         socket.on("playersConnected", onPlayersConnected);
         socket.on("startGame", onStart);
 
+        socket.emit("getReadyInfo")
+
         return () => {
             socket.off("playersConnected");
             socket.off("startGame");

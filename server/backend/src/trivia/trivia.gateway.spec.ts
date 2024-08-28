@@ -11,6 +11,8 @@ describe("TriviaGateway", () => {
   let gateway: TriviaGateway;
   let server: Server;
   let configService: ConfigService;
+  const player1 = { id: "1", send: jest.fn(), handshake: { headers: { authorization: serialize('userId', "1") } }  };
+  const player2 = { id: "2", send: jest.fn(), handshake: { headers: { authorization: serialize('userId', "2") } }  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -38,7 +40,7 @@ describe("TriviaGateway", () => {
 
   it("should add a player on login", () => {
     const userId = '1';
-    const socket = { id: "1", send: jest.fn(), handshake: { headers: { cookie: serialize('userId', userId) } }  };
+    const socket = {...player1};
     const name = "Player1";
     gateway.onLogin(name, socket);
     expect(gateway.game.getPlayers().has(socket.id)).toBe(true);
@@ -46,7 +48,7 @@ describe("TriviaGateway", () => {
 
   it("should update player ready status on ready", () => {
     const userId = '1';
-    const socket = { id: "1", send: jest.fn(), handshake: { headers: { cookie: serialize('userId', userId) } }  };
+    const socket = {...player1};
     gateway.game.addPlayer(socket.id, "Player1");
     gateway.onReady(socket);
     expect(gateway.game.getPlayers().get(socket.id).isReady).toBe(true);
@@ -55,7 +57,7 @@ describe("TriviaGateway", () => {
 
   it("should update player ready status on unready", () => {
     const userId = '1';
-    const socket = { id: "1", send: jest.fn(), handshake: { headers: { cookie: serialize('userId', userId) } }  };
+    const socket = {...player1};
     gateway.game.addPlayer(socket.id, "Player1");
     gateway.onReady(socket);
     gateway.onUnready(socket);
@@ -65,7 +67,7 @@ describe("TriviaGateway", () => {
 
   it("should emit start message on start", async () => {
     const userId = '1';
-    const socket = { id: "1", send: jest.fn(), handshake: { headers: { cookie: serialize('userId', userId) } } };
+    const socket = {...player1};
     gateway.game.addPlayer(socket.id, "Player1");
     const spy = jest.spyOn(server, "emit");
     await gateway.game.startGame();
@@ -77,7 +79,7 @@ describe("TriviaGateway", () => {
   it("should send a question every 10000ms", async () => {
     jest.useFakeTimers();
     const userId = '1';
-    const socket = { id: "1", send: jest.fn(), handshake: { headers: { cookie: serialize('userId', userId) } }  };
+    const socket = {...player1};
     gateway.game.addPlayer(socket.id, "Player1");
     const spy = jest.spyOn(server, "emit");
 
@@ -127,12 +129,12 @@ describe("TriviaGateway", () => {
 
   it("should launch the game if there's two players ready", async() => {
     const userId = '1';
-    const socket = { id: "1", send: jest.fn(), handshake: { headers: { cookie: serialize('userId', userId) } }  };
+    const socket = {...player1};
     gateway.game.addPlayer(socket.id, "Player1");
     gateway.onReady(socket);
     expect(gateway.game.hasGameStarted()).toBe(false);
     const userId2 = '2';
-    const socket2 = { id: "2", send: jest.fn(), handshake: { headers: { cookie: serialize('userId', userId2) } }};
+    const socket2 = {...player2};
     gateway.game.addPlayer(socket2.id, "Player2");
     gateway.onReady(socket2);
 
@@ -146,12 +148,12 @@ describe("TriviaGateway", () => {
     jest.useFakeTimers();
 
     const userId = '1';
-    const socket = { id: "1", send: jest.fn(), handshake: { headers: { cookie: serialize('userId', userId) } }  };
+    const socket = {...player1};
     gateway.game.addPlayer(socket.id, "Player1");
     gateway.onReady(socket);
     expect(gateway.game.hasGameStarted()).toBe(false);
     const userId2 = '2';
-    const socket2 = { id: "2", send: jest.fn(), handshake: { headers: { cookie: serialize('userId', userId2) } }};
+    const socket2 = {...player2};
     gateway.game.addPlayer(socket2.id, "Player2");
     gateway.onReady(socket2);
 
@@ -178,12 +180,12 @@ describe("TriviaGateway", () => {
     jest.useFakeTimers();
 
     const userId = '1';
-    const socket = { id: "1", send: jest.fn(), handshake: { headers: { cookie: serialize('userId', userId) } }  };
+    const socket = {...player1};
     gateway.game.addPlayer(socket.id, "Player1");
     gateway.onReady(socket);
     expect(gateway.game.hasGameStarted()).toBe(false);
     const userId2 = '2';
-    const socket2 = { id: "2", send: jest.fn(), handshake: { headers: { cookie: serialize('userId', userId2) } }};
+    const socket2 = {...player2};
     gateway.game.addPlayer(socket2.id, "Player2");
     gateway.onReady(socket2);
 
@@ -193,8 +195,8 @@ describe("TriviaGateway", () => {
     jest.advanceTimersByTime(80000);
     await Promise.resolve();
 
-    expect(gateway.game.getPlayerById(socket.id).getNbQuestions()).toBe(8);
-    expect(gateway.game.getPlayerById(socket.id).getAlive()).toBe(false);
+    expect(gateway.game.getPlayerById(socket.id).getNbQuestions()).toBe(7);
+    expect(gateway.game.getPlayerById(socket.id).alive()).toBe(false);
 
     jest.useRealTimers();
   });

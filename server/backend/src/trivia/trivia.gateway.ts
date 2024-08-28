@@ -42,23 +42,36 @@ export class TriviaGateway implements OnModuleInit {
       console.log(socket.id);
       console.log("Connected");
 
-      let userId = this.getIdFromCookie(socket);
+      let userId = this.getIdFromHeaders(socket);
 
       if (!userId) {
         userId = this.generateAndSetCookie(socket);
         console.log("New user connected. Generated userId:", userId);
       } else {
-        console.log("Existing user connected. UserId:", userId);
+        console.log("This person already connected previously");
+        if(this.game.getPlayers().has(userId)){
+          console.log("User already in game, clearing timeout.");
+          clearTimeout(this.game.getPlayers().get(userId).isInTimeOut);
+        } else {
+          console.log("User need to create a new player.");
+        }
       }
 
       socket.on("disconnect", () => {
         console.log(socket.id);
         console.log("Disconnected");
-        if (this.game.getPlayers().has(socket.id)) {
-          if (this.game.getPlayers().get(socket.id).isReady) {
-            --this.game.nbReady;
-          }
-          this.game.getPlayers().delete(socket.id);
+        let userId = this.getIdFromHeaders(socket);
+
+        if (this.game.getPlayers().has(userId)){
+          this.game.getPlayers().get(userId).isInTimeOut = setTimeout(() => {
+            console.log("User timed out");
+            if (this.game.getPlayers().has(userId)) {
+              if (this.game.getPlayers().get(userId).isReady) {
+                --this.game.nbReady;
+              }
+              this.game.getPlayers().delete(userId);
+            }
+          }, 5000);
         }
       });
     });
@@ -88,8 +101,8 @@ export class TriviaGateway implements OnModuleInit {
     });
   }
 
-  getIdFromCookie(socket: any): string | null {
-    const cookie = socket.handshake.headers.cookie;
+  getIdFromHeaders(socket: any): string | null {
+    const cookie = socket.handshake.headers.authorization;
 
     if(!cookie){
       console.log("No cookie found");
@@ -103,7 +116,7 @@ export class TriviaGateway implements OnModuleInit {
 
   @SubscribeMessage("isUserLogged")
   onIsUserLogged(@ConnectedSocket() socket: any){
-    let loggedInInfo = this.game.getPlayers().has(this.getIdFromCookie(socket));
+    let loggedInInfo = this.game.getPlayers().has(this.getIdFromHeaders(socket));
     this.server.to(socket.id).emit("loggedInfo",
         {
           loggedInInfo
@@ -112,30 +125,30 @@ export class TriviaGateway implements OnModuleInit {
 
   @SubscribeMessage("login")
   onLogin(@MessageBody() name: any, @ConnectedSocket() socket: any) {
-    this.game.addPlayer(this.getIdFromCookie(socket), name);
-    //socket.send("Number of ready users: " + this.game.getNbReady()); //Placeholder
-    this.sendReadyInfo();
+    if(!this.game.getPlayers().has(this.getIdFromHeaders(socket))) {
+      this.game.addPlayer(this.getIdFromHeaders(socket), name);
+      this.sendReadyInfo();
+    }
   }
-
-
 
   @SubscribeMessage("ready")
   onReady(@ConnectedSocket() socket: any) {
-    const playerId = this.getIdFromCookie(socket);
+    const playerId = this.getIdFromHeaders(socket);
     if (
-      this.game.getPlayers().has(playerId) &&
-      !this.game.getPlayers().get(playerId).isReady
+        this.game.getPlayers().has(playerId) &&
+        !this.game.getPlayers().get(playerId).isReady
     ) {
       this.game.getPlayers().get(playerId).isReady = true;
       ++this.game.nbReady;
-      this.sendReadyInfo();
-      this.game.checkAndStartGame();
     }
+    this.sendReadyInfo();
+    this.game.checkAndStartGame();
+
   }
 
   @SubscribeMessage("unready")
   onUnready(@ConnectedSocket() socket: any) {
-    const playerId = this.getIdFromCookie(socket);
+    const playerId = this.getIdFromHeaders(socket);
     if (
       this.game.getPlayers().has(playerId) &&
       this.game.getPlayers().get(playerId).isReady
@@ -165,7 +178,7 @@ export class TriviaGateway implements OnModuleInit {
   @SubscribeMessage("attack")
   onAttack(@ConnectedSocket() socket: any) {
     //Get the streak of the player to determine how many attacks are sent
-    const streak = this.game.getPlayerById(this.getIdFromCookie(socket)).getStreak();
+    const streak = this.game.getPlayerById(this.getIdFromHeaders(socket)).getStreak();
     //If the streak is less than 3, don't send any attacks
     if (streak < this.STREAK) return;
 
@@ -192,7 +205,7 @@ export class TriviaGateway implements OnModuleInit {
   @SubscribeMessage("answer")
   onAnswer(@MessageBody() body: any, @ConnectedSocket() socket: any) {
     //Get the player that answered the question
-    const player = this.game.getPlayers().get(this.getIdFromCookie(socket));
+    const player = this.game.getPlayers().get(this.getIdFromHeaders(socket));
     //Check if the answer is correct
     const question = player.getCurrentQuestion();
     //Todo: Logic of the answer handling, can only do it once the question class is done
@@ -209,19 +222,24 @@ export class TriviaGateway implements OnModuleInit {
   @SubscribeMessage("deathUpdate")
   onDeathUpdate(@MessageBody() body: any, @ConnectedSocket() socket: any) {
     //Get the player that died
-    const player = this.game.getPlayerById(this.getIdFromCookie(socket));
+    const player = this.game.getPlayerById(this.getIdFromHeaders(socket));
     player.kill();
     //Tell everyone that the player died
     this.server.emit("onDeath", {
       msg: "Player died",
-      id: this.getIdFromCookie(socket),
+      id: this.getIdFromHeaders(socket),
     });
+  }
+
+  @SubscribeMessage("getReadyInfo")
+  getReadyInfo(@ConnectedSocket() socket: any) {
+    this.sendReadyInfo();
   }
 
   @SubscribeMessage("getStreak")
   getStreak(@ConnectedSocket() socket: any) {
     //Get the player that asked for the streak
-    const player = this.game.getPlayerById(this.getIdFromCookie(socket));
+    const player = this.game.getPlayerById(this.getIdFromHeaders(socket));
     socket.emit("streak", {
       streak: player.getStreak(),
     });
