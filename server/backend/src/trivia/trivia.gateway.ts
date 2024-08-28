@@ -12,59 +12,81 @@ import { Game } from "./game";
 import {ConfigService} from "@nestjs/config";
 import { parse, serialize } from 'cookie';
 
+// CORS configuration
 const cors =
   process.env.CORS_URL != undefined
     ? process.env.CORS_URL
     : "http://localhost:3000";
 
+
+/**
+ * @class TriviaGateway
+ * @description This class is responsible for handling WebSocket connections and events for trivia99.
+ */
 @WebSocketGateway({
   cors: {
     origin: cors,
   },
 })
-
 export class TriviaGateway implements OnModuleInit {
   @WebSocketServer()
   server: Server;
   game: Game;
   private STREAK: number;
+
+  /**
+   * @constructor
+   * @param {ConfigService} configService - The service to access the application configuration.
+   */
   constructor(private configService: ConfigService) {
     this.STREAK = parseInt(this.configService.get<string>("STREAK"));
   }
 
+  /**
+   * @method onModuleInit
+   * @description Lifecycle hook that is called when the application starts.
+   */
   onModuleInit(): void {
     //Create a new game if it doesn't exist
     if (this.game == undefined) {
       this.game = new Game(this.server, this.configService);
     }
 
+    /**
+     * @event connection
+     * @description Event listener for the 'connection' event. This event is emitted when a new client connects to the server.
+     */
     this.server.on("connection", (socket) => {
-      console.log(socket.id);
-      console.log("Connected");
+      //console.log(socket.id);
+      //console.log("Connected");
 
       let userId = this.getIdFromHeaders(socket);
 
+      //If the user doesn't have a cookie, generate one
       if (!userId) {
-        userId = this.generateAndSetCookie(socket);
-        console.log("New user connected. Generated userId:", userId);
+        this.generateAndSetCookie(socket);
       } else {
-        console.log("This person already connected previously");
+        //We need to check if the user is already in the game or not
         if(this.game.getPlayers().has(userId)){
-          console.log("User already in game, clearing timeout.");
+          //Clearing the timeout if the user is already in the game
           clearTimeout(this.game.getPlayers().get(userId).isInTimeOut);
-        } else {
-          console.log("User need to create a new player.");
         }
       }
 
+      /**
+       * @event disconnect
+       * @description Event listener for the 'disconnect' event. This event is emitted when a client disconnects from the server.
+       */
       socket.on("disconnect", () => {
-        console.log(socket.id);
-        console.log("Disconnected");
+        //console.log(socket.id);
+        //console.log("Disconnected");
+
         let userId = this.getIdFromHeaders(socket);
 
+        //If the user is in the game, set a timeout to remove him from the game after a certain time
         if (this.game.getPlayers().has(userId)){
           this.game.getPlayers().get(userId).isInTimeOut = setTimeout(() => {
-            console.log("User timed out");
+            //console.log("User timed out");
             if (this.game.getPlayers().has(userId)) {
               if (this.game.getPlayers().get(userId).isReady) {
                 --this.game.nbReady;
@@ -77,6 +99,12 @@ export class TriviaGateway implements OnModuleInit {
     });
   }
 
+  /**
+   * @method generateAndSetCookie
+   * @description Generates a user ID and sets it as a cookie for the client.
+   * @param {Socket} socket - The socket object of the client.
+   * @returns {string} The generated user ID.
+   */
   private generateAndSetCookie(socket: Socket): string {
     const userId = socket.id;
     const cookieOptions = {
@@ -87,13 +115,16 @@ export class TriviaGateway implements OnModuleInit {
     };
 
     const serializedCookie = serialize('userId', userId, cookieOptions);
-    socket.handshake.headers.cookie = serializedCookie;
 
     socket.emit('setCookie', serializedCookie);
 
     return userId;
   }
 
+  /**
+   * @method sendReadyInfo
+   * @description Emits an event to all clients with the number of ready and total players.
+   */
   sendReadyInfo(): void {
     this.server.emit("playersConnected", {
       nbReady: this.game.getNbReady(),
@@ -101,6 +132,12 @@ export class TriviaGateway implements OnModuleInit {
     });
   }
 
+  /**
+   * @method getIdFromHeaders
+   * @description Retrieves the user ID from the handshake headers.
+   * @param {any} socket - The socket object of the client.
+   * @returns {string | null} The user ID, or null if no user ID was found.
+   */
   getIdFromHeaders(socket: any): string | null {
     const cookie = socket.handshake.headers.authorization;
 
@@ -114,6 +151,11 @@ export class TriviaGateway implements OnModuleInit {
     return parsedCookie['userId'] || null;
   }
 
+  /**
+   * @method onIsUserLogged
+   * @description Checks if the user is logged in, aka ready to play or already playing.
+   * @param {Socket} socket - The socket object of the client.
+   */
   @SubscribeMessage("isUserLogged")
   onIsUserLogged(@ConnectedSocket() socket: any){
     let loggedInInfo = this.game.getPlayers().has(this.getIdFromHeaders(socket));
@@ -123,14 +165,26 @@ export class TriviaGateway implements OnModuleInit {
         })
   }
 
+  /**
+   * @method onLogin
+   * @description Logs in a user.
+   * @param {string} name - The name of the user.
+   * @param {Socket} socket - The socket object of the client.
+   */
   @SubscribeMessage("login")
-  onLogin(@MessageBody() name: any, @ConnectedSocket() socket: any) {
+  onLogin(@MessageBody() name: string, @ConnectedSocket() socket: any) {
+    //Doesn't re-add the player if he's already in the game
     if(!this.game.getPlayers().has(this.getIdFromHeaders(socket))) {
       this.game.addPlayer(this.getIdFromHeaders(socket), name);
       this.sendReadyInfo();
     }
   }
 
+  /**
+   * @method onReady
+   * @description Marks a user as ready.
+   * @param {Socket} socket - The socket object of the client.
+   */
   @SubscribeMessage("ready")
   onReady(@ConnectedSocket() socket: any) {
     const playerId = this.getIdFromHeaders(socket);
@@ -146,6 +200,11 @@ export class TriviaGateway implements OnModuleInit {
 
   }
 
+    /**
+     * @method onUnready
+     * @description Marks a user as unready.
+     * @param {Socket} socket - The socket object of the client
+     */
   @SubscribeMessage("unready")
   onUnready(@ConnectedSocket() socket: any) {
     const playerId = this.getIdFromHeaders(socket);
@@ -160,8 +219,9 @@ export class TriviaGateway implements OnModuleInit {
   }
 
   /**
-   * Will send a question to everyone
-   * @param socket
+   * @method onQuestion
+   * @description Sends a question to all users.
+   * @param {Socket} socket - The socket object of the client.
    */
   @SubscribeMessage("question")
   onQuestion(@ConnectedSocket() socket: any) {
@@ -172,8 +232,9 @@ export class TriviaGateway implements OnModuleInit {
   }
 
   /**
-   * Attack another player randomly
-   * @param socket
+   * @method onAttack
+   * @description Attacks another player randomly.
+   * @param {Socket} socket - The socket object of the client.
    */
   @SubscribeMessage("attack")
   onAttack(@ConnectedSocket() socket: any) {
@@ -198,9 +259,10 @@ export class TriviaGateway implements OnModuleInit {
   }
 
   /**
-   * Sends the answer of the question to the server and checks if the answer is valid or not
-   * @param body The answer of the question
-   * @param socket The socket of the user that answered the question
+   * @method onAnswer
+   * @description Handles the answer of a user.
+   * @param {any} body - The body of the message.
+   * @param {Socket} socket - The socket object of the client.
    */
   @SubscribeMessage("answer")
   onAnswer(@MessageBody() body: any, @ConnectedSocket() socket: any) {
@@ -219,6 +281,12 @@ export class TriviaGateway implements OnModuleInit {
     });
   }
 
+    /**
+     * @method onDeathUpdate
+     * @description Handles the death of a user.
+     * @param {any} body - The body of the message.
+     * @param {Socket} socket - The socket object of the client.
+     */
   @SubscribeMessage("deathUpdate")
   onDeathUpdate(@MessageBody() body: any, @ConnectedSocket() socket: any) {
     //Get the player that died
@@ -231,11 +299,21 @@ export class TriviaGateway implements OnModuleInit {
     });
   }
 
+  /**
+   * @method getReadyInfo
+   * @description Sends the ready info to everyone when requested
+   * @param {Socket} socket - The socket object of the client.
+   */
   @SubscribeMessage("getReadyInfo")
   getReadyInfo(@ConnectedSocket() socket: any) {
     this.sendReadyInfo();
   }
 
+  /**
+   * @method getStreak
+   * @description Sends the streak of a player when requested
+   * @param {Socket} socket - The socket object of the client.
+   */
   @SubscribeMessage("getStreak")
   getStreak(@ConnectedSocket() socket: any) {
     //Get the player that asked for the streak

@@ -12,6 +12,7 @@ import { EventEmitter } from 'events';
  * Handles the game's logic and state
  * @class
  */
+@Injectable()
 export class Game {
     private TIME_BETWEEN_QUESTION: number;
     private READY_PLAYERS_THRESHOLD: number;
