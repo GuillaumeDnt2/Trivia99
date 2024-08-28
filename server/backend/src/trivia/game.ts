@@ -11,7 +11,7 @@ import { EventEmitter } from 'events';
 export class Game {
   private TIME_BETWEEN_QUESTION: number;
   private READY_PLAYERS_THRESHOLD: number;
-  private NB_READY_PLAYERS: number;
+  private NB_MIN_READY_PLAYERS: number;
   private SIZE_OF_QUESTION_QUEUE: number;
   public nbReady: number;
   private players: Map<string, Player>;
@@ -33,7 +33,7 @@ export class Game {
     this.questionLoaded = false;
     this.TIME_BETWEEN_QUESTION = parseInt(this.configService.get<string>("TIME_BETWEEN_QUESTION")) * 1000;
     this.READY_PLAYERS_THRESHOLD = parseInt(this.configService.get<string>("READY_PLAYERS_THRESHOLD"));
-    this.NB_READY_PLAYERS = parseInt(this.configService.get<string>("NB_READY_PLAYERS"));
+    this.NB_MIN_READY_PLAYERS = parseInt(this.configService.get<string>("NB_MIN_READY_PLAYERS"));
     this.SIZE_OF_QUESTION_QUEUE = parseInt(this.configService.get<string>("SIZE_OF_QUESTION_QUEUE"));
     this.eventEmitter = new EventEmitter();
     // qList est vide à se moment donc erreur
@@ -62,7 +62,7 @@ export class Game {
   public checkAndStartGame() {
     if (!this.hasStarted) {
       if (
-        //this.getNbReady() >= this.NB_READY_PLAYERS &&
+        this.getNbReady() >= this.NB_MIN_READY_PLAYERS &&
         //this.getNbReady() >= this.players.size * this.READY_PLAYERS_THRESHOLD
         this.getNbReady() == this.getNbPlayers()
       ) {
