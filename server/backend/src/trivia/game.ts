@@ -62,8 +62,9 @@ export class Game {
   public checkAndStartGame() {
     if (!this.hasStarted) {
       if (
-        this.getNbReady() >= this.NB_READY_PLAYERS &&
-        this.getNbReady() >= this.players.size * this.READY_PLAYERS_THRESHOLD
+        //this.getNbReady() >= this.NB_READY_PLAYERS &&
+        //this.getNbReady() >= this.players.size * this.READY_PLAYERS_THRESHOLD
+        this.getNbPlayers() == this.players.size
       ) {
         this.startGame().then(() => console.log("Game started"));
       }
