@@ -229,8 +229,9 @@ export class TriviaGateway implements OnModuleInit {
 
   @SubscribeMessage("isStarted")
   getGameStatus(@ConnectedSocket() socket: any) {
+    let status = this.game.hasGameStarted();
     socket.emit("startStatus", {
-      this.game.hasGameStarted();
+      status
     });
   }
 
