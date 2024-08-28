@@ -20,6 +20,7 @@ export class Game {
     private SIZE_OF_QUESTION_QUEUE: number;
     public nbReady: number;
     private players: Map<string, Player>;
+    private eliminatedPlayers: string[]; //TODO
     private nbPlayerAlive: number;
     private hasStarted: boolean;
     private qManager: QuestionManager;
@@ -35,6 +36,7 @@ export class Game {
      * @param configService the configuration service to enable us to use the .env file
      */
     constructor(server: Server, private configService: ConfigService) {
+        this.eliminatedPlayers = [];
         this.nbReady = 0;
         this.nbPlayerAlive = 0;
         this.players = new Map<string, Player>();
@@ -170,6 +172,7 @@ export class Game {
     public checkQuestionQueue(player: Player) : boolean {
         if (player.getNbQuestions() >= this.SIZE_OF_QUESTION_QUEUE) {
             player.kill();
+            this.eliminatedPlayers.push(player.getId());
             if(--this.nbPlayerAlive === 1){
                 this.endGame();
             }
@@ -251,14 +254,15 @@ export class Game {
      */
     public sendRankingInfo() : void {
         //TODO ranking trié du 1er au dernier joueur
-        let ranking = [];
+        /*let ranking = [];
         for(let [key, value] of this.players){
             ranking.push({
                 name: value.getName(),
                 score: value.getScore()
             });
-        }
-
+        }*/
+       //TODO
+        let ranking = "ok";
         this.server.emit("ranking", ranking);
     }
 
@@ -271,5 +275,9 @@ export class Game {
         return new Promise((resolve) => {
             this.eventEmitter.once('loaded', () => resolve(true));
         });
+    }
+
+    private createLeaderboard(){
+      //TODO
     }
 }

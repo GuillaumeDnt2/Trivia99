@@ -11,6 +11,7 @@ export class Player {
   private nbAnsweredQuestions: number;
   public isInTimeOut: NodeJS.Timeout;
   private id: string;
+  private outAt: number; //TODO
 
   constructor(name: string, id:string) {
     this.name = name;
