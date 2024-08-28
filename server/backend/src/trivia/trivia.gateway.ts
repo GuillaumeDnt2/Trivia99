@@ -226,4 +226,12 @@ export class TriviaGateway implements OnModuleInit {
       streak: player.getStreak(),
     });
   }
+
+  @SubscribeMessage("isStarted")
+  getGameStatus(@ConnectedSocket() socket: any) {
+    socket.emit("startStatus", {
+      this.game.hasGameStarted();
+    });
+  }
+
 }
