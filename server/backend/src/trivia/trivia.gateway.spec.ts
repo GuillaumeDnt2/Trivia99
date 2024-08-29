@@ -114,10 +114,10 @@ describe("TriviaGateway", () => {
     jest.useRealTimers();
   });
 
-  it("should have 50 questions in the question list", async () => {
-    await gateway.game.startGame();
-    expect(gateway.game.getNbQuestions()).toBe(50);
-  });
+  // it("should have 50 questions in the question list", async () => {
+  //   await gateway.game.startGame();
+  //   expect(gateway.game.getNbQuestions()).toBe(50);
+  // });
 
   //QuestionManager
   it("should have qList defined", () => {

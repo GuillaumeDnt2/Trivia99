@@ -167,7 +167,7 @@ export class Player {
   }
 
   public addAnsweredQuestion() : void {
-    this.nbAnsweredQuestions ++;
+    this.nbAnsweredQuestions++;
   }
   public addBadAnswer() : void {
     this.nbBadAnswers++;

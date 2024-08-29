@@ -191,15 +191,22 @@ export class Game {
      * @param id : player id
      * @param question : question to add
      */
-    public addQuestionToPlayer(id: string, question: QuestionInQueue) : void {
+    public async addQuestionToPlayer(id: string, question: QuestionInQueue) {
         let player = this.players.get(id);
         if(!this.checkQuestionQueue(player)){
             player.addQuestion(question);
             console.log("Question added to " + player.getName());
             let info = player.getUserInfo();
-            this.server.to(id).emit("userInfo", {
-                info: info,
-            });
+            this.server.to(id).emit("userInfo", info);
+
+            //Wait for the game to be started before sending question
+            await this.waitForTheGameToBeStarted();
+
+            //Send question to player if queue was empty before
+            if(player.getNbQuestions() == 1){
+                this.server.to(id).emit("newQuestion",this.qManager.get(question));
+                player.addAnsweredQuestion();
+            }
         }
 
     }
