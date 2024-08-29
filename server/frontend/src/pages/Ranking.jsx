@@ -1,10 +1,18 @@
 import { useEffect, useState } from "react"
 import { socket } from "../utils/socket";
 import BaseLayout from "../components/BaseLayout";
+import {useNavigate} from "react-router-dom";
 
 export default function Ranking(){
 
+    const navigate = useNavigate()
+
     const [ranking, setRanking] = useState([]);
+
+    const handleReturnHome = () => {
+        socket.emit("deleteUser")
+        navigate("/")
+    }
 
     useEffect(() => {
         function onRanking(sentRanking){
@@ -28,5 +36,6 @@ export default function Ranking(){
                             )}
                         </ul>
                     </div>
+                    <button type={"button"} onClick={handleReturnHome}>Return to home page</button>
             </BaseLayout>
 }
