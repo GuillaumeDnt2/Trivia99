@@ -37,7 +37,7 @@ export default function Waiting(){
 
 
     return <BaseLayout>
-        <div className={"content-column-box center"}>
+        <div className={"content-column-box center padding-20px"}>
                 <p className={"text"}>{playersInfo.nbReady}/{playersInfo.nbPlayers} player(s) ready</p>
                 <button id="readyBtn" className={'orange-button'} onClick={onClick} disabled={ready}>Ready ?</button>
         </div>

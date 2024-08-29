@@ -36,6 +36,9 @@
     height: auto;
     align-self: center;
     background-color: white;
+}
+
+.padding-20px {
     padding: 20px;
 }
 
@@ -75,4 +78,10 @@
 
 .text {
     color: var(--onyx);
+}
+
+.center-text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
