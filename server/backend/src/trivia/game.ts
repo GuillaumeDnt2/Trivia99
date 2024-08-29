@@ -6,6 +6,27 @@ import { QuestionInQueue } from "./questionInQueue";
 import { Injectable } from "@nestjs/common";
 import {ConfigService} from "@nestjs/config";
 import { EventEmitter } from 'events';
+/**
+ * Save the final player's stats and rank about the game
+ */
+class Rank {
+  playerid:string;
+  playerName:string;
+  rank:number;
+  goodAnswers:number;
+  badAnswers:number;
+  answeredQuestions:number;
+  constructor(player:Player, rank:number){
+    this.playerid = player.getId();
+    this.playerName = player.getName();
+    this.rank = rank;
+    this.goodAnswers = player.getGoodAnswers();
+    this.badAnswers = player.getBadAnswers();
+    this.answeredQuestions = player.getAnsweredQuestion();
+  }
+}
+
+
 
 /**
  * Game class
@@ -20,7 +41,7 @@ export class Game {
     private SIZE_OF_QUESTION_QUEUE: number;
     public nbReady: number;
     private players: Map<string, Player>;
-    private eliminatedPlayers: string[]; //TODO
+    private leaderboard: Rank[];
     private nbPlayerAlive: number;
     private hasStarted: boolean;
     private qManager: QuestionManager;
@@ -36,7 +57,7 @@ export class Game {
      * @param configService the configuration service to enable us to use the .env file
      */
     constructor(server: Server, private configService: ConfigService) {
-        this.eliminatedPlayers = [];
+        this.leaderboard = [];
         this.nbReady = 0;
         this.nbPlayerAlive = 0;
         this.players = new Map<string, Player>();
@@ -53,6 +74,15 @@ export class Game {
         this.SIZE_OF_QUESTION_QUEUE = parseInt(this.configService.get<string>("SIZE_OF_QUESTION_QUEUE"));
         this.eventEmitter = new EventEmitter();
 
+        this.addPlayer("jeunet", "jean-pierre");this.nbPlayerAlive++;
+        this.addPlayer("jarre", "jean-michel");this.nbPlayerAlive++;
+        this.addPlayer("belmondo", "jean-paul");this.nbPlayerAlive++;
+
+        this.eliminatePlayer(this.players.get("jeunet"));
+        this.eliminatePlayer(this.players.get("jarre"));
+        this.eliminatePlayer(this.players.get("belmondo"));
+
+        console.log(this.leaderboard);
     }
 
     /**
@@ -174,9 +204,7 @@ export class Game {
             
             this.eliminatePlayer(player);
 
-            if(--this.nbPlayerAlive === 1){
-                this.endGame();
-            }
+            
             return true;
         }
         return false;
@@ -186,7 +214,7 @@ export class Game {
      * Ending game procedure : send the ranking to all players
      */
     public endGame() : void {
-        this.sendRankingInfo();
+        this.sendLeaderboard();
     }
 
     /**
@@ -251,20 +279,10 @@ export class Game {
     }
 
     /**
-     * Make the ranking and send it to all players
+     * Send the leaderboard to all players
      */
-    public sendRankingInfo() : void {
-        //TODO ranking trié du 1er au dernier joueur
-        /*let ranking = [];
-        for(let [key, value] of this.players){
-            ranking.push({
-                name: value.getName(),
-                score: value.getScore()
-            });
-        }*/
-       //TODO
-        let ranking = "ok";
-        this.server.emit("ranking", ranking);
+    public sendLeaderboard() : void {
+      this.server.emit("ranking", this.leaderboard);
     }
 
 
@@ -284,30 +302,16 @@ export class Game {
      */
     private eliminatePlayer(player: Player) : void {
       player.unalive(this.nbPlayerAlive);
-      
-      this.eliminatedPlayers.push(player.getId());
-      this.server.to(player.getId()).emit("gameOver", {
-        userInfo: player.getUserInfo()
-      });
+     
+      const rank = new Rank(player, this.nbPlayerAlive);
+      this.leaderboard.push(rank);
+      this.server.to(player.getId()).emit("gameOver", rank);
+      if(--this.nbPlayerAlive === 1){
+        this.endGame();
+      }
     }
 
-    private createLeaderboard() : object {
-      let leaderboard: rank[];
-      leaderboard = [];
-      this.eliminatedPlayers.forEach(string => {
-        
-      });
-
-
-      return leaderboard;
-    }
+    
 }
 
-class rank {
-  playerid:string;
-  playerName:string;
-  rank:number;
-  goodAnswers:number;
-  badAnswers:number;
-  answeredQuestions:number;
-}
+
