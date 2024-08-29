@@ -11,7 +11,7 @@ export class Player {
   private nbAnsweredQuestions: number;
   public isInTimeOut: NodeJS.Timeout;
   private id: string;
-  private outAt: number; //TODO
+  private rank: number; //TODO
 
   constructor(name: string, id:string) {
     this.name = name;
@@ -23,6 +23,7 @@ export class Player {
     this.nbGoodAnswers = 0;
     this.nbAnsweredQuestions = 0;
     this.id = id;
+    this.rank = 0;
   }
 
   /**
@@ -54,8 +55,9 @@ export class Player {
   /**
    * Unalive the player
    */
-  public kill() {
+  public unalive(rank:number) {
     this.isAlive = false;
+    this.rank = rank;
   }
 
   /**
@@ -105,6 +107,8 @@ export class Player {
       isAlive: this.isAlive,
       nbBadAnswers: this.nbBadAnswers,
       nbGoodAnswers: this.nbGoodAnswers,
+      nbAnsweredQuestions: this.nbAnsweredQuestions,
+      rank: this.rank,
       questions: [],
     };
     this.queue.forEach((question: any) => {
@@ -112,6 +116,12 @@ export class Player {
     });
 
     return info;
+  }
+
+  public correctAnswer() : void {
+    this.removeQuestion();
+    this.addGoodAnswer();
+    this.incrementStreak();
   }
 
   /**

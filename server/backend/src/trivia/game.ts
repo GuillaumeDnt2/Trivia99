@@ -171,13 +171,15 @@ export class Game {
      */
     public checkQuestionQueue(player: Player) : boolean {
         if (player.getNbQuestions() >= this.SIZE_OF_QUESTION_QUEUE) {
-            player.kill();
-            this.eliminatedPlayers.push(player.getId());
+            
+            this.eliminatePlayer(player);
+
             if(--this.nbPlayerAlive === 1){
                 this.endGame();
             }
             return true;
         }
+        return false;
     }
 
     /**
@@ -222,9 +224,8 @@ export class Game {
   public checkPlayerAnswer(player:Player, answer:number){
     if(this.qManager.check(player.getCurrentQuestion(),answer)){
         //Correct answer
-        player.removeQuestion();
-        player.addGoodAnswer();
-        player.incrementStreak();
+        
+        player.correctAnswer();
         if(player.getNbQuestions() > 0){
             const qToSend = this.qManager.get(player.getCurrentQuestion());
             this.server.to(player.getId()).emit("newQuestion",qToSend);
@@ -277,7 +278,36 @@ export class Game {
         });
     }
 
-    private createLeaderboard(){
-      //TODO
+    /**
+     * Eliminate a player from the game, send game over message
+     * @param player : player to eliminate
+     */
+    private eliminatePlayer(player: Player) : void {
+      player.unalive(this.nbPlayerAlive);
+      
+      this.eliminatedPlayers.push(player.getId());
+      this.server.to(player.getId()).emit("gameOver", {
+        userInfo: player.getUserInfo()
+      });
     }
+
+    private createLeaderboard() : object {
+      let leaderboard: rank[];
+      leaderboard = [];
+      this.eliminatedPlayers.forEach(string => {
+        
+      });
+
+
+      return leaderboard;
+    }
+}
+
+class rank {
+  playerid:string;
+  playerName:string;
+  rank:number;
+  goodAnswers:number;
+  badAnswers:number;
+  answeredQuestions:number;
 }
