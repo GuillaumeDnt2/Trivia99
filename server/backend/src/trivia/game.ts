@@ -6,6 +6,27 @@ import { QuestionInQueue } from "./questionInQueue";
 import { Injectable } from "@nestjs/common";
 import {ConfigService} from "@nestjs/config";
 import { EventEmitter } from 'events';
+/**
+ * Save the final player's stats and rank about the game
+ */
+class Rank {
+  playerid:string;
+  playerName:string;
+  rank:number;
+  goodAnswers:number;
+  badAnswers:number;
+  answeredQuestions:number;
+  constructor(player:Player, rank:number){
+    this.playerid = player.getId();
+    this.playerName = player.getName();
+    this.rank = rank;
+    this.goodAnswers = player.getGoodAnswers();
+    this.badAnswers = player.getBadAnswers();
+    this.answeredQuestions = player.getAnsweredQuestion();
+  }
+}
+
+
 
 /**
  * Game class
@@ -20,6 +41,7 @@ export class Game {
     private SIZE_OF_QUESTION_QUEUE: number;
     public nbReady: number;
     private players: Map<string, Player>;
+    private leaderboard: Rank[];
     private nbPlayerAlive: number;
     private hasStarted: boolean;
     private qManager: QuestionManager;
@@ -35,6 +57,7 @@ export class Game {
      * @param configService the configuration service to enable us to use the .env file
      */
     constructor(server: Server, private configService: ConfigService) {
+        this.leaderboard = [];
         this.nbReady = 0;
         this.nbPlayerAlive = 0;
         this.players = new Map<string, Player>();
@@ -50,7 +73,7 @@ export class Game {
         this.NB_MIN_READY_PLAYERS = parseInt(this.configService.get<string>("NB_MIN_READY_PLAYERS"));
         this.SIZE_OF_QUESTION_QUEUE = parseInt(this.configService.get<string>("SIZE_OF_QUESTION_QUEUE"));
         this.eventEmitter = new EventEmitter();
-
+  
     }
 
     /**
@@ -173,19 +196,20 @@ export class Game {
      */
     public checkQuestionQueue(player: Player) : boolean {
         if (player.getNbQuestions() >= this.SIZE_OF_QUESTION_QUEUE) {
-            player.kill();
-            if(--this.nbPlayerAlive === 1){
-                this.endGame();
-            }
+            
+            this.eliminatePlayer(player);
+
+            
             return true;
         }
+        return false;
     }
 
     /**
      * Ending game procedure : send the ranking to all players
      */
     public endGame() : void {
-        this.sendRankingInfo();
+        this.sendLeaderboard();
     }
 
     /**
@@ -231,9 +255,8 @@ export class Game {
   public checkPlayerAnswer(player:Player, answer:number){
     if(this.qManager.check(player.getCurrentQuestion(),answer)){
         //Correct answer
-        player.removeQuestion();
-        player.addGoodAnswer();
-        player.incrementStreak();
+        
+        player.correctAnswer();
         if(player.getNbQuestions() > 0){
             const qToSend = this.qManager.get(player.getCurrentQuestion());
             this.server.to(player.getSocket().id).emit("newQuestion",qToSend);
@@ -261,19 +284,10 @@ export class Game {
     }
 
     /**
-     * Make the ranking and send it to all players
+     * Send the leaderboard to all players
      */
-    public sendRankingInfo() : void {
-        //TODO ranking trié du 1er au dernier joueur
-        let ranking = [];
-        for(let [key, value] of this.players){
-            ranking.push({
-                name: value.getName(),
-                score: value.getScore()
-            });
-        }
-
-        this.server.emit("ranking", ranking);
+    public sendLeaderboard() : void {
+      this.server.emit("ranking", this.leaderboard);
     }
 
 
@@ -286,4 +300,23 @@ export class Game {
             this.eventEmitter.once('loaded', () => resolve(true));
         });
     }
+
+    /**
+     * Eliminate a player from the game, send game over message
+     * @param player : player to eliminate
+     */
+    private eliminatePlayer(player: Player) : void {
+      player.unalive(this.nbPlayerAlive);
+     
+      const rank = new Rank(player, this.nbPlayerAlive);
+      this.leaderboard.push(rank);
+      this.server.to(player.getId()).emit("gameOver", rank);
+      if(--this.nbPlayerAlive === 1){
+        this.endGame();
+      }
+    }
+
+    
 }
+
+

@@ -265,29 +265,26 @@ export class TriviaGateway implements OnModuleInit {
    */
   @SubscribeMessage("answer")
   onAnswer(@MessageBody() body: any, @ConnectedSocket() socket: any) {
-    //Get the player that answered the question
+
     const player = this.game.getPlayers().get(this.getIdFromHeaders(socket));
 
+    const answer = body;
+
+
     //Check if the answer is correct
-    if(this.game.checkPlayerAnswer(player, body)){
-      //Send correct answer msg
-      socket.emit("onResult",{
-        msg: "Correct"
-      });
+    if(this.game.checkPlayerAnswer(player, answer.answer)){
+        //Send correct answer msg
+        socket.emit("onResult",{
+          msg: "Correct"
+        });
     }
     else{
-      //If the answer is incorrect
-      socket.emit("onResult", {
+        //If the answer is incorrect
+        socket.emit("onResult", {
         msg: "Incorrect",
-      });
+    });
     }
 
-    //Todo: Logic of the answer handling, can only do it once the question class is done
-
-    //If the answer is correct
-    socket.emit("onResult", {
-      msg: "Correct",
-    });
   }
 
     /**
@@ -296,11 +293,11 @@ export class TriviaGateway implements OnModuleInit {
      * @param {any} body - The body of the message.
      * @param {Socket} socket - The socket object of the client.
      */
-  @SubscribeMessage("deathUpdate")
+  @SubscribeMessage("deathUpdate") //TO CHANGE
   onDeathUpdate(@MessageBody() body: any, @ConnectedSocket() socket: any) {
     //Get the player that died
     const player = this.game.getPlayerById(this.getIdFromHeaders(socket));
-    player.kill();
+    //player.unalive(); ???
     //Tell everyone that the player died
     this.server.emit("onDeath", {
       msg: "Player died",
