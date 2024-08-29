@@ -4,26 +4,27 @@ import Game from "../pages/Game";
 import Ranking from "../pages/Ranking";
 import React from "react";
 import NotFound from "../pages/NotFound";
-import ProtectedRoute from "./ProtectedRoute";
+import ProtectedRouteNavToHome from "../components/ProtectedRouteNavToHome";
+import ProtectedRouteGoBack from "../components/ProtectedRouteGoBack";
 
 
 const routes = [
     {
         path: "/",
-        element: <ProtectedRoute Component={Home} />,
+        element: <ProtectedRouteGoBack Component={Home} />,
         errorElement: <NotFound/>,
     },
     {
         path: "/waiting",
-        element: <Waiting />
+        element: <ProtectedRouteNavToHome Component={Waiting} />
     },
     {
         path: "/game",
-        element: <ProtectedRoute Component={Game} />
+        element: <ProtectedRouteNavToHome Component={Game} />
     },
     {
         path: "/ranking",
-        element: <ProtectedRoute Component={Ranking} />
+        element: <ProtectedRouteNavToHome Component={Ranking} />
     }
 ];
 
