@@ -41,20 +41,29 @@ export default function Game(){
             console.log("elimination")
         }
 
-        function onNoMoreQuestion(){
-
+        function onPlayers(players){
+            console.log(players);
+            for(let i = 0; i < players.length; ++i){
+                if(i%2 === 0){
+                    setPlayersLeft([...playersLeft, players[i].name.name]);
+                } else {
+                    setPlayersRight([...playersRight, players[i].name.name]);
+                }
+            }
         }
 
         socket.on("userInfo", onUserInfo);
         socket.on("newQuestion", onNewQuestion);
         socket.on("elimination", onElimination);
-        socket.on("noMoreQuestions", onNoMoreQuestion);
+        socket.on("players", onPlayers);
+
+        socket.emit("getAllInfo");
 
         return () => {
             socket.off("userInfo");
             socket.off("newQuestion");
             socket.off("elimination");
-            socket.off("noMoreQuestions");
+            socket.off("players");
 
         }
     }, []);

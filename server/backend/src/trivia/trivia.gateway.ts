@@ -256,6 +256,16 @@ export class TriviaGateway implements OnModuleInit {
     this.game.getPlayerById(this.getIdFromHeaders(socket)).resetStreak();
   }
 
+  @SubscribeMessage("getAllInfo")
+  onGetAllInfo(@ConnectedSocket() socket:any){
+    const player = this.game.getPlayerById(this.getIdFromHeaders(socket))
+    if(player){
+      socket.emit("userInfo", player.getUserInfo());
+      this.game.emitCurrentQuestionOf(player);
+      socket.emit("players", this.game.getAllPlayerList());
+    }
+  }
+
   /**
    * @method onAnswer
    * @description Handles the answer of a user.
