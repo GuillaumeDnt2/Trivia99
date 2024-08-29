@@ -54,7 +54,7 @@ export class Player {
    */
   public getCurrentQuestion() {
     if (this.queue.length > 0) {
-      return this.queue[0];
+      return this.queue[this.queue.length-1];
     }
   }
 
