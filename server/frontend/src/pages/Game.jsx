@@ -28,6 +28,7 @@ export default function Game(){
             setAccuracy(userInfo.nbGoodAnswers / (userInfo.nbGoodAnswers + userInfo.nbBadAnswers));
             setNbResponse(userInfo.nbGoodAnswers);
             setStack(userInfo.questions);
+            console.log("userinfo");
         }
 
         function onNewQuestion(question){
@@ -37,6 +38,7 @@ export default function Game(){
 
         function onElimination(player){
             document.getElementById(player).classList.add("eliminated");
+            console.log("elimination")
         }
 
         function onNoMoreQuestion(){

@@ -1,4 +1,5 @@
 import { QuestionInQueue } from "./questionInQueue";
+import {last, Timestamp} from "rxjs";
 
 export class Player {
   private name: string;
@@ -13,6 +14,7 @@ export class Player {
   private id: string;
   private rank: number; 
   private currentSocket: any;
+  private lastWrongAnswerTime: number;
 
 
   constructor(name: string, id:string, socket: any) {
@@ -27,7 +29,7 @@ export class Player {
     this.id = id;
     this.rank = 0;
     this.currentSocket = socket;
-
+    this.lastWrongAnswerTime = 0;
   }
 
   /**
@@ -36,6 +38,14 @@ export class Player {
    */
   public getId() : string{
     return this.id;
+  }
+
+  public updateWrongAnswerTime(){
+    this.lastWrongAnswerTime = Date.now();
+  }
+
+  public getWrongAnswerTime(){
+    return this.lastWrongAnswerTime;
   }
 
   /**

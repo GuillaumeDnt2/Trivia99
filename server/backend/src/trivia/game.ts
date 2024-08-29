@@ -147,6 +147,13 @@ export class Game {
     }
 
     /**
+     * Get how many players are still alive in the current running game
+     */
+    public getNbPlayerAlive() : number {
+        return this.nbPlayerAlive;
+    }
+
+    /**
      * Get how many players are ready to start the game
      * @returns : how many ready players
      */
@@ -170,7 +177,35 @@ export class Game {
             msg: "The game has started",
         });
 
+        //Send the player list
+        this.server.emit("players", this.getAllPlayerList())
         await this.sendTimedQuestionToEveryone();
+    }
+
+    /**
+     * Creates a list of players to be then used in the player list in the frontend
+     * @private
+     */
+    private getAllPlayerList(): Object[]{
+        let list = [];
+        this.players.forEach((player:Player) => {
+            let smallPlayer = {
+                id: player.getId(),
+                name: player.getName()
+            }
+            list.push(smallPlayer);
+        });
+        return list;
+    }
+
+    /**
+     * Send a question to every connected and alive player
+     */
+    private async sendQuestionToEveryone() : Promise<void> {
+        let question = await this.qManager.newQuestion(false);
+        this.players.forEach((_player: Player, id: string) => {
+            this.addQuestionToPlayer(id, question);
+        });
     }
 
     /**
@@ -178,21 +213,20 @@ export class Game {
      */
     public async sendTimedQuestionToEveryone() : Promise<void> {
         console.log("Sending questions to everyone!");
+        setTimeout(async () => {
+            await this.sendQuestionToEveryone();
+        },1000); //Wait a sec to be sure everyone has loaded the new page
+
+
         this.intervalId = setInterval(async () => {
-            console.log("Interval triggered");
-            let question = await this.qManager.newQuestion(false);
-            console.log("Question fetched");
-            this.players.forEach((_player: Player, id: string) => {
-                console.log("About to send");
-                this.addQuestionToPlayer(id, question);
-            });
+            await this.sendQuestionToEveryone();
         }, this.TIME_BETWEEN_QUESTION);
     }
 
     /**
      * Check if the player has to be eliminated from the game
      * @param player : player to verify
-     * @returnes if the player is eleminated
+     * @returnes if the player is eliminated
      */
     public checkQuestionQueue(player: Player) : boolean {
         if (player.getNbQuestions() >= this.SIZE_OF_QUESTION_QUEUE) {
@@ -232,6 +266,7 @@ export class Game {
             if(player.getNbQuestions() == 1){
                 console.log(this.qManager.get(question));
                 this.server.to(player.getSocket().id).emit("newQuestion",this.qManager.get(question));
+                this.server.to(player.getSocket().id).emit("userInfo", info);
                 player.addAnsweredQuestion();
             }
         }
@@ -240,10 +275,12 @@ export class Game {
 
   /**
    * Add a new question to player triggered by an attack
-   * @param id : player id
+   * @param attacker The player who attacks
    */
-  public async addAttackQuestionToPlayer(id: string) : Promise<void> {
-    this.addQuestionToPlayer(id, await this.qManager.newQuestion(true));
+  public async attackPlayer(attacker: Player) : Promise<void> {
+    let target = this.getOtherRandomPlayer(attacker);
+    await this.addQuestionToPlayer(target.getId(), await this.qManager.newQuestion(true));
+    this.server.to(target.getSocket().id).emit("userInfo", target.getUserInfo());
   }
 
   /**
@@ -257,6 +294,8 @@ export class Game {
         //Correct answer
         
         player.correctAnswer();
+
+        this.server.to(player.getSocket().id).emit("userInfo", player.getUserInfo());
         if(player.getNbQuestions() > 0){
             const qToSend = this.qManager.get(player.getCurrentQuestion());
             this.server.to(player.getSocket().id).emit("newQuestion",qToSend);
@@ -270,6 +309,7 @@ export class Game {
         //Bad answer
         player.addBadAnswer();
         player.resetStreak();
+        this.server.to(player.getSocket().id).emit("userInfo", player.getUserInfo());
         return false;
     }
   }
@@ -290,7 +330,31 @@ export class Game {
       this.server.emit("ranking", this.leaderboard);
     }
 
+    /**
+     * Return a random alive player that isn't the attacker
+     * @param attacker : player who attack
+     * @private
+     */
+    private getOtherRandomPlayer(attacker:Player) : Player{
+        let targetPlayer : Player;
 
+        const rnd = Math.floor(Math.random() * this.nbPlayerAlive-1);
+        let count = 0;
+        this.players.forEach((player:Player) => {
+            if(targetPlayer == null){
+                if(player.alive() && player.getId() != attacker.getId()){
+                    if(++count == rnd){
+                        targetPlayer = player;
+                    }
+                }
+            }
+        })
+
+        return targetPlayer;
+
+
+
+    }
     /**
      * Wait for the questionLoaded flag to be set to true
      */
