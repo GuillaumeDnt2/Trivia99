@@ -335,25 +335,21 @@ export class Game {
      * @param attacker : player who attack
      * @private
      */
-    private getOtherRandomPlayer(attacker:Player) : Player{
+    public getOtherRandomPlayer(attacker:Player) : Player{
         let targetPlayer : Player;
-
-        const rnd = Math.floor(Math.random() * this.nbPlayerAlive-1);
+        let map : Player[];
+        map = [];
         let count = 0;
+        
+        console.log(attacker)
         this.players.forEach((player:Player) => {
-            if(targetPlayer == null){
-                if(player.alive() && player.getId() != attacker.getId()){
-                    if(++count == rnd){
-                        targetPlayer = player;
-                    }
-                }
+            if(player.alive() && player.getId() != attacker.getId()){
+                count++;
+                map.push(player);
             }
         })
-
-        return targetPlayer;
-
-
-
+        const rnd = Math.floor(Math.random() * map.length);
+        return map.at(rnd);
     }
     /**
      * Wait for the questionLoaded flag to be set to true

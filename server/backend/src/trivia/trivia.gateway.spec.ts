@@ -123,7 +123,15 @@ describe("TriviaGateway", () => {
     expect(gateway.game.hasGameStarted()).toBe(true);
   });
 
+  it("should have a target different than the attacker", () => {
+    gateway.game.addPlayer("belmondo", "jean-paul", null);
+    gateway.game.addPlayer("jarre", "jean-michel", null);
+    gateway.game.addPlayer("jeunet", "jean-pierre", null);
+    const attacker = gateway.game.getPlayerById("belmondo")
+    let target = gateway.game.getOtherRandomPlayer(attacker);
 
+    expect(target).not.toBe(attacker);
+  });
 
 
   //QuestionManager
