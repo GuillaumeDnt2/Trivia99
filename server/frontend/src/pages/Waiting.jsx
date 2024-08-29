@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { socket } from "../utils/socket.js";
 import logo from "../assets/Trivia99.png";
 import './Waiting.css';
+import BaseLayout from "../components/BaseLayout";
 
 export default function Waiting(){
     const [playersInfo, setPlayersInfo] = useState({nbReady: 0, nbPlayers: 0});
@@ -36,13 +37,10 @@ export default function Waiting(){
     }
 
 
-    return <>
-            <div className="vertical">
-                <img src={logo} alt="Trivia 99 logo"/>
-                <div className="rounded-box">
+    return <BaseLayout>
+                <div className={'waiting-container content-column-box'}>
                     <p>{playersInfo.nbReady}/{playersInfo.nbPlayers} player(s) ready</p>
-                    <button id="readyBtn" onClick={onClick} disabled={ready}>Ready?</button>
+                    <button id="readyBtn" className={'orange-button'} onClick={onClick} disabled={ready}>Ready?</button>
                 </div>
-            </div>
-        </>
+            </BaseLayout>
 }

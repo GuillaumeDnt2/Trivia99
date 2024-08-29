@@ -70,6 +70,8 @@ export class TriviaGateway implements OnModuleInit {
         if(this.game.getPlayers().has(userId)){
           //Clearing the timeout if the user is already in the game
           clearTimeout(this.game.getPlayers().get(userId).isInTimeOut);
+          //Changing the socket of the player
+            this.game.getPlayers().get(userId).changeSocket(socket);
         }
       }
 
@@ -158,11 +160,8 @@ export class TriviaGateway implements OnModuleInit {
    */
   @SubscribeMessage("isUserLogged")
   onIsUserLogged(@ConnectedSocket() socket: any){
-    let loggedInInfo = this.game.getPlayers().has(this.getIdFromHeaders(socket));
-    this.server.to(socket.id).emit("loggedInfo",
-        {
-          loggedInInfo
-        })
+    let loggedInfo = this.game.getPlayers().has(this.getIdFromHeaders(socket));
+    this.server.to(socket.id).emit("loggedInfo",loggedInfo);
   }
 
   /**
@@ -175,7 +174,7 @@ export class TriviaGateway implements OnModuleInit {
   onLogin(@MessageBody() name: string, @ConnectedSocket() socket: any) {
     //Doesn't re-add the player if he's already in the game
     if(!this.game.getPlayers().has(this.getIdFromHeaders(socket))) {
-      this.game.addPlayer(this.getIdFromHeaders(socket), name);
+      let player = this.game.addPlayer(this.getIdFromHeaders(socket), name, socket);
       this.sendReadyInfo();
     }
   }
@@ -268,6 +267,7 @@ export class TriviaGateway implements OnModuleInit {
   onAnswer(@MessageBody() body: any, @ConnectedSocket() socket: any) {
 
     const player = this.game.getPlayers().get(this.getIdFromHeaders(socket));
+
     const answer = body;
 
 
@@ -284,6 +284,7 @@ export class TriviaGateway implements OnModuleInit {
         msg: "Incorrect",
     });
     }
+
   }
 
     /**
@@ -327,4 +328,13 @@ export class TriviaGateway implements OnModuleInit {
       streak: player.getStreak(),
     });
   }
+
+  @SubscribeMessage("isStarted")
+  getGameStatus(@ConnectedSocket() socket: any) {
+    let status = this.game.hasGameStarted();
+    socket.emit("startStatus", {
+      status
+    });
+  }
+
 }

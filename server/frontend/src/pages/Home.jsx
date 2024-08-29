@@ -1,9 +1,10 @@
 import "./Home.css"
 import {socket} from "../utils/socket.js"
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom"
 import logo from '../assets/Trivia99.png'
 import github from '../assets/github-mark.svg'
+import BaseLayout from "../components/BaseLayout";
 
 /**
  * React file for the home page of Trivia99
@@ -19,6 +20,29 @@ export default function Home(){
 
     const [name, setName] = useState("");
     const [placeholder, setPlaceholder] = useState("Enter your name")
+    const [gameStarted, setGameStarted] = useState(false);
+
+    useEffect(() => {
+        socket.on("startGame", () => {
+            setGameStarted(true)
+        })
+
+        socket.on("ranking", () => {
+            setGameStarted(false)
+        })
+
+        socket.on("startStatus", (started) => {
+            setGameStarted(started.status)
+        })
+
+        socket.emit("isStarted")
+
+        return () => {
+            socket.off("startGame");
+            socket.off("ranking");
+            socket.off("startStatus");
+        }
+    }, []);
 
     const navigate = useNavigate();
 
@@ -38,10 +62,7 @@ export default function Home(){
         }
     }
 
-    return (
-        <div className="center-inside-div">
-            <div className="content-column-box">
-                <img src={logo} alt="Trivia99" className="logo" />
+    return <BaseLayout>
                 <form onSubmit={handleSubmit} className="content-column-box">
                     <label>Username
                         <input
@@ -50,12 +71,10 @@ export default function Home(){
                             placeholder={placeholder}
                         />
                     </label>
-                    <button type="submit">Click to play!</button>
-                    <Link to="https://github.com/GuillaumeDnt2/Trivia99/tree/main" >
-                        <button type="button">GitHub<img src={github} alt="GitHub" /></button>
-                    </Link>
+                    <button type="submit" disabled={gameStarted}>{gameStarted ? "Game in progress..." : "Click to play !"}</button>
                 </form>
-            </div>
-        </div>
-    );
+                <Link to="https://github.com/GuillaumeDnt2/Trivia99/tree/main">
+                    <button type="button">GitHub<img src={github} alt="GitHub"/></button>
+                </Link>
+        </BaseLayout>
 }

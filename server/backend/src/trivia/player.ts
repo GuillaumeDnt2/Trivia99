@@ -11,9 +11,11 @@ export class Player {
   private nbAnsweredQuestions: number;
   public isInTimeOut: NodeJS.Timeout;
   private id: string;
-  private rank: number; //TODO
+  private rank: number; 
+  private currentSocket: any;
 
-  constructor(name: string, id:string) {
+
+  constructor(name: string, id:string, socket: any) {
     this.name = name;
     this.queue = [];
     this.streak = 0;
@@ -24,6 +26,8 @@ export class Player {
     this.nbAnsweredQuestions = 0;
     this.id = id;
     this.rank = 0;
+    this.currentSocket = socket;
+
   }
 
   /**
@@ -125,6 +129,22 @@ export class Player {
   }
 
   /**
+   * Change the socket of the player
+   * @param socket to change to
+   */
+  public changeSocket(socket: any) {
+    this.currentSocket = socket;
+  }
+
+    /**
+     * Get the current socket of the player
+     * @returns
+     */
+  public getSocket() {
+    return this.currentSocket;
+  }
+
+  /**
    * Get player's name
    * @returns 
    */
@@ -161,7 +181,7 @@ export class Player {
   }
 
   public addAnsweredQuestion() : void {
-    this.nbAnsweredQuestions ++;
+    this.nbAnsweredQuestions++;
   }
   public addBadAnswer() : void {
     this.nbBadAnswers++;

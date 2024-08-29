@@ -55,6 +55,9 @@ export class QuestionManager {
    * @returns : QuestionToSend object (question text + 4 answers) 
    */
   public get(q: QuestionInQueue) : QuestionToSend{
+    if(!this.qPool.has(q.getId())){
+      return; //Do nothing
+    }
     return new QuestionToSend(this.qPool.get(q.getId()), q.getIsAttack());
   }
 
@@ -71,7 +74,7 @@ export class QuestionManager {
       }
       q = this.qList.shift();
     } while (this.qPool.has(q.getId()));
-
+    this.qPool.set(q.getId(), q);
     return new QuestionInQueue(q, isAttack);
   }
 

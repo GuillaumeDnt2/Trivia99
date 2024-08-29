@@ -1,24 +1,7 @@
-
-
-.center-inside-div{
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.logo {
-    height: 300px;
-    width : 400px;
-}
-
-.content-column-box {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
 ::placeholder {
     color: var(--c, #000000);
+}
+
+button:disabled {
+    background-color: #fcad599a;
 }
