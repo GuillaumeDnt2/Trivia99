@@ -55,6 +55,7 @@ Sends to one user his information in this form :
   "nbBadAnswers": 2,
   "nbGoodAnswers": 3,
   "nbAnsweredQuestions":3,
+  "outAt": 0,
   "questions": [
     {
       "id": 1,
@@ -99,6 +100,7 @@ Inform the player that it's game over for them!
           "nbBadAnswers": 2,
           "nbGoodAnswers": 3,
           "nbAnsweredQuestions":3,
+          "outAt": 0,
           "questions": [
             {
               "id": 1,
@@ -111,9 +113,7 @@ Inform the player that it's game over for them!
               "isAttack": true
             }
           ]
-        },
-    rank : 36
-
+        }
 }
 
 ```
