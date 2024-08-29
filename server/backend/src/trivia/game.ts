@@ -73,16 +73,7 @@ export class Game {
         this.NB_MIN_READY_PLAYERS = parseInt(this.configService.get<string>("NB_MIN_READY_PLAYERS"));
         this.SIZE_OF_QUESTION_QUEUE = parseInt(this.configService.get<string>("SIZE_OF_QUESTION_QUEUE"));
         this.eventEmitter = new EventEmitter();
-
-        this.addPlayer("jeunet", "jean-pierre");this.nbPlayerAlive++;
-        this.addPlayer("jarre", "jean-michel");this.nbPlayerAlive++;
-        this.addPlayer("belmondo", "jean-paul");this.nbPlayerAlive++;
-
-        this.eliminatePlayer(this.players.get("jeunet"));
-        this.eliminatePlayer(this.players.get("jarre"));
-        this.eliminatePlayer(this.players.get("belmondo"));
-
-        console.log(this.leaderboard);
+  
     }
 
     /**
