@@ -1,4 +1,5 @@
 import '../styles/common.css';
+import '../styles/BaseLayout.css'
 import logo from "../assets/Trivia99.png";
 
 export default function BaseLayout(props){

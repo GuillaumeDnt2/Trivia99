@@ -1,9 +1,8 @@
-import "./Home.css"
-import {socket} from "../utils/socket.js"
+import "../styles/Home.css";
+import {socket} from "../utils/socket.js";
 import {useState} from "react";
-import {Link, useNavigate} from "react-router-dom"
-import logo from '../assets/Trivia99.png'
-import github from '../assets/github-mark.svg'
+import {Link, useNavigate} from "react-router-dom";
+import github from "../assets/github-mark.svg"
 import BaseLayout from "../components/BaseLayout";
 
 /**

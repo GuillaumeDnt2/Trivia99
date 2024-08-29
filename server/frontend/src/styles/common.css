@@ -6,15 +6,11 @@
 .content-column-box {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
 }
 
 .content-row-box {
     display: flex;
     flex-direction: row;
-    justify-content: center;
-    align-items: center;
 }
 
 .spaced {
@@ -40,13 +36,6 @@
     scroll-behavior: smooth;
 }
 
-.logo {
-    align-self: center;
-    height: 150px;
-    width: 200px;
-    margin-bottom: 20px;
-}
-
 .orange-button {
     background-color: var(--strong-orange);
     padding: 10px;
@@ -65,4 +54,8 @@
     border-style: solid;
     border-radius: 6px;
     border-color: var(--strong-orange);
+}
+
+.hsize {
+    height: 90vh;
 }

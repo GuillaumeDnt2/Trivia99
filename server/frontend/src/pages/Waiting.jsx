@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"
 import { socket } from "../utils/socket.js";
-import logo from "../assets/Trivia99.png";
-import './Waiting.css';
+import '../styles/Waiting.css';
 import BaseLayout from "../components/BaseLayout";
 
 export default function Waiting(){
