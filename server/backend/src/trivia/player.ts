@@ -1,5 +1,4 @@
 import { QuestionInQueue } from "./questionInQueue";
-import {last, Timestamp} from "rxjs";
 
 export class Player {
   private name: string;
@@ -200,4 +199,5 @@ export class Player {
   public addGoodAnswer() : void {
     this.nbGoodAnswers++;
   }
+
 }

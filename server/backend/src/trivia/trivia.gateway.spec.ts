@@ -130,6 +130,7 @@ describe("TriviaGateway", () => {
     const attacker = gateway.game.getPlayerById("belmondo")
     let target = gateway.game.getOtherRandomPlayer(attacker);
 
+    expect(target).toBeDefined();
     expect(target).not.toBe(attacker);
   });
 

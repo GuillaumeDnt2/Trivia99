@@ -229,10 +229,8 @@ export class Game {
      */
     public checkQuestionQueue(player: Player) : boolean {
         if (player.getNbQuestions() >= this.SIZE_OF_QUESTION_QUEUE) {
-            
             this.eliminatePlayer(player);
 
-            
             return true;
         }
         return false;
@@ -254,7 +252,7 @@ export class Game {
         let player = this.players.get(id);
         if(!this.checkQuestionQueue(player)){
             player.addQuestion(question);
-            console.log("Question added to " + player.getName());
+            console.log(`Question added to ${player}`);
             let info = player.getUserInfo();
             this.server.to(player.getSocket().id).emit("userInfo", info);
 
@@ -371,7 +369,8 @@ export class Game {
      */
     private eliminatePlayer(player: Player) : void {
       player.unalive(this.nbPlayerAlive);
-     
+      console.log(player.getName() + " is dead");
+
       const rank = new Rank(player, this.nbPlayerAlive);
       this.leaderboard.push(rank);
       this.server.to(player.getId()).emit("gameOver", rank);

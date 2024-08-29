@@ -45,9 +45,9 @@ export default function Game(){
             console.log(players);
             for(let i = 0; i < players.length; ++i){
                 if(i%2 === 0){
-                    setPlayersLeft([...playersLeft, players[i].name.name]);
+                    setPlayersLeft([...playersLeft, players[i].name]);
                 } else {
-                    setPlayersRight([...playersRight, players[i].name.name]);
+                    setPlayersRight([...playersRight, players[i].name]);
                 }
             }
         }
