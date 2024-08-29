@@ -99,8 +99,10 @@ export class Game {
    * @param id : id of the player
    * @param name : name chosen by the player
    */
-  public addPlayer(id: string, name: string) : void {
-    this.players.set(id, new Player(name,id));
+  public addPlayer(id: string, name: string) : Player {
+      let player = new Player(name, id);
+    this.players.set(id, player);
+    return player;
   }
 
     /**

@@ -70,6 +70,8 @@ export class TriviaGateway implements OnModuleInit {
         if(this.game.getPlayers().has(userId)){
           //Clearing the timeout if the user is already in the game
           clearTimeout(this.game.getPlayers().get(userId).isInTimeOut);
+          //Changing the socket of the player
+            this.game.getPlayers().get(userId).changeSocket(socket);
         }
       }
 
@@ -175,7 +177,8 @@ export class TriviaGateway implements OnModuleInit {
   onLogin(@MessageBody() name: string, @ConnectedSocket() socket: any) {
     //Doesn't re-add the player if he's already in the game
     if(!this.game.getPlayers().has(this.getIdFromHeaders(socket))) {
-      this.game.addPlayer(this.getIdFromHeaders(socket), name);
+      let player = this.game.addPlayer(this.getIdFromHeaders(socket), name);
+      player.changeSocket(socket);
       this.sendReadyInfo();
     }
   }
