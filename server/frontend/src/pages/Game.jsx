@@ -31,21 +31,29 @@ export default function Game(){
         }
 
         function onNewQuestion(question){
-            setQuestion(question)
+            setQuestion(question);
+            console.log(question);
         }
 
         function onElimination(player){
             document.getElementById(player).classList.add("eliminated");
         }
 
+        function onNoMoreQuestion(){
+
+        }
+
         socket.on("userInfo", onUserInfo);
         socket.on("newQuestion", onNewQuestion);
         socket.on("elimination", onElimination);
+        socket.on("noMoreQuestions", onNoMoreQuestion);
 
         return () => {
             socket.off("userInfo");
             socket.off("newQuestion");
             socket.off("elimination");
+            socket.off("noMoreQuestions");
+
         }
     }, []);
 
@@ -57,7 +65,7 @@ export default function Game(){
                 <div id="content-column-box">
                     <Stack state={stack} />
                     <Stats streak={streak} accuracy={accuracy} nbReponse={nbResponse}/>
-                    <QuestAndAnsw isAlive={isAlive} q={question.question} a={question.answers}/>
+                    <QuestAndAnsw isAlive={isAlive} q={question.question?.text} a={question.answers}/>
                 </div>
                 <PlayerList players={playersRight}/>
             </div>   

@@ -13,7 +13,7 @@ export class Player {
   private id: string;
   private currentSocket: any;
 
-  constructor(name: string, id:string) {
+  constructor(name: string, id:string, socket: any) {
     this.name = name;
     this.queue = [];
     this.streak = 0;
@@ -23,6 +23,7 @@ export class Player {
     this.nbGoodAnswers = 0;
     this.nbAnsweredQuestions = 0;
     this.id = id;
+    this.currentSocket = socket;
   }
 
   /**

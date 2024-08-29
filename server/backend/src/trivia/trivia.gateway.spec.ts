@@ -40,7 +40,6 @@ describe("TriviaGateway", () => {
   });
 
   it("should add a player on login", () => {
-    const userId = '1';
     const socket = {...player1};
     const name = "Player1";
     gateway.onLogin(name, socket);
@@ -50,7 +49,7 @@ describe("TriviaGateway", () => {
   it("should update player ready status on ready", () => {
     const userId = '1';
     const socket = {...player1};
-    gateway.game.addPlayer(socket.id, "Player1");
+    gateway.game.addPlayer(socket.id, "Player1", socket);
     gateway.onReady(socket);
     expect(gateway.game.getPlayers().get(socket.id).isReady).toBe(true);
     expect(gateway.game.getNbReady()).toBe(1);
@@ -59,7 +58,7 @@ describe("TriviaGateway", () => {
   it("should update player ready status on unready", () => {
     const userId = '1';
     const socket = {...player1};
-    gateway.game.addPlayer(socket.id, "Player1");
+    gateway.game.addPlayer(socket.id, "Player1", socket);
     gateway.onReady(socket);
     gateway.onUnready(socket);
     expect(gateway.game.getPlayers().get(socket.id).isReady).toBe(false);
@@ -69,7 +68,7 @@ describe("TriviaGateway", () => {
   it("should emit start message on start", async () => {
     const userId = '1';
     const socket = {...player1};
-    gateway.game.addPlayer(socket.id, "Player1");
+    gateway.game.addPlayer(socket.id, "Player1",socket);
     const spy = jest.spyOn(server, "emit");
     await gateway.game.startGame();
     expect(spy).toHaveBeenCalledWith("startGame", {
@@ -80,7 +79,7 @@ describe("TriviaGateway", () => {
   it("should send a question every 10000ms", async () => {
     jest.useFakeTimers();
     const socket = {...player1};
-    gateway.game.addPlayer(socket.id, "Player1");
+    gateway.game.addPlayer(socket.id, "Player1",socket);
 
     await gateway.game.startGame();
 
@@ -111,12 +110,12 @@ describe("TriviaGateway", () => {
   it("should launch the game if there's two players ready", async() => {
     const userId = '1';
     const socket = {...player1};
-    gateway.game.addPlayer(socket.id, "Player1");
+    gateway.game.addPlayer(socket.id, "Player1",socket);
     gateway.onReady(socket);
     expect(gateway.game.hasGameStarted()).toBe(false);
     const userId2 = '2';
     const socket2 = {...player2};
-    gateway.game.addPlayer(socket2.id, "Player2");
+    gateway.game.addPlayer(socket2.id, "Player2",socket2);
     gateway.onReady(socket2);
 
     await Promise.resolve(); // Allow any pending Promises to resolve
@@ -141,12 +140,12 @@ describe("TriviaGateway", () => {
 
     const userId = '1';
     const socket = {...player1};
-    gateway.game.addPlayer(socket.id, "Player1");
+    gateway.game.addPlayer(socket.id, "Player1",socket);
     gateway.onReady(socket);
     expect(gateway.game.hasGameStarted()).toBe(false);
     const userId2 = '2';
     const socket2 = {...player2};
-    gateway.game.addPlayer(socket2.id, "Player2");
+    gateway.game.addPlayer(socket2.id, "Player2",socket2);
     gateway.onReady(socket2);
 
     expect(
@@ -173,12 +172,12 @@ describe("TriviaGateway", () => {
 
     const userId = '1';
     const socket = {...player1};
-    gateway.game.addPlayer(socket.id, "Player1");
+    gateway.game.addPlayer(socket.id, "Player1",socket);
     gateway.onReady(socket);
     expect(gateway.game.hasGameStarted()).toBe(false);
     const userId2 = '2';
     const socket2 = {...player2};
-    gateway.game.addPlayer(socket2.id, "Player2");
+    gateway.game.addPlayer(socket2.id, "Player2",socket2);
     gateway.onReady(socket2);
 
     await gateway.game.waitForTheGameToBeStarted();

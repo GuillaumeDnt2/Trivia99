@@ -99,9 +99,10 @@ export class Game {
    * Add a new player to players list
    * @param id : id of the player
    * @param name : name chosen by the player
+   * @param socket
    */
-  public addPlayer(id: string, name: string) : Player {
-      let player = new Player(name, id);
+  public addPlayer(id: string, name: string, socket: any) : Player {
+      let player = new Player(name, id,socket);
     this.players.set(id, player);
     return player;
   }
@@ -198,14 +199,15 @@ export class Game {
             player.addQuestion(question);
             console.log("Question added to " + player.getName());
             let info = player.getUserInfo();
-            this.server.to(id).emit("userInfo", info);
+            this.server.to(player.getSocket().id).emit("userInfo", info);
 
             //Wait for the game to be started before sending question
             await this.waitForTheGameToBeStarted();
 
             //Send question to player if queue was empty before
             if(player.getNbQuestions() == 1){
-                this.server.to(id).emit("newQuestion",this.qManager.get(question));
+                console.log(this.qManager.get(question));
+                this.server.to(player.getSocket().id).emit("newQuestion",this.qManager.get(question));
                 player.addAnsweredQuestion();
             }
         }
@@ -234,8 +236,10 @@ export class Game {
         player.incrementStreak();
         if(player.getNbQuestions() > 0){
             const qToSend = this.qManager.get(player.getCurrentQuestion());
-            this.server.to(player.getId()).emit("newQuestion",qToSend);
+            this.server.to(player.getSocket().id).emit("newQuestion",qToSend);
             player.addAnsweredQuestion();
+        } else {
+            this.server.to(player.getSocket().id).emit("noMoreQuestions");
         }
         return true;
     }

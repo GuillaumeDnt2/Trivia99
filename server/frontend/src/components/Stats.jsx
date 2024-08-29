@@ -2,6 +2,7 @@ import '../styles/common.css';
 import '../styles/Stats.css';
 import flame from '../assets/flame.png';
 import { useEffect } from 'react';
+import {socket} from "../utils/socket";
 
 export default function Stats(props){
 
@@ -11,7 +12,7 @@ export default function Stats(props){
     }, [props.streak])
 
     function attack(){
-
+        socket.emit("attack");
     }
 
     return <div className='content-row-box'>

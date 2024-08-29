@@ -174,8 +174,7 @@ export class TriviaGateway implements OnModuleInit {
   onLogin(@MessageBody() name: string, @ConnectedSocket() socket: any) {
     //Doesn't re-add the player if he's already in the game
     if(!this.game.getPlayers().has(this.getIdFromHeaders(socket))) {
-      let player = this.game.addPlayer(this.getIdFromHeaders(socket), name);
-      player.changeSocket(socket);
+      let player = this.game.addPlayer(this.getIdFromHeaders(socket), name, socket);
       this.sendReadyInfo();
     }
   }
@@ -268,16 +267,26 @@ export class TriviaGateway implements OnModuleInit {
   onAnswer(@MessageBody() body: any, @ConnectedSocket() socket: any) {
     //Get the player that answered the question
     const player = this.game.getPlayers().get(this.getIdFromHeaders(socket));
+
     //Check if the answer is correct
-    const question = player.getCurrentQuestion();
+    if(this.game.checkPlayerAnswer(player, body)){
+      //Send correct answer msg
+      socket.emit("onResult",{
+        msg: "Correct"
+      });
+    }
+    else{
+      //If the answer is incorrect
+      socket.emit("onResult", {
+        msg: "Incorrect",
+      });
+    }
+
     //Todo: Logic of the answer handling, can only do it once the question class is done
+
     //If the answer is correct
     socket.emit("onResult", {
       msg: "Correct",
-    });
-    //If the answer is incorrect
-    socket.emit("onResult", {
-      msg: "Incorrect",
     });
   }
 

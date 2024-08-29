@@ -74,7 +74,7 @@ export class QuestionManager {
       }
       q = this.qList.shift();
     } while (this.qPool.has(q.getId()));
-
+    this.qPool.set(q.getId(), q);
     return new QuestionInQueue(q, isAttack);
   }
 
