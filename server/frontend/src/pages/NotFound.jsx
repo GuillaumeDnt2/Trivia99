@@ -1,5 +1,4 @@
 import "../styles/common.css"
-import logo from '../assets/Trivia99.png'
 import BaseLayout from "../components/BaseLayout";
 
 

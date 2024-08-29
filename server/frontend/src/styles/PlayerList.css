@@ -10,8 +10,7 @@
 .column {
     display: flex;
     flex-direction: column-reverse;
-    
-    background-color: var(--light-orange);
+    background-color: var(--white-orange);
 }
 
 /* Tooltip container */
