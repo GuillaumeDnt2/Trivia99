@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { socket } from "../utils/socket";
 import BaseLayout from "../components/BaseLayout";
+import "../styles/Ranking.css"
 
 export default function Ranking(){
 
