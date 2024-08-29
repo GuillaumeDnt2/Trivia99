@@ -4,6 +4,8 @@ import Game from "../pages/Game";
 import Ranking from "../pages/Ranking";
 import React from "react";
 import NotFound from "../pages/NotFound";
+import ProtectedRouteNavToHome from "../components/ProtectedRouteNavToHome";
+import ProtectedRouteGoBack from "../components/ProtectedRouteGoBack";
 import Test from "../pages/Test";
 import Zebi from "../pages/Zebi";
 
@@ -11,19 +13,20 @@ import Zebi from "../pages/Zebi";
 const routes = [
     {
         path: "/",
-        element: <Home />,
+        element: <ProtectedRouteGoBack Component={Home} />,
         errorElement: <NotFound/>,
     },
     {
         path: "/waiting",
-        element: <Waiting />     },
+        element: <ProtectedRouteNavToHome Component={Waiting} />
+    },
     {
         path: "/game",
-        element: <Game />
+        element: <ProtectedRouteNavToHome Component={Game} />
     },
     {
         path: "/ranking",
-        element: <Ranking />
+        element: <ProtectedRouteNavToHome Component={Ranking} />
     },
     {
         path: "/test",
