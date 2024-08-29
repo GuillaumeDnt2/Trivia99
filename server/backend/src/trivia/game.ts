@@ -178,19 +178,18 @@ export class Game {
         });
 
         //Send the player list
-        this.server.emit("players", this.getAllPlayerList())
+        //setTimeout(()=> this.server.emit("players", this.getAllPlayerList()),300);
         await this.sendTimedQuestionToEveryone();
     }
 
     /**
      * Creates a list of players to be then used in the player list in the frontend
-     * @private
      */
-    private getAllPlayerList(): Object[]{
+    public getAllPlayerList(): Object[]{
         let list = [];
         this.players.forEach((player:Player) => {
             let smallPlayer = {
-                id: player.getId(),
+                isAlive: player.alive(),
                 name: player.getName()
             }
             list.push(smallPlayer);
@@ -270,7 +269,12 @@ export class Game {
                 player.addAnsweredQuestion();
             }
         }
+    }
 
+    public emitCurrentQuestionOf(player: Player){
+        if(player.getNbQuestions() > 0){
+            this.server.to(player.getSocket().id).emit("newQuestion",this.qManager.get(player.getCurrentQuestion()));
+        }
     }
 
   /**
