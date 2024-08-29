@@ -19,6 +19,7 @@ export default function Ranking(){
     }, []);
 
     return <BaseLayout>
+            <div className={"content-column-box center"}>
                     <h2>{ranking[0]?.name} won!</h2>
                     <h3>Ranking: </h3>
                     <div className="scroll-box">
@@ -28,5 +29,6 @@ export default function Ranking(){
                             )}
                         </ul>
                     </div>
+            </div>
             </BaseLayout>
 }

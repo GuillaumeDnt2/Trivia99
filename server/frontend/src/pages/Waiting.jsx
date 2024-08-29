@@ -37,9 +37,9 @@ export default function Waiting(){
 
 
     return <BaseLayout>
-                <div className={'waiting-container content-column-box'}>
-                    <p>{playersInfo.nbReady}/{playersInfo.nbPlayers} player(s) ready</p>
-                    <button id="readyBtn" className={'orange-button'} onClick={onClick} disabled={ready}>Ready?</button>
-                </div>
-            </BaseLayout>
+        <div className={"content-column-box center"}>
+                <p className={"text"}>{playersInfo.nbReady}/{playersInfo.nbPlayers} player(s) ready</p>
+                <button id="readyBtn" className={'orange-button'} onClick={onClick} disabled={ready}>Ready ?</button>
+        </div>
+        </BaseLayout>
 }

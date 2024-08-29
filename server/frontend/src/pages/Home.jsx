@@ -39,18 +39,20 @@ export default function Home(){
     }
 
     return <BaseLayout>
+            <div className={"content-column-box center "}>
                 <form onSubmit={handleSubmit} className="content-column-box">
-                    <label>Username
+                    <label className={"content-row-box"}><p className={"username-home"}>Username</p>
                         <input
                             type="text"
                             onChange={(e) => setName(e.target.value)}
                             placeholder={placeholder}
                         />
                     </label>
-                    <button type="submit">Click to play!</button>
+                    <button type="submit" className={"orange-button"}>Click to play !</button>
                 </form>
                 <Link to="https://github.com/GuillaumeDnt2/Trivia99/tree/main">
-                    <button type="button">GitHub<img src={github} alt="GitHub"/></button>
+                    <button type="button" className={"content-row-box center gap-in-button orange-button"}>GitHub<img src={github} alt="GitHub" className={"image-git"}/></button>
                 </Link>
+            </div>
         </BaseLayout>
 }
