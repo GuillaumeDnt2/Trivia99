@@ -12,7 +12,7 @@ Tells the backend if the user is not ready to play.
 Tells the backend that the user wants to attack random players.
 #### 'answer'
 Gives an answer to the backend with the answer (0,1,2 or 3) in the body of the message.
-```
+```json
 {
     "answer": 3
 }
@@ -88,4 +88,32 @@ Sends the streak of the user that requested it in this form :
 {
     "streak": 5
 }
+```
+#### 'gameOver'
+Inform the player that it's game over for them!
+```json
+{
+    userInfo : {
+            "streak": 5,
+          "isAlive": false,
+          "nbBadAnswers": 2,
+          "nbGoodAnswers": 3,
+          "nbAnsweredQuestions":3,
+          "questions": [
+            {
+              "id": 1,
+              "difficulty": "easy",
+              "isAttack": false
+            },
+            {
+              "id": 2,
+              "difficulty": "hard",
+              "isAttack": true
+            }
+          ]
+        },
+    rank : 36
+
+}
+
 ```
