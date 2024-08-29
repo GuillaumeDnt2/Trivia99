@@ -1,0 +1,14 @@
+.answers-grid {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto;
+}
+
+.answer-cell {
+    border: 1px;
+    border-style: solid;
+    border-color: #f18847;
+    padding: 10px;
+    background-color: #f9efe6;
+    text-align: center;
+}

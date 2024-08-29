@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { socket } from "../utils/socket";
+import BaseLayout from "../components/BaseLayout";
 
 export default function Ranking(){
 
@@ -17,9 +18,7 @@ export default function Ranking(){
         }
     }, []);
 
-    return <div className="vertical">
-                <img src="../../Trivia_99.png" alt="Trivia 99 logo"/>
-                <div className="rounded-box">
+    return <BaseLayout>
                     <h2>{ranking[0]?.name} won!</h2>
                     <h3>Ranking: </h3>
                     <div className="scroll-box">
@@ -29,6 +28,5 @@ export default function Ranking(){
                             )}
                         </ul>
                     </div>
-                </div>
-            </div>
+            </BaseLayout>
 }

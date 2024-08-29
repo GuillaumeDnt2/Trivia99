@@ -4,6 +4,8 @@ import Game from "../pages/Game";
 import Ranking from "../pages/Ranking";
 import React from "react";
 import NotFound from "../pages/NotFound";
+import Test from "../pages/Test";
+import Zebi from "../pages/Zebi";
 
 
 const routes = [
@@ -22,6 +24,14 @@ const routes = [
     {
         path: "/ranking",
         element: <Ranking />
+    },
+    {
+        path: "/test",
+        element: <Test />
+    },
+    {
+        path: "/zebi",
+        element: <Zebi />
     }
 ];
 
