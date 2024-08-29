@@ -29,9 +29,10 @@ describe("TriviaGateway", () => {
     gateway.game = new Game(server, configService);
   });
 
-  afterEach(() => {
+  afterEach(async() => {
     jest.clearAllTimers();
     gateway.game.stopGame();
+    await Promise.resolve();
   })
 
   it("should read from the .env file", () => {
@@ -78,10 +79,8 @@ describe("TriviaGateway", () => {
 
   it("should send a question every 10000ms", async () => {
     jest.useFakeTimers();
-    const userId = '1';
     const socket = {...player1};
     gateway.game.addPlayer(socket.id, "Player1");
-    const spy = jest.spyOn(server, "emit");
 
     await gateway.game.startGame();
 
@@ -89,8 +88,6 @@ describe("TriviaGateway", () => {
       gateway.game.getPlayerById(socket.id).getCurrentQuestion(),
     ).toBeUndefined();
 
-    // Clear previous calls
-    spy.mockClear();
 
     // Advance time by 10000ms
     jest.advanceTimersByTime(10000);
@@ -99,10 +96,6 @@ describe("TriviaGateway", () => {
     expect(
       gateway.game.getPlayerById(socket.id).getCurrentQuestion(),
     ).toBeDefined();
-    //expect(spySocket).toHaveBeenCalledWith("userInfo", expect.any(Object));
-
-    // Clear previous calls
-    spy.mockClear();
 
     // Advance time by another 10000ms
     jest.advanceTimersByTime(10000);
@@ -113,18 +106,6 @@ describe("TriviaGateway", () => {
 
     jest.useRealTimers();
   });
-
-  // it("should have 50 questions in the question list", async () => {
-  //   await gateway.game.startGame();
-  //   expect(gateway.game.getNbQuestions()).toBe(50);
-  // });
-
-  //QuestionManager
-  it("should have qList defined", () => {
-    let qManager = new QuestionManager(configService);
-    expect(qManager.qList).toBeDefined();
-  });
-  
 
 
   it("should launch the game if there's two players ready", async() => {
@@ -142,6 +123,17 @@ describe("TriviaGateway", () => {
 
     expect(gateway.game.hasGameStarted()).toBe(true);
   });
+
+
+
+
+  //QuestionManager
+  it("should have qList defined", () => {
+    let qManager = new QuestionManager(configService);
+    expect(qManager.qList).toBeDefined();
+  });
+  
+
 
   it("should give questions to players after the game has started", async () => {
 
@@ -199,6 +191,11 @@ describe("TriviaGateway", () => {
     expect(gateway.game.getPlayerById(socket.id).alive()).toBe(false);
 
     jest.useRealTimers();
+  });
+
+  it("should have 50 questions in the question list", async () => {
+    await gateway.game.startGame();
+    expect(gateway.game.getNbQuestions()).toBe(50);
   });
 
 });

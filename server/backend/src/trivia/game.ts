@@ -67,6 +67,7 @@ export class Game {
     public stopGame() : void{
         if (this.intervalId) {
             clearInterval(this.intervalId);
+            this.intervalId = null;
         }
     }
 
