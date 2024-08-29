@@ -11,6 +11,7 @@ export class Player {
   private nbAnsweredQuestions: number;
   public isInTimeOut: NodeJS.Timeout;
   private id: string;
+  private currentSocket: any;
 
   constructor(name: string, id:string) {
     this.name = name;
@@ -111,6 +112,22 @@ export class Player {
     });
 
     return info;
+  }
+
+  /**
+   * Change the socket of the player
+   * @param socket to change to
+   */
+  public changeSocket(socket: any) {
+    this.currentSocket = socket;
+  }
+
+    /**
+     * Get the current socket of the player
+     * @returns
+     */
+  public getSocket() {
+    return this.currentSocket;
   }
 
   /**
