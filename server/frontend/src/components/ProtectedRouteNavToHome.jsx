@@ -5,13 +5,21 @@ import {socket} from "../utils/socket";
 
 export default function ProtectedRouteNavToHome({Component}){
 
-    const [loggedIn, setLoggedIn] = useState(false)
+    const [loggedIn, setLoggedIn] = useState(true)
 
+    /*
+      @SubscribeMessage("isUserLogged")
+  onIsUserLogged(@ConnectedSocket() socket: any){
+    let loggedInfo = this.game.getPlayers().has(this.getIdFromHeaders(socket));
+    this.server.to(socket.id).emit("loggedInfo",loggedInfo);
+  }
+     */
     useEffect(() => {
         socket.emit("isUserLogged")
 
         socket.on("loggedInfo", (state) => {
-            setLoggedIn(state.loggedInInfo)
+            setLoggedIn(state)
+            console.log("User's state in NavToHome :" + state)
         })
 
         return () => {

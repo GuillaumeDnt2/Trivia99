@@ -17,7 +17,8 @@ export default function ProtectedRouteGoBack({Component}){
         socket.emit("isUserLogged")
 
         socket.on("loggedInfo", (state) => {
-            setLoggedIn(state.loggedInInfo)
+            setLoggedIn(state)
+            console.log("User's state in GoBack :" + state)
         })
 
         return () => {

@@ -160,11 +160,8 @@ export class TriviaGateway implements OnModuleInit {
    */
   @SubscribeMessage("isUserLogged")
   onIsUserLogged(@ConnectedSocket() socket: any){
-    let loggedInInfo = this.game.getPlayers().has(this.getIdFromHeaders(socket));
-    this.server.to(socket.id).emit("loggedInfo",
-        {
-          loggedInInfo
-        })
+    let loggedInfo = this.game.getPlayers().has(this.getIdFromHeaders(socket));
+    this.server.to(socket.id).emit("loggedInfo",loggedInfo);
   }
 
   /**
