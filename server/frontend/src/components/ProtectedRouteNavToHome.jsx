@@ -7,13 +7,6 @@ export default function ProtectedRouteNavToHome({Component}){
 
     const [loggedIn, setLoggedIn] = useState(true)
 
-    /*
-      @SubscribeMessage("isUserLogged")
-  onIsUserLogged(@ConnectedSocket() socket: any){
-    let loggedInfo = this.game.getPlayers().has(this.getIdFromHeaders(socket));
-    this.server.to(socket.id).emit("loggedInfo",loggedInfo);
-  }
-     */
     useEffect(() => {
         socket.emit("isUserLogged")
 
