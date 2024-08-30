@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 
-export default function StackQuestion(props){
+export default function QueueQuestion(props){
 
     const [color, setColor] = useState("");
 
