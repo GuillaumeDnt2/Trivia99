@@ -13,7 +13,7 @@ export default function Game(){
     const [playersLeft, setPlayersLeft] = useState([]);
     const [playersRight, setPlayersRight] = useState([]);
 
-    const [stack, setStack] = useState([]);
+    const [queue, setQueue] = useState([]);
     const [streak, setStreak] = useState(0);
     const [accuracy, setAccuracy] = useState(0);
     const [nbResponse, setNbResponse] = useState(0);
@@ -28,7 +28,7 @@ export default function Game(){
             setStreak(userInfo.streak);
             setAccuracy(userInfo.nbGoodAnswers / (userInfo.nbGoodAnswers + userInfo.nbBadAnswers));
             setNbResponse(userInfo.nbGoodAnswers);
-            setStack(userInfo.questions);
+            setQueue(userInfo.questions);
         }
 
         function onNewQuestion(question){
@@ -50,13 +50,12 @@ export default function Game(){
         }
     }, []);
 
-
     return (
         <BaseLayout>
             <div className="content-row-box switch-vertical hsize">
                 <PlayerList col="col1" players={playersLeft}/>
                 <div id="content-column-box col2">
-                    <Queue state={stack} />
+                    <Queue state={queue} />
                     <Stats streak={streak} accuracy={accuracy} nbReponse={nbResponse}/>
                     <QuestAndAnsw isAlive={isAlive} q={question.question} a={question.answers}/>
                 </div>
