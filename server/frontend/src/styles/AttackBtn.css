@@ -1,0 +1,12 @@
+#attack-button {
+    padding: 10px;
+    align-self: stretch;
+    border-radius: 6px;
+    font-weight: bolder;
+    background-color: var(--grad-blue);
+    cursor: pointer;
+}
+
+.red-fade {
+    background-image: linear-gradient(#ffe9e5, #fd300c);
+}
