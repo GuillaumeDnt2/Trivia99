@@ -125,7 +125,7 @@ export class Game {
    * @param socket
    */
   public addPlayer(id: string, name: string, socket: any) : Player {
-      let player = new Player(name, id,socket);
+      let player = new Player(name, id,socket, this.configService);
     this.players.set(id, player);
     return player;
   }
@@ -275,9 +275,9 @@ export class Game {
 
             //Wait for the game to be started before sending question
             await this.waitForTheGameToBeStarted();
-            console.log(player.getCurrentQuestion());
+            //console.log(player.getCurrentQuestion());
             //Send question to player if queue was empty before
-            if(player.getNbQuestionsInQueue() == 0){
+            if(player.getCurrentQuestion() === undefined || player.getNbQuestionsInQueue() == 0){
                 this.server.to(player.getSocket().id).emit("newQuestion",this.qManager.get(question));
                 this.server.to(player.getSocket().id).emit("userInfo", info);
                 player.addAnsweredQuestion();
@@ -286,7 +286,7 @@ export class Game {
     }
 
     public emitCurrentQuestionOf(player: Player){
-        if(player.getNbQuestionsInQueue() > 0){
+        if(player.getCurrentQuestion() !== undefined){
             this.server.to(player.getSocket().id).emit("newQuestion",this.qManager.get(player.getCurrentQuestion()));
         }
     }
@@ -299,6 +299,12 @@ export class Game {
     let target = this.getOtherRandomPlayer(attacker);
     console.log("The target is " + target.getName());
     await this.addQuestionToPlayer(target.getId(), await this.qManager.newQuestion(true));
+    // if(target.getCurrentQuestion() == undefined){
+    //     target.nextQuestion();
+    //     this.server.to(target.getSocket().id).emit("newQuestion",this.qManager.get(target.getCurrentQuestion()));
+    //     this.server.to(target.getSocket().id).emit("userInfo", target.getUserInfo());
+    //     target.addAnsweredQuestion();
+    // }
     this.server.to(target.getSocket().id).emit("userInfo", target.getUserInfo());
   }
 

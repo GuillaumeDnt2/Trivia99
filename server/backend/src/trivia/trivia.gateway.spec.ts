@@ -101,7 +101,7 @@ describe("TriviaGateway", () => {
 
     await Promise.resolve(); // Allow any pending Promises to resolve
 
-    expect(gateway.game.getPlayerById(socket.id).getNbQuestionsInQueue()).toBe(2);
+    expect(gateway.game.getPlayerById(socket.id).getNbQuestionsInQueue()).toBe(1);
 
     jest.useRealTimers();
   });
@@ -168,7 +168,7 @@ describe("TriviaGateway", () => {
     jest.advanceTimersByTime(20000);
     await Promise.resolve(); // Allow any pending Promises to resolve
 
-    expect(gateway.game.getPlayerById(socket.id).getNbQuestionsInQueue()).toBe(3); //We also send a question when the game starts
+    expect(gateway.game.getPlayerById(socket.id).getNbQuestionsInQueue()).toBe(2); //We also send a question when the game starts
 
     jest.useRealTimers();
   });

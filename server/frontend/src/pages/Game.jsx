@@ -18,6 +18,7 @@ export default function Game(){
     const [accuracy, setAccuracy] = useState(0);
     const [nbResponse, setNbResponse] = useState(0);
     const [isAlive, setAlive] = useState(true);
+    const [canAttack, setCanAttack] = useState(false);
 
     const [question, setQuestion] = useState({});
 
@@ -31,7 +32,9 @@ export default function Game(){
             setAccuracy(userInfo.nbGoodAnswers / (userInfo.nbGoodAnswers + userInfo.nbBadAnswers));
             setNbResponse(userInfo.nbGoodAnswers);
             setStack(userInfo.questions);
-            console.log(userInfo);
+            setCanAttack(userInfo.canAttack);
+            console.log("Questions of " + userInfo.name + " :")
+            console.log(userInfo.questions);
         }
 
         function onNewQuestion(question){
@@ -83,7 +86,7 @@ export default function Game(){
                 <PlayerList players={playersLeft}/>
                 <div id="content-column-box">
                     <Stack state={stack} />
-                    <Stats streak={streak} accuracy={accuracy} nbReponse={nbResponse}/>
+                    <Stats streak={streak} accuracy={accuracy} nbReponse={nbResponse} canAttack={canAttack}/>
                     <QuestAndAnsw isAlive={isAlive} q={question.question?.text} a={question.answers}/>
                 </div>
                 <PlayerList players={playersRight}/>

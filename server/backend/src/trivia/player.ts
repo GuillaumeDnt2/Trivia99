@@ -1,4 +1,5 @@
 import { QuestionInQueue } from "./questionInQueue";
+import {ConfigService} from "@nestjs/config";
 
 export class Player {
   private name: string;
@@ -15,8 +16,10 @@ export class Player {
   private currentSocket: any;
   private lastWrongAnswerTime: number;
   private currentQuestion: QuestionInQueue;
+  //Configuration variables
+  private STREAK: number;
 
-  constructor(name: string, id:string, socket: any) {
+  constructor(name: string, id:string, socket: any, private configService: ConfigService) {
     this.name = name;
     this.queue = [];
     this.streak = 0;
@@ -29,6 +32,9 @@ export class Player {
     this.rank = 0;
     this.currentSocket = socket;
     this.lastWrongAnswerTime = 0;
+    this.configService = configService;
+
+    this.STREAK = parseInt(this.configService.get<string>("STREAK"));
   }
 
   /**
@@ -56,6 +62,11 @@ export class Player {
   }
 
   public nextQuestion(): QuestionInQueue|void{
+    console.log("Queue length of " + this.name + ": " + this.queue.length)
+
+    this.queue.forEach((question: any) => {
+      console.log(question.isAttack)
+        });
 
     if(this.queue.length > 0){
       this.currentQuestion = this.queue.shift();
@@ -129,17 +140,19 @@ export class Player {
   public getUserInfo(): object {
     let info = {
       streak: this.streak,
+      canAttack: this.streak >= this.STREAK,
       isAlive: this.isAlive,
       nbBadAnswers: this.nbBadAnswers,
       nbGoodAnswers: this.nbGoodAnswers,
       nbAnsweredQuestions: this.nbAnsweredQuestions,
       rank: this.rank,
-      questions: []
+      questions: this.queue
     };
 
-    this.queue.forEach((question: any) => {
-      info.questions.push(question);
-    });
+    // this.queue.forEach((question: any) => {
+    //   info.questions.push(question);
+    // });
+    //
 
 
     return info;
