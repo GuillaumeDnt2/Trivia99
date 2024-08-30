@@ -52,14 +52,14 @@ export default function Game(){
 
     return (
         <BaseLayout>
-            <div className="content-row-box">
-                <PlayerList players={playersLeft}/>
-                <div id="content-column-box">
+            <div className="content-row-box switch-vertical hsize">
+                <PlayerList col="col1" players={playersLeft}/>
+                <div id="content-column-box col2">
                     <Stack state={stack} />
                     <Stats streak={streak} accuracy={accuracy} nbReponse={nbResponse}/>
                     <QuestAndAnsw isAlive={isAlive} q={question.question} a={question.answers}/>
                 </div>
-                <PlayerList players={playersRight}/>
+                <PlayerList col="col3" players={playersRight}/>
             </div>   
         </BaseLayout>
     );
