@@ -3,7 +3,7 @@ import {socket} from "../utils/socket";
 import "../components/PlayerList"
 import PlayerList from "../components/PlayerList";
 import BaseLayout from "../components/BaseLayout";
-import Stack from "../components/Stack";
+import Queue from "../components/Queue";
 import Stats from "../components/Stats";
 import QuestAndAnsw from "../components/QuestAndAnsw";
 import "../styles/common.css";
@@ -12,7 +12,7 @@ export default function Game(){
     const [playersLeft, setPlayersLeft] = useState([]);
     const [playersRight, setPlayersRight] = useState([]);
 
-    const [stack, setStack] = useState([]);
+    const [queue, setQueue] = useState([]);
     const [streak, setStreak] = useState(0);
     const [accuracy, setAccuracy] = useState(0);
     const [nbResponse, setNbResponse] = useState(0);
@@ -27,7 +27,7 @@ export default function Game(){
             setStreak(userInfo.streak);
             setAccuracy(userInfo.nbGoodAnswers / (userInfo.nbGoodAnswers + userInfo.nbBadAnswers));
             setNbResponse(userInfo.nbGoodAnswers);
-            setStack(userInfo.questions);
+            setQueue(userInfo.questions);
         }
 
         function onNewQuestion(question){
@@ -49,13 +49,12 @@ export default function Game(){
         }
     }, []);
 
-
     return (
         <BaseLayout>
             <div className="content-row-box switch-vertical hsize">
                 <PlayerList col="col1" players={playersLeft}/>
                 <div id="content-column-box col2">
-                    <Stack state={stack} />
+                    <Queue state={queue} />
                     <Stats streak={streak} accuracy={accuracy} nbReponse={nbResponse}/>
                     <QuestAndAnsw isAlive={isAlive} q={question.question} a={question.answers}/>
                 </div>

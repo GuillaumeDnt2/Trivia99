@@ -22,7 +22,7 @@ export default function QueueQuestion(props){
                     throw new Error();
             }
         }
-    }, []);
+    }, [props]);
 
     return (
         <div className={`square ${color}`}></div>
