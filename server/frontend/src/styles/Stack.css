@@ -13,7 +13,7 @@
 
     margin-left: calc(15% - 10px);
 
-    height: 80px;
+    min-height: 80px;
     width: 70%;
 
     background-color: var(--white-orange);

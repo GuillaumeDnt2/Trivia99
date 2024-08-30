@@ -14,6 +14,10 @@
     .col3 {
         order: 3;
     }
+
+    .game-container {
+        min-width: 100%;
+    }
 }
 
 .main-container {
@@ -22,5 +26,5 @@
 }
 
 .game-container{
-    width: 70%;
+    min-width: 70%;
 }

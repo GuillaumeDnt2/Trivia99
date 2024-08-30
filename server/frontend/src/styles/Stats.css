@@ -5,6 +5,7 @@
 
 .stat-container {
     background-color: var(--white-orange);
+    justify-content : center;
 }
 
 .img-container {
