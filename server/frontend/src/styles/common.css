@@ -73,7 +73,7 @@
 }
 
 .hsize {
-    height: 90vh;
+    height: 85vh;
 }
 
 .text {
@@ -84,4 +84,22 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+@media screen and (max-width: 630px) {
+    .switch-vertical {
+        flex-direction: column;
+    }
+
+    .col1 {
+        order: 2;
+    }
+
+    .col2 {
+        order: 1;
+    }
+
+    .col3 {
+        order: 3;
+    }
 }

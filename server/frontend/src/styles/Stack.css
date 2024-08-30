@@ -1,7 +1,8 @@
 .square {
     border-radius: 20px;
-    height: 100%;
-    width: 20px
+    height: 98%;
+    width: 14%;
+    margin: 1px;
 }
 
 .stack-box {
@@ -9,8 +10,12 @@
     flex-direction: row;
     justify-content: left;
     align-items: center;
+
+    margin-left: calc(15% - 10px);
+
     height: 80px;
-    width: 400px;
+    width: 70%;
+
     background-color: var(--white-orange);
 }
 
