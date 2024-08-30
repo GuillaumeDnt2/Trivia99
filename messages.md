@@ -33,18 +33,28 @@ Tells the frontend how many players are connected in this form :
 }
 ```
 #### 'ranking'
-Sends the ranking to every sockets connected in this form :
+Sends the ranking to players :
 ```json
-[
-    {
-        "name": "player1",
-        "score": 100
+{
+{
+      "playerid": "asdasdasdsadasdasmogusdnkahdas",
+      "playerName": "jean-paul",
+      "rank": 1,
+      "goodAnswers": 2,
+      "badAnswers": 3,
+      "answeredQuestions":3
     },
-    {
-        "name": "player2",
-        "score": 50
+{
+      "playerid": "asdasdasdsadasdasmogusdnkahdas",
+      "playerName": "jean-pierre",
+      "rank": 2,
+      "goodAnswers": 2,
+      "badAnswers": 3,
+      "answeredQuestions":3
     }
-]
+
+
+}
 ```
 #### 'userInfo'
 Sends to one user his information in this form :
@@ -93,27 +103,15 @@ Sends the streak of the user that requested it in this form :
 #### 'gameOver'
 Inform the player that it's game over for them!
 ```json
+
 {
-    userInfo : {
-            "streak": 5,
-          "isAlive": false,
-          "nbBadAnswers": 2,
-          "nbGoodAnswers": 3,
-          "nbAnsweredQuestions":3,
-          "outAt": 0,
-          "questions": [
-            {
-              "id": 1,
-              "difficulty": "easy",
-              "isAttack": false
-            },
-            {
-              "id": 2,
-              "difficulty": "hard",
-              "isAttack": true
-            }
-          ]
-        }
-}
+      "playerid": "asdasdasdsadasdasmogusdnkahdas",
+      "playerName": "jean-paul",
+      "rank": 0,
+      "goodAnswers": 2,
+      "badAnswers": 3,
+      "answeredQuestions":3
+    }
+
 
 ```
