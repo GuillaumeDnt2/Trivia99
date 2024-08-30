@@ -16,23 +16,24 @@ export default function Ranking(){
 
     useEffect(() => {
         function onRanking(sentRanking){
+            console.log(sentRanking);
             setRanking(sentRanking);
+            socket.off("ranking");
         }
 
         socket.on("ranking", onRanking);
 
-        return () => {
-            socket.off("ranking");
-        }
+        socket.emit("getRanking");
+
     }, []);
 
     return <BaseLayout>
-                    <h2>{ranking[0]?.name} won!</h2>
+                    <h2>{ranking[0]?.playerName} won!</h2>
                     <h3>Ranking: </h3>
                     <div className="scroll-box">
                         <ul>
                             {ranking.map(player =>
-                                <li>{player.name} : {player.score} answered correctly</li>
+                                <li>{player.playerName} : {player.goodAnswers} answered correctly</li>
                             )}
                         </ul>
                     </div>

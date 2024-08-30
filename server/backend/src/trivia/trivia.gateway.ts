@@ -245,12 +245,13 @@ export class TriviaGateway implements OnModuleInit {
     //If the streak is less than 3, don't send any attacks
     if (streak < this.STREAK) return;
 
-    if (this.game.getNbPlayerAlive() > 2) {
+    if (this.game.getNbPlayerAlive() > 1) {
       //Send the attack to the other players
       for (let i = 0; i <= streak - this.STREAK; i++) {
-        console.log(player.getName().toString() + " has attacked !");
+        console.log(player.getName() + " has attacked !");
         this.game.attackPlayer(player);
       }
+      socket.emit("userInfo", player.getUserInfo());
     }
     //Then reset the streak
     this.game.getPlayerById(this.getIdFromHeaders(socket)).resetStreak();
@@ -289,7 +290,6 @@ export class TriviaGateway implements OnModuleInit {
         })
         return;
       }
-
       //Check if the answer is correct
       if(this.game.checkPlayerAnswer(player, body)){
         //Send correct answer msg
@@ -348,6 +348,25 @@ export class TriviaGateway implements OnModuleInit {
     socket.emit("startStatus", {
       status
     });
+  }
+
+  @SubscribeMessage("getRanking")
+  getRanking(@ConnectedSocket() socket: any){
+    const player = this.game.getPlayerById(this.getIdFromHeaders(socket));
+    if(player){
+      this.game.emitLeaderboardToPlayer(player);
+    }
+  }
+
+  @SubscribeMessage("deleteUser")
+  deleteUser(@ConnectedSocket() socket: any){
+    const player = this.game.getPlayerById(this.getIdFromHeaders(socket));
+    if(player){
+      this.game.removePlayer(player);
+      if(this.game.getNbPlayers() === 0){
+        this.game = new Game(this.server, this.configService);
+      }
+    }
   }
 
 }

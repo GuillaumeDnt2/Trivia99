@@ -14,7 +14,7 @@ export class Player {
   private rank: number; 
   private currentSocket: any;
   private lastWrongAnswerTime: number;
-
+  private currentQuestion: QuestionInQueue;
 
   constructor(name: string, id:string, socket: any) {
     this.name = name;
@@ -52,8 +52,16 @@ export class Player {
    * @returns 
    */
   public getCurrentQuestion() {
-    if (this.queue.length > 0) {
-      return this.queue[this.queue.length-1];
+    return this.currentQuestion;
+  }
+
+  public nextQuestion(): QuestionInQueue|void{
+
+    if(this.queue.length > 0){
+      this.currentQuestion = this.queue.shift();
+      return this.getCurrentQuestion();
+    } else {
+      this.currentQuestion = undefined;
     }
   }
 
@@ -61,7 +69,7 @@ export class Player {
    * Return the nb of question in the question queue
    * @returns 
    */
-  public getNbQuestions() {
+  public getNbQuestionsInQueue() {
     return this.queue.length;
   }
 
@@ -100,7 +108,11 @@ export class Player {
    * @param question 
    */
   public addQuestion(question: any) {
-    this.queue.push(question);
+    if(this.currentQuestion == undefined){
+      this.currentQuestion = question;
+    } else {
+      this.queue.push(question);
+    }
   }
 
   /**
@@ -122,17 +134,19 @@ export class Player {
       nbGoodAnswers: this.nbGoodAnswers,
       nbAnsweredQuestions: this.nbAnsweredQuestions,
       rank: this.rank,
-      questions: [],
+      questions: []
     };
+
     this.queue.forEach((question: any) => {
       info.questions.push(question);
     });
+
 
     return info;
   }
 
   public correctAnswer() : void {
-    this.removeQuestion();
+    this.nextQuestion();
     this.addGoodAnswer();
     this.incrementStreak();
   }

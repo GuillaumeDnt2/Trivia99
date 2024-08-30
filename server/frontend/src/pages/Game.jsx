@@ -7,6 +7,7 @@ import Stack from "../components/Stack";
 import Stats from "../components/Stats";
 import QuestAndAnsw from "../components/QuestAndAnsw";
 import "../styles/common.css";
+import {useNavigate} from "react-router-dom";
 
 export default function Game(){
     const [playersLeft, setPlayersLeft] = useState([]);
@@ -20,6 +21,8 @@ export default function Game(){
 
     const [question, setQuestion] = useState({});
 
+    const navigate = useNavigate();
+
     useEffect(() => {
 
         function onUserInfo(userInfo) {
@@ -28,7 +31,7 @@ export default function Game(){
             setAccuracy(userInfo.nbGoodAnswers / (userInfo.nbGoodAnswers + userInfo.nbBadAnswers));
             setNbResponse(userInfo.nbGoodAnswers);
             setStack(userInfo.questions);
-            console.log("userinfo");
+            console.log(userInfo);
         }
 
         function onNewQuestion(question){
@@ -51,11 +54,16 @@ export default function Game(){
                 }
             }
         }
+        
+        function onEndGame(){
+            navigate("/ranking");
+        }
 
         socket.on("userInfo", onUserInfo);
         socket.on("newQuestion", onNewQuestion);
         socket.on("elimination", onElimination);
         socket.on("players", onPlayers);
+        socket.on("endGame", onEndGame);
 
         socket.emit("getAllInfo");
 
@@ -64,7 +72,7 @@ export default function Game(){
             socket.off("newQuestion");
             socket.off("elimination");
             socket.off("players");
-
+            socket.off("endGame");
         }
     }, []);
 

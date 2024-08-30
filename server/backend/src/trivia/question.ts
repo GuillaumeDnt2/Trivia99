@@ -24,6 +24,8 @@ export class Question {
     if (this.answers.length < 4) {
       this.answers.push(data.correctAnswer);
     }
+
+    //console.log(this);
   }
 
   /**

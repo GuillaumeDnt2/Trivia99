@@ -4,7 +4,8 @@ export default function StackQuestion(props){
 
     const [color, setColor] = useState("");
 
-    useEffect(() => {
+    useEffect(() =>{
+
         if(props.attack){
             setColor("red")
         }else{
