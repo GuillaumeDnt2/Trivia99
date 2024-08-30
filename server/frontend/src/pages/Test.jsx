@@ -6,117 +6,229 @@ export default function Ranking(){
 
     const [ranking, setRanking] = useState([
         {
-            "name": "player1",
-            "score": 100
+            "playerid": "asdasdasdsadasdasmogusdnkahdas",
+            "playerName": "jean-paul",
+            "rank": 1,
+            "goodAnswers": 2,
+            "badAnswers": 3,
+            "answeredQuestions":3
         },
         {
-            "name": "player2",
-            "score": 50
+            "playerid": "asdasdasdsadasdasmogusdnkahdas",
+            "playerName": "jean-pierre",
+            "rank": 2,
+            "goodAnswers": 2,
+            "badAnswers": 3,
+            "answeredQuestions":3
         },
         {
-            "name": "player1",
-            "score": 100
+            "playerid": "asdasdasdsadasdasmogusdnkahdas",
+            "playerName": "jean-paul",
+            "rank": 1,
+            "goodAnswers": 2,
+            "badAnswers": 3,
+            "answeredQuestions":3
         },
         {
-            "name": "player2",
-            "score": 50
+            "playerid": "asdasdasdsadasdasmogusdnkahdas",
+            "playerName": "jean-pierre",
+            "rank": 2,
+            "goodAnswers": 2,
+            "badAnswers": 3,
+            "answeredQuestions":3
         },
         {
-            "name": "player1",
-            "score": 100
+            "playerid": "asdasdasdsadasdasmogusdnkahdas",
+            "playerName": "jean-paul",
+            "rank": 1,
+            "goodAnswers": 2,
+            "badAnswers": 3,
+            "answeredQuestions":3
         },
         {
-            "name": "player2",
-            "score": 50
+            "playerid": "asdasdasdsadasdasmogusdnkahdas",
+            "playerName": "jean-pierre",
+            "rank": 2,
+            "goodAnswers": 2,
+            "badAnswers": 3,
+            "answeredQuestions":3
         },
         {
-            "name": "player1",
-            "score": 100
+            "playerid": "asdasdasdsadasdasmogusdnkahdas",
+            "playerName": "jean-paul",
+            "rank": 1,
+            "goodAnswers": 2,
+            "badAnswers": 3,
+            "answeredQuestions":3
         },
         {
-            "name": "player2",
-            "score": 50
+            "playerid": "asdasdasdsadasdasmogusdnkahdas",
+            "playerName": "jean-pierre",
+            "rank": 2,
+            "goodAnswers": 2,
+            "badAnswers": 3,
+            "answeredQuestions":3
         },
         {
-            "name": "player1",
-            "score": 100
+            "playerid": "asdasdasdsadasdasmogusdnkahdas",
+            "playerName": "jean-paul",
+            "rank": 1,
+            "goodAnswers": 2,
+            "badAnswers": 3,
+            "answeredQuestions":3
         },
         {
-            "name": "player2",
-            "score": 50
+            "playerid": "asdasdasdsadasdasmogusdnkahdas",
+            "playerName": "jean-pierre",
+            "rank": 2,
+            "goodAnswers": 2,
+            "badAnswers": 3,
+            "answeredQuestions":3
         },
         {
-            "name": "player1",
-            "score": 100
+            "playerid": "asdasdasdsadasdasmogusdnkahdas",
+            "playerName": "jean-paul",
+            "rank": 1,
+            "goodAnswers": 2,
+            "badAnswers": 3,
+            "answeredQuestions":3
         },
         {
-            "name": "player2",
-            "score": 50
+            "playerid": "asdasdasdsadasdasmogusdnkahdas",
+            "playerName": "jean-pierre",
+            "rank": 2,
+            "goodAnswers": 2,
+            "badAnswers": 3,
+            "answeredQuestions":3
         },
         {
-            "name": "player1",
-            "score": 100
+            "playerid": "asdasdasdsadasdasmogusdnkahdas",
+            "playerName": "jean-paul",
+            "rank": 1,
+            "goodAnswers": 2,
+            "badAnswers": 3,
+            "answeredQuestions":3
         },
         {
-            "name": "player2",
-            "score": 50
+            "playerid": "asdasdasdsadasdasmogusdnkahdas",
+            "playerName": "jean-pierre",
+            "rank": 2,
+            "goodAnswers": 2,
+            "badAnswers": 3,
+            "answeredQuestions":3
         },
         {
-            "name": "player1",
-            "score": 100
+            "playerid": "asdasdasdsadasdasmogusdnkahdas",
+            "playerName": "jean-paul",
+            "rank": 1,
+            "goodAnswers": 2,
+            "badAnswers": 3,
+            "answeredQuestions":3
         },
         {
-            "name": "player2",
-            "score": 50
+            "playerid": "asdasdasdsadasdasmogusdnkahdas",
+            "playerName": "jean-pierre",
+            "rank": 2,
+            "goodAnswers": 2,
+            "badAnswers": 3,
+            "answeredQuestions":3
         },
         {
-            "name": "player1",
-            "score": 100
+            "playerid": "asdasdasdsadasdasmogusdnkahdas",
+            "playerName": "jean-paul",
+            "rank": 1,
+            "goodAnswers": 2,
+            "badAnswers": 3,
+            "answeredQuestions":3
         },
         {
-            "name": "player2",
-            "score": 50
+            "playerid": "asdasdasdsadasdasmogusdnkahdas",
+            "playerName": "jean-pierre",
+            "rank": 2,
+            "goodAnswers": 2,
+            "badAnswers": 3,
+            "answeredQuestions":3
         },
         {
-            "name": "player1",
-            "score": 100
+            "playerid": "asdasdasdsadasdasmogusdnkahdas",
+            "playerName": "jean-paul",
+            "rank": 1,
+            "goodAnswers": 2,
+            "badAnswers": 3,
+            "answeredQuestions":3
         },
         {
-            "name": "player2",
-            "score": 50
+            "playerid": "asdasdasdsadasdasmogusdnkahdas",
+            "playerName": "jean-pierre",
+            "rank": 2,
+            "goodAnswers": 2,
+            "badAnswers": 3,
+            "answeredQuestions":3
         },
         {
-            "name": "player1",
-            "score": 100
+            "playerid": "asdasdasdsadasdasmogusdnkahdas",
+            "playerName": "jean-paul",
+            "rank": 1,
+            "goodAnswers": 2,
+            "badAnswers": 3,
+            "answeredQuestions":3
         },
         {
-            "name": "player2",
-            "score": 50
+            "playerid": "asdasdasdsadasdasmogusdnkahdas",
+            "playerName": "jean-pierre",
+            "rank": 2,
+            "goodAnswers": 2,
+            "badAnswers": 3,
+            "answeredQuestions":3
         },
         {
-            "name": "player1",
-            "score": 100
+            "playerid": "asdasdasdsadasdasmogusdnkahdas",
+            "playerName": "jean-paul",
+            "rank": 1,
+            "goodAnswers": 2,
+            "badAnswers": 3,
+            "answeredQuestions":3
         },
         {
-            "name": "player2",
-            "score": 50
+            "playerid": "asdasdasdsadasdasmogusdnkahdas",
+            "playerName": "jean-pierre",
+            "rank": 2,
+            "goodAnswers": 2,
+            "badAnswers": 3,
+            "answeredQuestions":3
         },
         {
-            "name": "player1",
-            "score": 100
+            "playerid": "asdasdasdsadasdasmogusdnkahdas",
+            "playerName": "jean-paul",
+            "rank": 1,
+            "goodAnswers": 2,
+            "badAnswers": 3,
+            "answeredQuestions":3
         },
         {
-            "name": "player2",
-            "score": 50
+            "playerid": "asdasdasdsadasdasmogusdnkahdas",
+            "playerName": "jean-pierre",
+            "rank": 2,
+            "goodAnswers": 2,
+            "badAnswers": 3,
+            "answeredQuestions":3
         },
         {
-            "name": "player1",
-            "score": 100
+            "playerid": "asdasdasdsadasdasmogusdnkahdas",
+            "playerName": "jean-paul",
+            "rank": 1,
+            "goodAnswers": 2,
+            "badAnswers": 3,
+            "answeredQuestions":3
         },
         {
-            "name": "player2",
-            "score": 50
-        },
+            "playerid": "asdasdasdsadasdasmogusdnkahdas",
+            "playerName": "jean-pierre",
+            "rank": 2,
+            "goodAnswers": 2,
+            "badAnswers": 3,
+            "answeredQuestions":3
+        }
     ]);
 
     useEffect(() => {
@@ -134,15 +246,25 @@ export default function Ranking(){
     return <BaseLayout>
         <div className={"padding-20px"}>
             <div className={"center-text"}>
-                <h2>{ranking[0]?.name} won!</h2>
+                <h2>{ranking[0]?.playerName} won!</h2>
             </div>
-            <h3>Ranking: </h3>
+            <div className={"item-ranking"}>
+                <span className={"rank-r"}>Rank</span>
+                <span className={"name-r"}>Name</span>
+                <span className={"nb-quest-r"}>Nb questions</span>
+                <span className={"accu-r"}>Accuracy</span>
+            </div>
             <div className="scroll-box disable-scrollbar">
-                <ol className={"list-ranking"}>
-                    {ranking.map(player =>
-                        <li>{player.name} : {player.score} answered correctly</li>
+                <div className={"list-ranking"}>
+                    {ranking.map((player) =>
+                        <div className={"item-ranking " + (player.rank % 2 !== 0 ? "colored-r" : "")}>
+                            <span className={"rank-r"}>{player.rank}</span>
+                            <span className={"name-r"}>{player.playerName}</span>
+                            <span className={"nb-quest-r align-center-text"}>{player.answeredQuestions}</span>
+                            <span className={"accu-r"}>{(player.goodAnswers / (player.badAnswers + player.goodAnswers) * 100).toFixed(2)}</span>
+                        </div>
                     )}
-                </ol>
+                </div>
             </div>
         </div>
     </BaseLayout>
