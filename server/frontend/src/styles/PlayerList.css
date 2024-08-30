@@ -1,16 +1,20 @@
 .dot {
     height: 25px;
-    width: 25px;
+    width: px;
     background-color: #ebddff;
     border-radius: 50%;
     display: inline-block;
-    margin: 5px;
+    margin: 2px;
   }
 
 .column {
     display: flex;
     flex-direction: column-reverse;
-    background-color: var(--white-orange);
+}
+
+.players-container{
+  width: 15%;
+  background-color: var(--white-orange);
 }
 
 /* Tooltip container */
@@ -37,4 +41,10 @@
   /* Show the tooltip text when you mouse over the tooltip container */
   .tooltip:hover .tooltiptext {
     visibility: visible;
+  }
+
+  @media screen and (max-width: 630px) {
+    .players-container{
+      width: calc(100% - 20px);
+    }
   }

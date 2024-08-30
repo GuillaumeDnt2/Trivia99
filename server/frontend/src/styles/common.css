@@ -73,10 +73,7 @@
     border-style: solid;
     border-radius: 6px;
     border-color: var(--strong-orange);
-}
-
-.hsize {
-    height: 85vh;
+    margin: 2px;
 }
 
 .text {
@@ -91,23 +88,4 @@
 
 .orange-fade {
     background-image: linear-gradient(var(--light-orange), white, var(--light-orange));
-}
-
-
-@media screen and (max-width: 630px) {
-    .switch-vertical {
-        flex-direction: column;
-    }
-
-    .col1 {
-        order: 2;
-    }
-
-    .col2 {
-        order: 1;
-    }
-
-    .col3 {
-        order: 3;
-    }
 }

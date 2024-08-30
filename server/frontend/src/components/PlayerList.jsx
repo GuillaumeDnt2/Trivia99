@@ -20,7 +20,7 @@ export default function PlayerList(props){
     }
 
     return (
-      <div className={"content-row-box orange-border " + props.col}>
+      <div className={"content-row-box orange-border players-container " + props.col}>
           <div className="column">
               {displayColumn(0)}
           </div>

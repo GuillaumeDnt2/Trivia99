@@ -3,10 +3,11 @@ import {socket} from "../utils/socket";
 import "../components/PlayerList"
 import PlayerList from "../components/PlayerList";
 import BaseLayout from "../components/BaseLayout";
-import Stack from "../components/Stack";
+import Queue from "../components/Queue";
 import Stats from "../components/Stats";
 import QuestAndAnsw from "../components/QuestAndAnsw";
 import "../styles/common.css";
+import "../styles/Game.css";
 
 export default function Game(){
     const [playersLeft, setPlayersLeft] = useState([]);
@@ -55,7 +56,7 @@ export default function Game(){
             <div className="content-row-box switch-vertical hsize">
                 <PlayerList col="col1" players={playersLeft}/>
                 <div id="content-column-box col2">
-                    <Stack state={stack} />
+                    <Queue state={stack} />
                     <Stats streak={streak} accuracy={accuracy} nbReponse={nbResponse}/>
                     <QuestAndAnsw isAlive={isAlive} q={question.question} a={question.answers}/>
                 </div>

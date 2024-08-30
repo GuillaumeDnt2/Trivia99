@@ -5,8 +5,5 @@
     font-weight: bolder;
     background-color: var(--grad-blue);
     cursor: pointer;
-}
-
-.red-fade {
-    background-image: linear-gradient(#ffe9e5, #fd300c);
+    width: 100%;
 }
