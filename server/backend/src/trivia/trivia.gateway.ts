@@ -33,6 +33,7 @@ export class TriviaGateway implements OnModuleInit {
   server: Server;
   game: Game;
   private STREAK: number;
+  private WRONG_ANSWER_COOLDOWN: number;
 
   /**
    * @constructor
@@ -40,6 +41,7 @@ export class TriviaGateway implements OnModuleInit {
    */
   constructor(private configService: ConfigService) {
     this.STREAK = parseInt(this.configService.get<string>("STREAK"));
+    this.WRONG_ANSWER_COOLDOWN = parseInt(this.configService.get<string>("WRONG_ANSWER_COOLDOWN"));
   }
 
   /**
@@ -238,23 +240,31 @@ export class TriviaGateway implements OnModuleInit {
   @SubscribeMessage("attack")
   onAttack(@ConnectedSocket() socket: any) {
     //Get the streak of the player to determine how many attacks are sent
-    const streak = this.game.getPlayerById(this.getIdFromHeaders(socket)).getStreak();
+    const player = this.game.getPlayerById(this.getIdFromHeaders(socket));
+    const streak = player.getStreak();
     //If the streak is less than 3, don't send any attacks
     if (streak < this.STREAK) return;
 
-    const connectedSockets = Array.from(this.server.sockets.sockets.values());
-    const otherSockets = connectedSockets.filter((s) => s.id !== socket.id);
-
-    if (otherSockets.length > 0) {
+    if (this.game.getNbPlayerAlive() > 1) {
       //Send the attack to the other players
-      for (let i = 0; i < streak - this.STREAK; i++) {
-        const randomSocket =
-          otherSockets[Math.floor(Math.random() * otherSockets.length)];
-        this.game.addAttackQuestionToPlayer(randomSocket.id);
+      for (let i = 0; i <= streak - this.STREAK; i++) {
+        console.log(player.getName() + " has attacked !");
+        this.game.attackPlayer(player);
       }
+      socket.emit("userInfo", player.getUserInfo());
     }
     //Then reset the streak
-    this.game.getPlayerById(socket.id).resetStreak();
+    this.game.getPlayerById(this.getIdFromHeaders(socket)).resetStreak();
+  }
+
+  @SubscribeMessage("getAllInfo")
+  onGetAllInfo(@ConnectedSocket() socket:any){
+    const player = this.game.getPlayerById(this.getIdFromHeaders(socket))
+    if(player){
+      socket.emit("userInfo", player.getUserInfo());
+      this.game.emitCurrentQuestionOf(player);
+      socket.emit("players", this.game.getAllPlayerList());
+    }
   }
 
   /**
@@ -266,25 +276,31 @@ export class TriviaGateway implements OnModuleInit {
   @SubscribeMessage("answer")
   onAnswer(@MessageBody() body: any, @ConnectedSocket() socket: any) {
 
+    if(!this.game.hasGameStarted()){
+        return;
+    }
+
     const player = this.game.getPlayers().get(this.getIdFromHeaders(socket));
 
-    const answer = body;
-
-
-    //Check if the answer is correct
-    if(this.game.checkPlayerAnswer(player, answer.answer)){
+    if(player){
+      //Check if the player still has a cooldown for wrong answers
+      if(Date.now() - player.getWrongAnswerTime() < this.WRONG_ANSWER_COOLDOWN * 1000){
+        socket.emit("onCooldown", {
+          timeRemainingMs: this.WRONG_ANSWER_COOLDOWN - (Date.now() - player.getWrongAnswerTime())
+        })
+        return;
+      }
+      //Check if the answer is correct
+      if(this.game.checkPlayerAnswer(player, body)){
         //Send correct answer msg
-        socket.emit("onResult",{
-          msg: "Correct"
-        });
-    }
-    else{
+        socket.emit("goodAnswer");
+      }
+      else{
         //If the answer is incorrect
-        socket.emit("onResult", {
-        msg: "Incorrect",
-    });
+        player.updateWrongAnswerTime();
+        socket.emit("badAnswer");
+      }
     }
-
   }
 
     /**
@@ -299,10 +315,7 @@ export class TriviaGateway implements OnModuleInit {
     const player = this.game.getPlayerById(this.getIdFromHeaders(socket));
     //player.unalive(); ???
     //Tell everyone that the player died
-    this.server.emit("onDeath", {
-      msg: "Player died",
-      id: this.getIdFromHeaders(socket),
-    });
+    this.server.emit("onDeath", this.getIdFromHeaders(socket));
   }
 
   /**
@@ -335,6 +348,25 @@ export class TriviaGateway implements OnModuleInit {
     socket.emit("startStatus", {
       status
     });
+  }
+
+  @SubscribeMessage("getRanking")
+  getRanking(@ConnectedSocket() socket: any){
+    const player = this.game.getPlayerById(this.getIdFromHeaders(socket));
+    if(player){
+      this.game.emitLeaderboardToPlayer(player);
+    }
+  }
+
+  @SubscribeMessage("deleteUser")
+  deleteUser(@ConnectedSocket() socket: any){
+    const player = this.game.getPlayerById(this.getIdFromHeaders(socket));
+    if(player){
+      this.game.removePlayer(player);
+      if(this.game.getNbPlayers() === 0){
+        this.game = new Game(this.server, this.configService);
+      }
+    }
   }
 
 }

@@ -1,4 +1,5 @@
 import { QuestionInQueue } from "./questionInQueue";
+import {ConfigService} from "@nestjs/config";
 
 export class Player {
   private name: string;
@@ -13,9 +14,12 @@ export class Player {
   private id: string;
   private rank: number; 
   private currentSocket: any;
+  private lastWrongAnswerTime: number;
+  private currentQuestion: QuestionInQueue;
+  //Configuration variables
+  private STREAK: number;
 
-
-  constructor(name: string, id:string, socket: any) {
+  constructor(name: string, id:string, socket: any, private configService: ConfigService) {
     this.name = name;
     this.queue = [];
     this.streak = 0;
@@ -27,7 +31,10 @@ export class Player {
     this.id = id;
     this.rank = 0;
     this.currentSocket = socket;
+    this.lastWrongAnswerTime = 0;
+    this.configService = configService;
 
+    this.STREAK = parseInt(this.configService.get<string>("STREAK"));
   }
 
   /**
@@ -38,13 +45,34 @@ export class Player {
     return this.id;
   }
 
+  public updateWrongAnswerTime(){
+    this.lastWrongAnswerTime = Date.now();
+  }
+
+  public getWrongAnswerTime(){
+    return this.lastWrongAnswerTime;
+  }
+
   /**
    * Return the 1st question in the question queue
    * @returns 
    */
   public getCurrentQuestion() {
-    if (this.queue.length > 0) {
-      return this.queue[0];
+    return this.currentQuestion;
+  }
+
+  public nextQuestion(): QuestionInQueue|void{
+    console.log("Queue length of " + this.name + ": " + this.queue.length)
+
+    this.queue.forEach((question: any) => {
+      console.log(question.isAttack)
+        });
+
+    if(this.queue.length > 0){
+      this.currentQuestion = this.queue.shift();
+      return this.getCurrentQuestion();
+    } else {
+      this.currentQuestion = undefined;
     }
   }
 
@@ -52,7 +80,7 @@ export class Player {
    * Return the nb of question in the question queue
    * @returns 
    */
-  public getNbQuestions() {
+  public getNbQuestionsInQueue() {
     return this.queue.length;
   }
 
@@ -91,7 +119,11 @@ export class Player {
    * @param question 
    */
   public addQuestion(question: any) {
-    this.queue.push(question);
+    if(this.currentQuestion == undefined){
+      this.currentQuestion = question;
+    } else {
+      this.queue.push(question);
+    }
   }
 
   /**
@@ -108,22 +140,26 @@ export class Player {
   public getUserInfo(): object {
     let info = {
       streak: this.streak,
+      canAttack: this.streak >= this.STREAK,
       isAlive: this.isAlive,
       nbBadAnswers: this.nbBadAnswers,
       nbGoodAnswers: this.nbGoodAnswers,
       nbAnsweredQuestions: this.nbAnsweredQuestions,
       rank: this.rank,
-      questions: [],
+      questions: this.queue
     };
-    this.queue.forEach((question: any) => {
-      info.questions.push(question);
-    });
+
+    // this.queue.forEach((question: any) => {
+    //   info.questions.push(question);
+    // });
+    //
+
 
     return info;
   }
 
   public correctAnswer() : void {
-    this.removeQuestion();
+    this.nextQuestion();
     this.addGoodAnswer();
     this.incrementStreak();
   }
@@ -190,4 +226,5 @@ export class Player {
   public addGoodAnswer() : void {
     this.nbGoodAnswers++;
   }
+
 }

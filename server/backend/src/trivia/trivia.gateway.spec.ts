@@ -89,7 +89,7 @@ describe("TriviaGateway", () => {
 
 
     // Advance time by 10000ms
-    jest.advanceTimersByTime(10000);
+    jest.advanceTimersByTime(1000);
     await Promise.resolve(); // Allow any pending Promises to resolve
 
     expect(
@@ -101,7 +101,7 @@ describe("TriviaGateway", () => {
 
     await Promise.resolve(); // Allow any pending Promises to resolve
 
-    expect(gateway.game.getPlayerById(socket.id).getNbQuestions()).toBe(2);
+    expect(gateway.game.getPlayerById(socket.id).getNbQuestionsInQueue()).toBe(1);
 
     jest.useRealTimers();
   });
@@ -123,7 +123,16 @@ describe("TriviaGateway", () => {
     expect(gateway.game.hasGameStarted()).toBe(true);
   });
 
+  it("should have a target different than the attacker", () => {
+    gateway.game.addPlayer("belmondo", "jean-paul", null);
+    gateway.game.addPlayer("jarre", "jean-michel", null);
+    gateway.game.addPlayer("jeunet", "jean-pierre", null);
+    const attacker = gateway.game.getPlayerById("belmondo")
+    let target = gateway.game.getOtherRandomPlayer(attacker);
 
+    expect(target).toBeDefined();
+    expect(target).not.toBe(attacker);
+  });
 
 
   //QuestionManager
@@ -154,14 +163,12 @@ describe("TriviaGateway", () => {
 
     await gateway.game.waitForTheGameToBeStarted();
 
-
     expect(gateway.game.getNbQuestions()).toBe(50);
 
-    // Advance time by another 10000ms
     jest.advanceTimersByTime(20000);
     await Promise.resolve(); // Allow any pending Promises to resolve
 
-    expect(gateway.game.getPlayerById(socket.id).getNbQuestions()).toBe(2);
+    expect(gateway.game.getPlayerById(socket.id).getNbQuestionsInQueue()).toBe(2); //We also send a question when the game starts
 
     jest.useRealTimers();
   });
@@ -186,7 +193,7 @@ describe("TriviaGateway", () => {
     jest.advanceTimersByTime(80000);
     await Promise.resolve();
 
-    expect(gateway.game.getPlayerById(socket.id).getNbQuestions()).toBe(7);
+    expect(gateway.game.getPlayerById(socket.id).getNbQuestionsInQueue()).toBe(7);
     expect(gateway.game.getPlayerById(socket.id).alive()).toBe(false);
 
     jest.useRealTimers();

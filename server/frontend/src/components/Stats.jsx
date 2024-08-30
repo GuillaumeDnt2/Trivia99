@@ -8,8 +8,8 @@ export default function Stats(props){
 
     useEffect(() => {
         const btn = document.getElementById('attack-button');
-        btn.disabled = props.streak < 3;
-    }, [props.streak])
+        btn.disabled = !props.canAttack;
+    }, [props.streak, props.canAttack])
 
     function attack(){
         socket.emit("attack");

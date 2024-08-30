@@ -7,6 +7,7 @@ import Stack from "../components/Stack";
 import Stats from "../components/Stats";
 import QuestAndAnsw from "../components/QuestAndAnsw";
 import "../styles/common.css";
+import {useNavigate} from "react-router-dom";
 
 export default function Game(){
     const [playersLeft, setPlayersLeft] = useState([]);
@@ -17,8 +18,11 @@ export default function Game(){
     const [accuracy, setAccuracy] = useState(0);
     const [nbResponse, setNbResponse] = useState(0);
     const [isAlive, setAlive] = useState(true);
+    const [canAttack, setCanAttack] = useState(false);
 
     const [question, setQuestion] = useState({});
+
+    const navigate = useNavigate();
 
     useEffect(() => {
 
@@ -28,6 +32,9 @@ export default function Game(){
             setAccuracy(userInfo.nbGoodAnswers / (userInfo.nbGoodAnswers + userInfo.nbBadAnswers));
             setNbResponse(userInfo.nbGoodAnswers);
             setStack(userInfo.questions);
+            setCanAttack(userInfo.canAttack);
+            console.log("Questions of " + userInfo.name + " :")
+            console.log(userInfo.questions);
         }
 
         function onNewQuestion(question){
@@ -37,23 +44,38 @@ export default function Game(){
 
         function onElimination(player){
             document.getElementById(player).classList.add("eliminated");
+            console.log("elimination")
         }
 
-        function onNoMoreQuestion(){
-
+        function onPlayers(players){
+            console.log(players);
+            for(let i = 0; i < players.length; ++i){
+                if(i%2 === 0){
+                    setPlayersLeft([...playersLeft, players[i].name]);
+                } else {
+                    setPlayersRight([...playersRight, players[i].name]);
+                }
+            }
+        }
+        
+        function onEndGame(){
+            navigate("/ranking");
         }
 
         socket.on("userInfo", onUserInfo);
         socket.on("newQuestion", onNewQuestion);
         socket.on("elimination", onElimination);
-        socket.on("noMoreQuestions", onNoMoreQuestion);
+        socket.on("players", onPlayers);
+        socket.on("endGame", onEndGame);
+
+        socket.emit("getAllInfo");
 
         return () => {
             socket.off("userInfo");
             socket.off("newQuestion");
             socket.off("elimination");
-            socket.off("noMoreQuestions");
-
+            socket.off("players");
+            socket.off("endGame");
         }
     }, []);
 
@@ -64,7 +86,7 @@ export default function Game(){
                 <PlayerList players={playersLeft}/>
                 <div id="content-column-box">
                     <Stack state={stack} />
-                    <Stats streak={streak} accuracy={accuracy} nbReponse={nbResponse}/>
+                    <Stats streak={streak} accuracy={accuracy} nbReponse={nbResponse} canAttack={canAttack}/>
                     <QuestAndAnsw isAlive={isAlive} q={question.question?.text} a={question.answers}/>
                 </div>
                 <PlayerList players={playersRight}/>

@@ -86,7 +86,7 @@ export class QuestionManager {
     let questions: any[] = [];
     let data: any;
     try {
-      await fetch(this.API_URL+"?limit=" + this.Q_FETCH_SIZE)
+      await fetch(this.API_URL+"&limit=" + this.Q_FETCH_SIZE)
         .then((response) => response.json())
         .then((json) => {
           questions = json;

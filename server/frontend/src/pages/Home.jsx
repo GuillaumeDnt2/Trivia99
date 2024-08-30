@@ -52,7 +52,7 @@ export default function Home(){
             // Message 'login' that send the name chosen by the user
             socket.emit(
                 'login',
-                {name: name}
+                name
             )
             navigate('/waiting')
         }else {
