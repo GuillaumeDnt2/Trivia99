@@ -277,11 +277,10 @@ export class Game {
             await this.waitForTheGameToBeStarted();
             //console.log(player.getCurrentQuestion());
             //Send question to player if queue was empty before
-            if(player.getCurrentQuestion() === undefined || player.getNbQuestionsInQueue() == 0){
-                this.server.to(player.getSocket().id).emit("newQuestion",this.qManager.get(question));
-                this.server.to(player.getSocket().id).emit("userInfo", info);
-                player.addAnsweredQuestion();
-            }
+
+            this.server.to(player.getSocket().id).emit("newQuestion",this.qManager.get(player.getCurrentQuestion()));
+            this.server.to(player.getSocket().id).emit("userInfo", info);
+
         }
     }
 
@@ -305,7 +304,7 @@ export class Game {
     //     this.server.to(target.getSocket().id).emit("userInfo", target.getUserInfo());
     //     target.addAnsweredQuestion();
     // }
-    this.server.to(target.getSocket().id).emit("userInfo", target.getUserInfo());
+      this.server.to(target.getSocket().id).emit("userInfo", target.getUserInfo());
   }
 
   /**
