@@ -137,12 +137,12 @@ export default function Ranking(){
                 <h2>{ranking[0]?.name} won!</h2>
             </div>
             <h3>Ranking: </h3>
-            <div className="scroll-box">
-                <ul>
+            <div className="scroll-box disable-scrollbar">
+                <ol className={"list-ranking"}>
                     {ranking.map(player =>
                         <li>{player.name} : {player.score} answered correctly</li>
                     )}
-                </ul>
+                </ol>
             </div>
         </div>
     </BaseLayout>

@@ -1,5 +1,19 @@
 .scroll-box {
     width: 100%;
-    height: 350px;
+    height: 300px;
     overflow: scroll;
+}
+
+.disable-scrollbar::-webkit-scrollbar {
+    background: transparent; /* Chrome/Safari/Webkit */
+    width: 0;
+}
+
+.disable-scrollbar {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE 10+ */
+}
+
+.list-ranking {
+
 }
