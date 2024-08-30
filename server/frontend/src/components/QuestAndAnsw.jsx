@@ -12,7 +12,7 @@ export default function QuestAndAnsw(props){
     return <div className='content-column-box'>
             {props.isAlive ? (
                 <>
-                <h3>{props.q}</h3>
+                <h3 className='question-text'>{props.q}</h3>
                 <div className='answers-grid orange-border'>
                     {props.a?.map((answer, key) =>
                                 <div className='answer-cell' key={'Answ'+key} 
