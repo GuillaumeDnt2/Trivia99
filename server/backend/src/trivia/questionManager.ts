@@ -35,8 +35,8 @@ export class QuestionManager {
    * Fetch trivia questions from API for the 1st time
    */
   async initializeQuestions() : Promise<void>{
-    await this.fetchQuestions();
-    console.log("length " + this.qList.length);
+      await this.fetchQuestions();
+      console.log("length " + this.qList.length);
   }
 
   
@@ -69,7 +69,7 @@ export class QuestionManager {
   public async waitingForFetchToBeDone() {
     if (!this.waitingForFetch) return true;
     return new Promise((resolve) => {
-      this.eventEmitter.once('loaded', () => resolve(true));
+      this.eventEmitter.once('questionLoaded', () => resolve(true));
     });
   }
 
@@ -85,7 +85,8 @@ export class QuestionManager {
         await this.fetchQuestions();
       }
       q = this.qList.shift();
-    } while (this.qPool.has(q.getId()));
+    } while (q && this.qPool.has(q.getId()));
+    if(!q) return;
     this.qPool.set(q.getId(), q);
     return new QuestionInQueue(q, isAttack);
   }
@@ -95,6 +96,7 @@ export class QuestionManager {
    */
   private async fetchQuestions(): Promise<void> {
     try {
+      if(this.waitingForFetch) return;
       this.waitingForFetch = true;
       const response = await fetch(this.API_URL + "&limit=" + this.Q_FETCH_SIZE);
       if (response.ok) {
@@ -111,7 +113,7 @@ export class QuestionManager {
       return Promise.resolve();
     }
     this.waitingForFetch = false;
-    this.eventEmitter.emit('loaded');
+    this.eventEmitter.emit('questionLoaded');
     return Promise.resolve();
   }
 
