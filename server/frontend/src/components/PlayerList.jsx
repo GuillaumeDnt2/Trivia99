@@ -12,15 +12,15 @@ export default function PlayerList(props){
 
     function displayColumn(colId){
       return props.players?.map((plyr, key) => 
-        key % 4 === colId ? <span id={plyr} className="dot tooltip">
-          <span className="tooltiptext">{plyr}</span>
+        key % 4 === colId ? <span id={plyr} className="dot tooltip" key={"Player"+plyr+key}>
+          <span key={"tooltip"+plyr+key} className="tooltiptext">{plyr}</span>
           </span> 
         : null
       )
     }
 
     return (
-      <div className="content-row-box orange-border">
+      <div className={"content-row-box orange-border players-container " + props.col}>
           <div className="column">
               {displayColumn(0)}
           </div>

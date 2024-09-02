@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"
 import { socket } from "../utils/socket.js";
-import logo from "../assets/Trivia99.png";
-import './Waiting.css';
+import '../styles/Waiting.css';
 import BaseLayout from "../components/BaseLayout";
 
 export default function Waiting(){
@@ -38,9 +37,9 @@ export default function Waiting(){
 
 
     return <BaseLayout>
-                <div className={'waiting-container content-column-box'}>
-                    <p>{playersInfo.nbReady}/{playersInfo.nbPlayers} player(s) ready</p>
-                    <button id="readyBtn" className={'orange-button'} onClick={onClick} disabled={ready}>Ready?</button>
-                </div>
-            </BaseLayout>
+        <div className={"content-column-box center padding-20px"}>
+                <p className={"text"}>{playersInfo.nbReady}/{playersInfo.nbPlayers} player(s) ready</p>
+                <button id="readyBtn" className={'orange-button'} onClick={onClick} disabled={ready}>Ready ?</button>
+        </div>
+        </BaseLayout>
 }

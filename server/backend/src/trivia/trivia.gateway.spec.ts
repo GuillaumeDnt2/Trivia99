@@ -6,6 +6,7 @@ import { QuestionManager } from "./questionManager";
 import {ConfigModule, ConfigService} from "@nestjs/config";
 import {config} from "rxjs";
 import {serialize} from "cookie";
+import {GameManager} from "./gameManager";
 
 describe("TriviaGateway", () => {
   let gateway: TriviaGateway;
@@ -26,12 +27,12 @@ describe("TriviaGateway", () => {
     server = new Server();
     configService = module.get<ConfigService>(ConfigService);
     gateway.server = server;
-    gateway.game = new Game(server, configService);
+    gateway.gameManager = new GameManager(server, configService);
   });
 
   afterEach(async() => {
     jest.clearAllTimers();
-    gateway.game.stopGame();
+    gateway.gameManager.game.forceStopGame();
     await Promise.resolve();
   })
 
@@ -43,34 +44,34 @@ describe("TriviaGateway", () => {
     const socket = {...player1};
     const name = "Player1";
     gateway.onLogin(name, socket);
-    expect(gateway.game.getPlayers().has(socket.id)).toBe(true);
+    expect(gateway.gameManager.game.getPlayers().has(socket.id)).toBe(true);
   });
 
   it("should update player ready status on ready", () => {
     const userId = '1';
     const socket = {...player1};
-    gateway.game.addPlayer(socket.id, "Player1", socket);
+    gateway.gameManager.game.addPlayer(socket.id, "Player1", socket);
     gateway.onReady(socket);
-    expect(gateway.game.getPlayers().get(socket.id).isReady).toBe(true);
-    expect(gateway.game.getNbReady()).toBe(1);
+    expect(gateway.gameManager.game.getPlayers().get(socket.id).isReady).toBe(true);
+    expect(gateway.gameManager.game.getNbReady()).toBe(1);
   });
 
   it("should update player ready status on unready", () => {
     const userId = '1';
     const socket = {...player1};
-    gateway.game.addPlayer(socket.id, "Player1", socket);
+    gateway.gameManager.game.addPlayer(socket.id, "Player1", socket);
     gateway.onReady(socket);
     gateway.onUnready(socket);
-    expect(gateway.game.getPlayers().get(socket.id).isReady).toBe(false);
-    expect(gateway.game.getNbReady()).toBe(0);
+    expect(gateway.gameManager.game.getPlayers().get(socket.id).isReady).toBe(false);
+    expect(gateway.gameManager.game.getNbReady()).toBe(0);
   });
 
   it("should emit start message on start", async () => {
     const userId = '1';
     const socket = {...player1};
-    gateway.game.addPlayer(socket.id, "Player1",socket);
+    gateway.gameManager.game.addPlayer(socket.id, "Player1",socket);
     const spy = jest.spyOn(server, "emit");
-    await gateway.game.startGame();
+    await gateway.gameManager.game.startGame();
     expect(spy).toHaveBeenCalledWith("startGame", {
       msg: "The game has started",
     });
@@ -79,12 +80,12 @@ describe("TriviaGateway", () => {
   it("should send a question every 10000ms", async () => {
     jest.useFakeTimers();
     const socket = {...player1};
-    gateway.game.addPlayer(socket.id, "Player1",socket);
+    gateway.gameManager.game.addPlayer(socket.id, "Player1",socket);
 
-    await gateway.game.startGame();
+    await gateway.gameManager.game.startGame();
 
     expect(
-      gateway.game.getPlayerById(socket.id).getCurrentQuestion(),
+      gateway.gameManager.game.getPlayerById(socket.id).getCurrentQuestion(),
     ).toBeUndefined();
 
 
@@ -93,7 +94,7 @@ describe("TriviaGateway", () => {
     await Promise.resolve(); // Allow any pending Promises to resolve
 
     expect(
-      gateway.game.getPlayerById(socket.id).getCurrentQuestion(),
+      gateway.gameManager.game.getPlayerById(socket.id).getCurrentQuestion(),
     ).toBeDefined();
 
     // Advance time by another 10000ms
@@ -101,7 +102,7 @@ describe("TriviaGateway", () => {
 
     await Promise.resolve(); // Allow any pending Promises to resolve
 
-    expect(gateway.game.getPlayerById(socket.id).getNbQuestionsInQueue()).toBe(1);
+    expect(gateway.gameManager.game.getPlayerById(socket.id).getNbQuestionsInQueue()).toBe(1);
 
     jest.useRealTimers();
   });
@@ -110,25 +111,25 @@ describe("TriviaGateway", () => {
   it("should launch the game if there's two players ready", async() => {
     const userId = '1';
     const socket = {...player1};
-    gateway.game.addPlayer(socket.id, "Player1",socket);
+    gateway.gameManager.game.addPlayer(socket.id, "Player1",socket);
     gateway.onReady(socket);
-    expect(gateway.game.hasGameStarted()).toBe(false);
+    expect(gateway.gameManager.game.hasGameStarted()).toBe(false);
     const userId2 = '2';
     const socket2 = {...player2};
-    gateway.game.addPlayer(socket2.id, "Player2",socket2);
+    gateway.gameManager.game.addPlayer(socket2.id, "Player2",socket2);
     gateway.onReady(socket2);
 
     await Promise.resolve(); // Allow any pending Promises to resolve
 
-    expect(gateway.game.hasGameStarted()).toBe(true);
+    expect(gateway.gameManager.game.hasGameStarted()).toBe(true);
   });
 
   it("should have a target different than the attacker", () => {
-    gateway.game.addPlayer("belmondo", "jean-paul", null);
-    gateway.game.addPlayer("jarre", "jean-michel", null);
-    gateway.game.addPlayer("jeunet", "jean-pierre", null);
-    const attacker = gateway.game.getPlayerById("belmondo")
-    let target = gateway.game.getOtherRandomPlayer(attacker);
+    gateway.gameManager.game.addPlayer("belmondo", "jean-paul", null);
+    gateway.gameManager.game.addPlayer("jarre", "jean-michel", null);
+    gateway.gameManager.game.addPlayer("jeunet", "jean-pierre", null);
+    const attacker = gateway.gameManager.game.getPlayerById("belmondo")
+    let target = gateway.gameManager.game.getOtherRandomPlayer(attacker);
 
     expect(target).toBeDefined();
     expect(target).not.toBe(attacker);
@@ -151,21 +152,22 @@ describe("TriviaGateway", () => {
 
     const userId = '1';
     const socket = {...player1};
-    gateway.game.addPlayer(socket.id, "Player1",socket);
+    gateway.gameManager.game.addPlayer(socket.id, "Player1",socket);
     gateway.onReady(socket);
-    expect(gateway.game.hasGameStarted()).toBe(false);
+    expect(gateway.gameManager.game.hasGameStarted()).toBe(false);
     const userId2 = '2';
     const socket2 = {...player2};
-    gateway.game.addPlayer(socket2.id, "Player2",socket2);
+    gateway.gameManager.game.addPlayer(socket2.id, "Player2",socket2);
     gateway.onReady(socket2);
 
     expect(
-        gateway.game.getPlayerById(socket.id).getCurrentQuestion(),
+        gateway.gameManager.game.getPlayerById(socket.id).getCurrentQuestion(),
     ).toBeUndefined();
 
-    await gateway.game.waitForTheGameToBeStarted();
+    await gateway.gameManager.game.waitForTheGameToBeStarted();
 
     expect(gateway.game.getNbQuestions()).toBe(150);
+
 
     // Advance time by 20200ms to make sure we have 2 questions
     for(let i = 0; i < 101; i++){
@@ -173,7 +175,7 @@ describe("TriviaGateway", () => {
       await Promise.resolve(); // Allow any pending Promises to resolve
     }
 
-    expect(gateway.game.getPlayerById(socket.id).getNbQuestionsInQueue()).toBe(2); //We also send a question when the game starts
+    expect(gateway.gameManager.game.getPlayerById(socket.id).getNbQuestionsInQueue()).toBe(2); //We also send a question when the game starts
 
     jest.useRealTimers();
   });
@@ -184,15 +186,15 @@ describe("TriviaGateway", () => {
 
     const userId = '1';
     const socket = {...player1};
-    gateway.game.addPlayer(socket.id, "Player1",socket);
+    gateway.gameManager.game.addPlayer(socket.id, "Player1",socket);
     gateway.onReady(socket);
-    expect(gateway.game.hasGameStarted()).toBe(false);
+    expect(gateway.gameManager.game.hasGameStarted()).toBe(false);
     const userId2 = '2';
     const socket2 = {...player2};
-    gateway.game.addPlayer(socket2.id, "Player2",socket2);
+    gateway.gameManager.game.addPlayer(socket2.id, "Player2",socket2);
     gateway.onReady(socket2);
 
-    await gateway.game.waitForTheGameToBeStarted();
+    await gateway.gameManager.game.waitForTheGameToBeStarted();
 
     // Advance time by 80000ms
     for(let i = 0; i < 500; i++){
@@ -200,8 +202,8 @@ describe("TriviaGateway", () => {
       await Promise.resolve(); // Allow any pending Promises to resolve
     }
 
-    expect(gateway.game.getPlayerById(socket.id).getNbQuestionsInQueue()).toBe(7);
-    expect(gateway.game.getPlayerById(socket.id).alive()).toBe(false);
+    expect(gateway.gameManager.game.getPlayerById(socket.id).getNbQuestionsInQueue()).toBe(7);
+    expect(gateway.gameManager.game.getPlayerById(socket.id).alive()).toBe(false);
 
     jest.useRealTimers();
   });
@@ -209,6 +211,32 @@ describe("TriviaGateway", () => {
   it("should have 150 questions in the question list", async () => {
     await gateway.game.startGame();
     expect(gateway.game.getNbQuestions()).toBe(150);
+  });
+
+  it("should reset the game after some time", async () => {
+    jest.useFakeTimers();
+    const socket = {...player1};
+    const socket2 = {...player2};
+    gateway.gameManager.game.addPlayer(socket.id, "Player1",socket);
+    gateway.gameManager.game.addPlayer(socket2.id, "Player2",socket2);
+    gateway.onReady(socket);
+    gateway.onReady(socket2);
+
+    await gateway.gameManager.game.startGame();
+
+    await gateway.gameManager.game.waitForTheGameToBeStarted();
+
+    jest.advanceTimersByTime(1000000); // Should have a player killed by now lol
+    await Promise.resolve();
+
+    jest.advanceTimersByTime(parseInt(gateway.configService.get<string>("END_OF_GAME_RANKING_COOLDOWN")) * 1000);
+    await Promise.resolve();
+    //await gateway.gameManager.waitingGameReset();
+
+    expect(gateway.gameManager.getHowManyGamesHaveFinished()).toBe(1);
+    expect(gateway.gameManager.game.hasGameStarted()).toBe(false);
+    jest.useRealTimers();
+
   });
 
 });

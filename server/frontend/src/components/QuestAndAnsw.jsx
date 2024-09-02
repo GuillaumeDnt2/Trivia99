@@ -36,13 +36,15 @@ export default function QuestAndAnsw(props){
         socket.on("badAnswer", onBadAnswer);
         socket.on("goodAnswer", onGoodAnswer);
         socket.on("noMoreQuestions", onNoMoreQuestions);
+        console.log("Props q");
+        console.log(props.q);
 
         return () => {
             socket.off("badAnswer");
             socket.off("goodAnswer");
             socket.off("noMoreQuestions");
         }
-    }, [])
+    })
 
     useEffect(() => setWaiting(false), [props.q])
 
@@ -54,7 +56,7 @@ export default function QuestAndAnsw(props){
                     ) : (
 
                 <>
-                <h3>{props.q}</h3>
+                <h3 className='question-text'>{props.q}</h3>
                 <div className='answers-grid orange-border'>
                     {props.a?.map((answer, key) =>
                                 <button className='answer-cell' key={'Answ'+key}

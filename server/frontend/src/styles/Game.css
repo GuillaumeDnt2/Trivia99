@@ -1,0 +1,30 @@
+@media screen and (max-width: 630px) {
+    .switch-vertical {
+        flex-direction: column;
+    }
+
+    .col1 {
+        order: 2;
+    }
+
+    .col2 {
+        order: 1;
+    }
+
+    .col3 {
+        order: 3;
+    }
+
+    .game-container {
+        min-width: 100%;
+    }
+}
+
+.main-container {
+    height: 85vh;
+    width: 95vw;
+}
+
+.game-container{
+    min-width: 70%;
+}

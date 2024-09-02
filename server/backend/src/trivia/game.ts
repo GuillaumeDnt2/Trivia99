@@ -6,6 +6,7 @@ import { QuestionInQueue } from "./questionInQueue";
 import { Injectable } from "@nestjs/common";
 import {ConfigService} from "@nestjs/config";
 import { EventEmitter } from 'events';
+import {GameManager} from "./gameManager";
 /**
  * Save the final player's stats and rank about the game
  */
@@ -28,8 +29,6 @@ class Rank {
   }
 }
 
-
-
 /**
  * Game class
  * Handles the game's logic and state
@@ -49,6 +48,8 @@ export class Game {
     private LEVEL2_t:number;
     private LEVEL3_t:number;
     private LEVEL4_t:number;
+    private END_OF_GAME_RANKING_COOLDOWN: number;
+
     public nbReady: number;
     private players: Map<string, Player>;
     private leaderboard: Rank[];
@@ -59,17 +60,23 @@ export class Game {
     private questionLoaded: boolean;
     private eventEmitter: any;
     private intervalId: NodeJS.Timeout;
+
     private nbQuestionsSent:number;
     private continueSending:boolean;
  
+
+    private readonly configService: ConfigService;
+    private gameManager : GameManager;
+
 
     /**
      * Game constructor
      * @constructor
      * @param server the server all the sockets are connected to
      * @param configService the configuration service to enable us to use the .env file
+     * @param gameManager
      */
-    constructor(server: Server, private configService: ConfigService) {
+    constructor(server: Server, configService: ConfigService, gameManager: GameManager) {
 
         this.nbReady = 0;
         this.nbPlayerAlive = 0;
@@ -77,6 +84,7 @@ export class Game {
         this.hasStarted = false;
         this.server = server;
         this.configService = configService;
+        this.gameManager = gameManager;
         this.questionLoaded = false;
         this.eventEmitter = new EventEmitter();
         this.continueSending = true;
@@ -87,6 +95,7 @@ export class Game {
         this.READY_PLAYERS_THRESHOLD = parseInt(this.configService.get<string>("READY_PLAYERS_THRESHOLD"));
         this.NB_MIN_READY_PLAYERS = parseInt(this.configService.get<string>("NB_MIN_READY_PLAYERS"));
         this.SIZE_OF_QUESTION_QUEUE = parseInt(this.configService.get<string>("SIZE_OF_QUESTION_QUEUE"));
+
         this.LEVEL1 = parseInt(this.configService.get<string>("LEVEL1"));
         this.LEVEL2 = parseInt(this.configService.get<string>("LEVEL2"));
         this.LEVEL3 = parseInt(this.configService.get<string>("LEVEL3"));
@@ -100,6 +109,10 @@ export class Game {
         //this.qManager = new QuestionManager(configService);
         //this.qManager.initializeQuestions();
   
+
+        this.END_OF_GAME_RANKING_COOLDOWN = parseInt(this.configService.get<string>("END_OF_GAME_RANKING_COOLDOWN")) * 1000;
+        this.eventEmitter = new EventEmitter();
+
     }
 
     /**
@@ -111,15 +124,18 @@ export class Game {
     }
 
     /**
-     * Stop sending question to players
+     * Stop sending question to players and ask the game manager to reset the game in 60 seconds
      */
     public stopGame() : void{
+        this.forceStopGame();
+        this.gameManager.resetGameIn60Seconds();
+    }
+
+    /**
+     * Stop sending question to players
+     */
+    public forceStopGame() : void{
         this.continueSending = false;
-        if (this.intervalId) {
-            clearInterval(this.intervalId);
-            this.intervalId = null;
-            
-        }
     }
 
     /**

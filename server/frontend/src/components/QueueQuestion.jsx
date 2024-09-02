@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 
-export default function StackQuestion(props){
+export default function QueueQuestion(props){
 
     const [color, setColor] = useState("");
 
@@ -23,7 +23,7 @@ export default function StackQuestion(props){
                     throw new Error();
             }
         }
-    }, []);
+    }, [props]);
 
     return (
         <div className={`square ${color}`}></div>

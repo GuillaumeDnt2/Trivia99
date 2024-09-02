@@ -2,13 +2,23 @@
     display: grid;
     grid-template-columns: auto auto;
     grid-template-rows: auto auto;
+    margin: 2px;
 }
 
 .answer-cell {
     border: 1px;
     border-style: solid;
-    border-color: #f18847;
+    border-color: var(--strong-orange);
     padding: 10px;
-    background-color: #f9efe6;
+    background-color: var(--white-orange);
+    text-align: center;
+}
+
+.answer-cell:hover {
+    background-color: var(--very-light-orange);
+    cursor: pointer;
+}
+
+.question-text {
     text-align: center;
 }

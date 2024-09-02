@@ -1,0 +1,9 @@
+#attack-button {
+    padding: 10px;
+    align-self: stretch;
+    border-radius: 6px;
+    font-weight: bolder;
+    background-color: var(--grad-blue);
+    cursor: pointer;
+    width: 100%;
+}
