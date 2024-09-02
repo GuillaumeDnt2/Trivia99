@@ -22,25 +22,35 @@ export default function Game(){
     const [isAlive, setAlive] = useState(true);
     const [canAttack, setCanAttack] = useState(false);
 
-    const [question, setQuestion] = useState({});
+    const [question, setQuestion] = useState("");
+    const [answers, setAnswers] = useState([])
 
     const navigate = useNavigate();
 
     useEffect(() => {
 
         function onUserInfo(userInfo) {
-            console.log("UserInfo");
+            console.log("Our user info questions: ")
+            console.log(userInfo.questions);
             setAlive(userInfo.isAlive);
             setStreak(userInfo.streak);
             setAccuracy(userInfo.nbGoodAnswers / (userInfo.nbGoodAnswers + userInfo.nbBadAnswers));
             setNbResponse(userInfo.nbGoodAnswers);
             setCanAttack(userInfo.canAttack);
+
+
+
             setQueue(userInfo.questions);
+            console.log("State of queue: ")
+            console.log(queue)
+            console.log(userInfo.questions);
         }
 
         function onNewQuestion(question){
-            console.log(question);
-            setQuestion(question);
+            setQuestion(question.question.text);
+            setAnswers(question.answers);
+            console.log("Question received: " )
+            console.log(question.question.text)
         }
 
         function onElimination(player){
@@ -94,7 +104,7 @@ export default function Game(){
                 <div id="content-column-box col2">
                     <Queue state={queue} />
                     <Stats streak={streak} accuracy={accuracy} nbReponse={nbResponse}/>
-                    <QuestAndAnsw isAlive={isAlive} q={question.text} a={question.answers}/>
+                    <QuestAndAnsw isAlive={isAlive} q={question} a={answers}/>
                     <AttackBtn canAttack={canAttack}/>
                 </div>
                 <PlayerList col="col3" players={playersRight}/>
