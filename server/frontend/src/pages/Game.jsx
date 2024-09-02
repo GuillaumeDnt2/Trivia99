@@ -77,7 +77,7 @@ export default function Game(){
             socket.off("players");
             socket.off("endGame");
         }
-    }, []);
+    });
 
     return (
         <BaseLayout>

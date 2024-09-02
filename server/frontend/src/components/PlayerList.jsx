@@ -12,7 +12,7 @@ export default function PlayerList(props){
 
     function displayColumn(colId){
       return props.players?.map((plyr, key) => 
-        key % 4 === colId ? <span id={plyr} className="dot tooltip">
+        key % 4 === colId ? <span id={plyr} className="dot tooltip" key={"Player"+plyr+key}>
           <span className="tooltiptext">{plyr}</span>
           </span> 
         : null
