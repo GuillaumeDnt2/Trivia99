@@ -9,6 +9,7 @@ import QuestAndAnsw from "../components/QuestAndAnsw";
 import "../styles/common.css";
 import {useNavigate} from "react-router-dom";
 import "../styles/Game.css";
+import AttackBtn from "../components/AttackBtn";
 
 export default function Game(){
     const [playersLeft, setPlayersLeft] = useState([]);
@@ -86,6 +87,7 @@ export default function Game(){
                     <Queue state={queue} />
                     <Stats streak={streak} accuracy={accuracy} nbReponse={nbResponse}/>
                     <QuestAndAnsw isAlive={isAlive} q={question.question} a={question.answers}/>
+                    <AttackBtn canAttack={canAttack}/>
                 </div>
                 <PlayerList col="col3" players={playersRight}/>
             </div>   
