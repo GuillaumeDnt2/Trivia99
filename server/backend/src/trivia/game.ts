@@ -73,6 +73,9 @@ export class Game {
         this.NB_MIN_READY_PLAYERS = parseInt(this.configService.get<string>("NB_MIN_READY_PLAYERS"));
         this.SIZE_OF_QUESTION_QUEUE = parseInt(this.configService.get<string>("SIZE_OF_QUESTION_QUEUE"));
         this.eventEmitter = new EventEmitter();
+
+        //this.qManager = new QuestionManager(configService);
+        //this.qManager.initializeQuestions();
   
     }
 
@@ -99,7 +102,7 @@ export class Game {
      * @returns nb of question
      */
     public getNbQuestions() : number {
-        return this.qManager.qList.length;
+        return this.qManager.getUnusedQuestions();
     }
 
     /**

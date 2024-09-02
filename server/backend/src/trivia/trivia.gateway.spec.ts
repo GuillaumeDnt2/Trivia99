@@ -138,7 +138,9 @@ describe("TriviaGateway", () => {
   //QuestionManager
   it("should have qList defined", () => {
     let qManager = new QuestionManager(configService);
-    expect(qManager.qList).toBeDefined();
+    expect(qManager.easy_questions).toBeDefined();
+    expect(qManager.medium_questions).toBeDefined();
+    expect(qManager.hard_questions).toBeDefined();
   });
   
 
@@ -163,7 +165,7 @@ describe("TriviaGateway", () => {
 
     await gateway.game.waitForTheGameToBeStarted();
 
-    expect(gateway.game.getNbQuestions()).toBe(50);
+    expect(gateway.game.getNbQuestions()).toBe(150);
 
     jest.advanceTimersByTime(20000);
     await Promise.resolve(); // Allow any pending Promises to resolve
@@ -199,9 +201,9 @@ describe("TriviaGateway", () => {
     jest.useRealTimers();
   });
 
-  it("should have 50 questions in the question list", async () => {
+  it("should have 150 questions in the question list", async () => {
     await gateway.game.startGame();
-    expect(gateway.game.getNbQuestions()).toBe(50);
+    expect(gateway.game.getNbQuestions()).toBe(150);
   });
 
 });
