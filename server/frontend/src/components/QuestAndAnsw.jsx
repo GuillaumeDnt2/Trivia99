@@ -36,13 +36,15 @@ export default function QuestAndAnsw(props){
         socket.on("badAnswer", onBadAnswer);
         socket.on("goodAnswer", onGoodAnswer);
         socket.on("noMoreQuestions", onNoMoreQuestions);
+        console.log("Props q");
+        console.log(props.q);
 
         return () => {
             socket.off("badAnswer");
             socket.off("goodAnswer");
             socket.off("noMoreQuestions");
         }
-    }, [])
+    })
 
     useEffect(() => setWaiting(false), [props.q])
 

@@ -29,6 +29,7 @@ export default function Game(){
     useEffect(() => {
 
         function onUserInfo(userInfo) {
+            console.log("UserInfo");
             setAlive(userInfo.isAlive);
             setStreak(userInfo.streak);
             setAccuracy(userInfo.nbGoodAnswers / (userInfo.nbGoodAnswers + userInfo.nbBadAnswers));
@@ -38,24 +39,28 @@ export default function Game(){
         }
 
         function onNewQuestion(question){
-            setQuestion(question);
             console.log(question);
+            setQuestion(question);
         }
 
         function onElimination(player){
-            document.getElementById(player).classList.add("eliminated");
-            console.log("elimination")
+            console.log("elimination");
+            document.getElementById(player)?.classList.add("eliminated");
         }
 
         function onPlayers(players){
-            console.log(players);
+            console.log("Players");
+            let plyrLeft = [];
+            let plyrRight = [];
             for(let i = 0; i < players.length; ++i){
                 if(i%2 === 0){
-                    setPlayersLeft([...playersLeft, players[i].name]);
+                    plyrLeft.push(players[i].name);
                 } else {
-                    setPlayersRight([...playersRight, players[i].name]);
+                    plyrRight.push(players[i].name);
                 }
             }
+            setPlayersLeft(plyrLeft);
+            setPlayersRight(plyrRight);
         }
         
         function onEndGame(){
@@ -68,6 +73,7 @@ export default function Game(){
         socket.on("players", onPlayers);
         socket.on("endGame", onEndGame);
 
+        console.log("emit all");
         socket.emit("getAllInfo");
 
         return () => {
@@ -77,7 +83,9 @@ export default function Game(){
             socket.off("players");
             socket.off("endGame");
         }
-    });
+    }, []);
+
+    
 
     return (
         <BaseLayout>
@@ -86,7 +94,7 @@ export default function Game(){
                 <div id="content-column-box col2">
                     <Queue state={queue} />
                     <Stats streak={streak} accuracy={accuracy} nbReponse={nbResponse}/>
-                    <QuestAndAnsw isAlive={isAlive} q={question.question} a={question.answers}/>
+                    <QuestAndAnsw isAlive={isAlive} q={question.text} a={question.answers}/>
                     <AttackBtn canAttack={canAttack}/>
                 </div>
                 <PlayerList col="col3" players={playersRight}/>
