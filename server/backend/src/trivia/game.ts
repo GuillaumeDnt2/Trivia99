@@ -91,10 +91,10 @@ export class Game {
         this.LEVEL2 = parseInt(this.configService.get<string>("LEVEL2"));
         this.LEVEL3 = parseInt(this.configService.get<string>("LEVEL3"));
         this.LEVEL4 = parseInt(this.configService.get<string>("LEVEL4"));
-        this.LEVEL1_t = parseInt(this.configService.get<string>("LEVEL1_t"));
-        this.LEVEL2_t = parseInt(this.configService.get<string>("LEVEL2_t"));
-        this.LEVEL3_t = parseInt(this.configService.get<string>("LEVEL3_t"));
-        this.LEVEL4_t = parseInt(this.configService.get<string>("LEVEL4_t"));
+        this.LEVEL1_t = parseFloat(this.configService.get<string>("LEVEL1_T"));
+        this.LEVEL2_t = parseFloat(this.configService.get<string>("LEVEL2_T"));
+        this.LEVEL3_t = parseFloat(this.configService.get<string>("LEVEL3_T"));
+        this.LEVEL4_t = parseFloat(this.configService.get<string>("LEVEL4_T"));
         this.eventEmitter = new EventEmitter();
 
         //this.qManager = new QuestionManager(configService);
@@ -235,6 +235,7 @@ export class Game {
      * Send a question to every connected and alive player
      */
     private async sendQuestionToEveryone() : Promise<void> {
+        console.log("Question number : " + this.nbQuestionsSent);
         let question = await this.qManager.newQuestion(false);
         //console.log(question);
         this.players.forEach((_player: Player, id: string) => {
@@ -262,15 +263,14 @@ export class Game {
         
         //setTimeout(this.sendTimedQuestion, this.TIME_BETWEEN_QUESTION);
         setTimeout(async () => {
-            await this.sendQuestionToEveryone();
             await this.sendTimedQuestion();
         },this.TIME_BETWEEN_QUESTION);
     }
 
 
     private async sendTimedQuestion(){
-        
-        
+
+        await this.sendQuestionToEveryone();
         ++this.nbQuestionsSent;
         let level:number = 1;
         if(this.continueSending){
@@ -287,14 +287,12 @@ export class Game {
             else if(this.nbQuestionsSent >= this.LEVEL1){
                 level = this.LEVEL1_t;
             }
+            console.log("Next question in " + this.TIME_BETWEEN_QUESTION * level + "ms");
             //setTimeout(this.sendTimedQuestion, this.TIME_BETWEEN_QUESTION * level);
             setTimeout(async () => {
-                await this.sendQuestionToEveryone();
                 await this.sendTimedQuestion();
             },this.TIME_BETWEEN_QUESTION * level);
         }
-        
-        
     }
 
     /**
