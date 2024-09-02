@@ -166,7 +166,7 @@ describe("TriviaGateway", () => {
 
     await gateway.gameManager.game.waitForTheGameToBeStarted();
 
-    expect(gateway.game.getNbQuestions()).toBe(150);
+    expect(gateway.gameManager.game.getNbQuestions()).toBe(150);
 
 
     // Advance time by 20200ms to make sure we have 2 questions
@@ -209,8 +209,8 @@ describe("TriviaGateway", () => {
   });
 
   it("should have 150 questions in the question list", async () => {
-    await gateway.game.startGame();
-    expect(gateway.game.getNbQuestions()).toBe(150);
+    await gateway.gameManager.game.startGame();
+    expect(gateway.gameManager.game.getNbQuestions()).toBe(150);
   });
 
   it("should reset the game after some time", async () => {
@@ -226,8 +226,11 @@ describe("TriviaGateway", () => {
 
     await gateway.gameManager.game.waitForTheGameToBeStarted();
 
-    jest.advanceTimersByTime(1000000); // Should have a player killed by now lol
-    await Promise.resolve();
+    // Advance time by 80000ms to kill players
+    for(let i = 0; i < 500; i++){
+      jest.advanceTimersByTime(200);
+      await Promise.resolve(); // Allow any pending Promises to resolve
+    }
 
     jest.advanceTimersByTime(parseInt(gateway.configService.get<string>("END_OF_GAME_RANKING_COOLDOWN")) * 1000);
     await Promise.resolve();
