@@ -17,6 +17,7 @@ class Rank {
   goodAnswers:number;
   badAnswers:number;
   answeredQuestions:number;
+  
   constructor(player:Player, rank:number){
     this.playerid = player.getId();
     this.playerName = player.getName();
@@ -24,6 +25,7 @@ class Rank {
     this.goodAnswers = player.getGoodAnswers();
     this.badAnswers = player.getBadAnswers();
     this.answeredQuestions = player.getAnsweredQuestion();
+   
   }
 }
 
@@ -38,7 +40,16 @@ export class Game {
     private READY_PLAYERS_THRESHOLD: number;
     private NB_MIN_READY_PLAYERS: number;
     private SIZE_OF_QUESTION_QUEUE: number;
+    private LEVEL1:number;
+    private LEVEL2:number;
+    private LEVEL3:number;
+    private LEVEL4:number;
+    private LEVEL1_t:number;
+    private LEVEL2_t:number;
+    private LEVEL3_t:number;
+    private LEVEL4_t:number;
     private END_OF_GAME_RANKING_COOLDOWN: number;
+
     public nbReady: number;
     private players: Map<string, Player>;
     private leaderboard: Rank[];
@@ -49,8 +60,14 @@ export class Game {
     private questionLoaded: boolean;
     private eventEmitter: any;
     private intervalId: NodeJS.Timeout;
+
+    private nbQuestionsSent:number;
+    private continueSending:boolean;
+ 
+
     private readonly configService: ConfigService;
     private gameManager : GameManager;
+
 
     /**
      * Game constructor
@@ -70,12 +87,29 @@ export class Game {
         this.gameManager = gameManager;
         this.questionLoaded = false;
         this.eventEmitter = new EventEmitter();
+        this.continueSending = true;
+        this.nbQuestionsSent = 0;
 
         // Load the configuration values from the .env file
         this.TIME_BETWEEN_QUESTION = parseInt(this.configService.get<string>("TIME_BETWEEN_QUESTION")) * 1000;
         this.READY_PLAYERS_THRESHOLD = parseInt(this.configService.get<string>("READY_PLAYERS_THRESHOLD"));
         this.NB_MIN_READY_PLAYERS = parseInt(this.configService.get<string>("NB_MIN_READY_PLAYERS"));
         this.SIZE_OF_QUESTION_QUEUE = parseInt(this.configService.get<string>("SIZE_OF_QUESTION_QUEUE"));
+
+        this.LEVEL1 = parseInt(this.configService.get<string>("LEVEL1"));
+        this.LEVEL2 = parseInt(this.configService.get<string>("LEVEL2"));
+        this.LEVEL3 = parseInt(this.configService.get<string>("LEVEL3"));
+        this.LEVEL4 = parseInt(this.configService.get<string>("LEVEL4"));
+        this.LEVEL1_t = parseFloat(this.configService.get<string>("LEVEL1_T"));
+        this.LEVEL2_t = parseFloat(this.configService.get<string>("LEVEL2_T"));
+        this.LEVEL3_t = parseFloat(this.configService.get<string>("LEVEL3_T"));
+        this.LEVEL4_t = parseFloat(this.configService.get<string>("LEVEL4_T"));
+        this.eventEmitter = new EventEmitter();
+
+        //this.qManager = new QuestionManager(configService);
+        //this.qManager.initializeQuestions();
+  
+
         this.END_OF_GAME_RANKING_COOLDOWN = parseInt(this.configService.get<string>("END_OF_GAME_RANKING_COOLDOWN")) * 1000;
         this.eventEmitter = new EventEmitter();
 
@@ -101,10 +135,7 @@ export class Game {
      * Stop sending question to players
      */
     public forceStopGame() : void{
-        if (this.intervalId) {
-            clearInterval(this.intervalId);
-            this.intervalId = null;
-        }
+        this.continueSending = false;
     }
 
     /**
@@ -112,7 +143,7 @@ export class Game {
      * @returns nb of question
      */
     public getNbQuestions() : number {
-        return this.qManager.qList.length;
+        return this.qManager.getUnusedQuestions();
     }
 
     /**
@@ -220,6 +251,7 @@ export class Game {
      * Send a question to every connected and alive player
      */
     private async sendQuestionToEveryone() : Promise<void> {
+        console.log("Question number : " + this.nbQuestionsSent);
         let question = await this.qManager.newQuestion(false);
         //console.log(question);
         this.players.forEach((_player: Player, id: string) => {
@@ -236,12 +268,47 @@ export class Game {
         console.log("Sending questions to everyone!");
         setTimeout(async () => {
             await this.sendQuestionToEveryone();
-        },1000); //Wait a sec to be sure everyone has loaded the new page
-
-
-        this.intervalId = setInterval(async () => {
+        },1000); 
+        //Wait a sec to be sure everyone has loaded the new page
+        
+        /*this.intervalId = setInterval(async () => {
             await this.sendQuestionToEveryone();
-        }, this.TIME_BETWEEN_QUESTION);
+        }, this.TIME_BETWEEN_QUESTION);*/
+        //this.sendTimedQuestion(this.TIME_BETWEEN_QUESTION);
+        
+        
+        //setTimeout(this.sendTimedQuestion, this.TIME_BETWEEN_QUESTION);
+        setTimeout(async () => {
+            await this.sendTimedQuestion();
+        },this.TIME_BETWEEN_QUESTION);
+    }
+
+
+    private async sendTimedQuestion(){
+
+        await this.sendQuestionToEveryone();
+        ++this.nbQuestionsSent;
+        let level:number = 1;
+        if(this.continueSending){
+           
+            if(this.nbQuestionsSent >= this.LEVEL4){
+                level = this.LEVEL4_t;
+            }
+            else if(this.nbQuestionsSent >= this.LEVEL3){
+                level = this.LEVEL3_t;
+            }
+            else if(this.nbQuestionsSent >= this.LEVEL2){
+                level = this.LEVEL2_t;
+            }
+            else if(this.nbQuestionsSent >= this.LEVEL1){
+                level = this.LEVEL1_t;
+            }
+            console.log("Next question in " + this.TIME_BETWEEN_QUESTION * level + "ms");
+            //setTimeout(this.sendTimedQuestion, this.TIME_BETWEEN_QUESTION * level);
+            setTimeout(async () => {
+                await this.sendTimedQuestion();
+            },this.TIME_BETWEEN_QUESTION * level);
+        }
     }
 
     /**
