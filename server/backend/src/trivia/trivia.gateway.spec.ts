@@ -34,6 +34,7 @@ describe("TriviaGateway", () => {
     jest.clearAllTimers();
     gateway.gameManager.game.forceStopGame();
     await Promise.resolve();
+    await gateway.gameManager.game.waitingForQuestionFetchToBeDone();
   })
 
   it("should read from the .env file", () => {

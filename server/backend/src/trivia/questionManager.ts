@@ -2,6 +2,7 @@ import { Question } from "./question";
 import { QuestionToSend } from "./questionToSend";
 import { QuestionInQueue } from "./questionInQueue";
 import {ConfigService} from "@nestjs/config";
+import { EventEmitter } from 'events';
 
 import {Injectable} from "@nestjs/common";
 
@@ -14,11 +15,15 @@ export class QuestionManager {
   private QUESTION_MIN: number;
   private Q_FETCH_SIZE: number;
   private API_URL: string;
+  private waitingForFetch: boolean;
+  private eventEmitter: any;
 
   constructor(private configService: ConfigService) {
 
     this.qPool = new Map<string, Question>();
     this.qList = [];
+    this.waitingForFetch = false;
+    this.eventEmitter = new EventEmitter();
  
     //Env variables
     this.QUESTION_MIN = parseInt(this.configService.get<string>("QUESTION_MIN"));
@@ -37,8 +42,8 @@ export class QuestionManager {
   
   /**
    * Check the answer from a player
-   * @param q : Question to check the answer
-   * @param answer : Answer given by the player
+   * @param q Question to check the answer
+   * @param answer Answer given by the player
    * @returns : if the answer is correct or not
    */
   public check(q: QuestionInQueue, answer: number) : boolean{
@@ -50,8 +55,8 @@ export class QuestionManager {
   }
 
   /**
-   * Obtain information about a question which will be send
-   * @param q : The question for which we would like full information
+   * Obtain information about a question which will be sent
+   * @param q The question for which we would like full information
    * @returns : QuestionToSend object (question text + 4 answers) 
    */
   public get(q: QuestionInQueue) : QuestionToSend{
@@ -59,6 +64,13 @@ export class QuestionManager {
       return; //Do nothing
     }
     return new QuestionToSend(this.qPool.get(q.getId()), q.getIsAttack());
+  }
+  
+  public async waitingForFetchToBeDone() {
+    if (!this.waitingForFetch) return true;
+    return new Promise((resolve) => {
+      this.eventEmitter.once('loaded', () => resolve(true));
+    });
   }
 
   /**
@@ -81,23 +93,26 @@ export class QuestionManager {
   /**
    * Call the trivia api and fetch the questions to store them in the question list
    */
-  private async fetchQuestions() : Promise<void>{
-    const fs = require("fs");
-    let questions: any[] = [];
-    let data: any;
+  private async fetchQuestions(): Promise<void> {
     try {
-      await fetch(this.API_URL+"&limit=" + this.Q_FETCH_SIZE)
-        .then((response) => response.json())
-        .then((json) => {
-          questions = json;
-          questions.forEach((question: any) => {
-            this.qList.push(new Question(question));
-            
-          });
+      this.waitingForFetch = true;
+      const response = await fetch(this.API_URL + "&limit=" + this.Q_FETCH_SIZE);
+      if (response.ok) {
+        const questions: any[] = await response.json();
+        questions.forEach((question: any) => {
+          this.qList.push(new Question(question));
         });
-  
+      } else {
+        const errorMessage = await response.text();
+        console.error("Error fetching questions:", errorMessage);
+      }
     } catch (err) {
       console.error("Error reading or parsing questions:", err);
+      return Promise.resolve();
     }
+    this.waitingForFetch = false;
+    this.eventEmitter.emit('loaded');
+    return Promise.resolve();
   }
+
 }

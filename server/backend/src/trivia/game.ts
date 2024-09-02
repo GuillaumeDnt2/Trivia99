@@ -178,6 +178,10 @@ export class Game {
         return this.nbReady;
     }
 
+    public async waitingForQuestionFetchToBeDone() {
+        await this.qManager.waitingForFetchToBeDone();
+    }
+
     /**
      * Starting game procedure : create the question manager and fetch new questions
      */
