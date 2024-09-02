@@ -54,7 +54,7 @@ export default function QuestAndAnsw(props){
                     ) : (
 
                 <>
-                <h3>{props.q}</h3>
+                <h3 className='question-text'>{props.q}</h3>
                 <div className='answers-grid orange-border'>
                     {props.a?.map((answer, key) =>
                                 <button className='answer-cell' key={'Answ'+key}

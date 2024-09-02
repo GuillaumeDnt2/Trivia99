@@ -1,0 +1,57 @@
+.scroll-box {
+    width: 100%;
+    height: 300px;
+    overflow: scroll;
+}
+
+.disable-scrollbar::-webkit-scrollbar {
+    background: transparent; /* Chrome/Safari/Webkit */
+    width: 0;
+}
+
+.disable-scrollbar {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE 10+ */
+}
+
+.list-ranking {
+    display: flex;
+    flex-direction: column;
+}
+
+.item-ranking {
+    display: flex;
+    flex-direction: row;
+    padding-bottom: 5px;
+}
+
+.rank-r {
+    min-width: 60px;
+    text-align: left;
+}
+
+.name-r {
+    text-align: left;
+    flex-basis: 150px;
+    flex-grow: 1;
+    margin-right: 15px
+}
+
+.nb-quest-r {
+    height: 100%;
+    min-width: 110px;
+}
+
+
+.accu-r {
+    height: 100%;
+    min-width: 65px;
+}
+
+.align-center-text {
+    text-align: center;
+}
+
+.colored-r {
+    background-color: var(--white-orange);
+}

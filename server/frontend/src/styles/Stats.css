@@ -1,13 +1,11 @@
-#attack-button {
-    padding: 10px;
-    align-self: stretch;
-    border-radius: 6px;
-    font-weight: bolder;
-}
-
 #flame-img {
     height: 50px;
     width: 40px;
+}
+
+.stat-container {
+    background-color: var(--white-orange);
+    justify-content : center;
 }
 
 .img-container {
@@ -23,10 +21,3 @@
     margin: 0px;
 }
 
-.orange-fade {
-    background-image: linear-gradient(#f9efe6, #fe8c43);
-}
-
-.red-fade {
-    background-image: linear-gradient(#ffe9e5, #fd300c);
-}

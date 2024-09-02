@@ -1,0 +1,29 @@
+::placeholder {
+    color: var(--c, #000000);
+}
+
+input {
+    border: none;
+    border-bottom: 1px solid var(--light-onyx);
+}
+
+input[type="text"] {
+    font-size: 16px
+}
+
+input:focus {
+    outline: none
+}
+
+.image-git {
+    height: 30px;
+    width: 30px;
+}
+
+label {
+    gap: 8px
+}
+
+.username-home {
+    color: var(--light-onyx)
+}
