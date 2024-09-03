@@ -1,0 +1,14 @@
+.about-container {
+    width: 70%;
+    margin-left: 15%;
+    margin-bottom: 15px;
+    margin-top: 15px;
+}
+
+@media screen and (max-width: 700px) {
+    
+    .about-container{
+        width: 90%;
+        margin-left: 5%;
+    }
+}
