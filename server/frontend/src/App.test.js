@@ -5,6 +5,7 @@ import {
     createMemoryRouter,
 } from "react-router-dom";
 import routes from "./utils/routes.js";
+import {socket} from "./utils/socket";
 
 const testPage = async (path) => {
     const router = createMemoryRouter(routes, {
@@ -18,6 +19,7 @@ const testPage = async (path) => {
 
 describe('Routing', () => {
     afterAll(() => {
+        socket.disconnect()
         cleanup()
     })
 
