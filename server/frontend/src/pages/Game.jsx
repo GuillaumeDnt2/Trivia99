@@ -25,7 +25,7 @@ export default function Game(){
 
     const [question, setQuestion] = useState("");
     const [answers, setAnswers] = useState([]);
-    const [attak, setAttack] = useState(false);
+    const [attack, setAttack] = useState(false);
     const [difficulty, setDifficulty] = useState("easy");
 
     const navigate = useNavigate();
@@ -114,7 +114,7 @@ export default function Game(){
                 <div className="content-column-box col2 game-container">
                     <Queue state={queue} />
                     <Stats streak={streak} accuracy={accuracy} nbReponse={nbResponse}/>
-                    <QuestAndAnsw isAlive={isAlive} q={question} a={answers} atk={question.isAttack} difficulty={question.difficulty} rank={rank}/>
+                    <QuestAndAnsw isAlive={isAlive} q={question} a={answers} atk={attack} difficulty={difficulty} rank={rank}/>
                     <AttackBtn canAttack={canAttack}/>
                 </div>
                 <PlayerList col="col3" players={playersRight}/>
