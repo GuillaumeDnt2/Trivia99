@@ -5,7 +5,9 @@ import BaseLayout from "../components/BaseLayout";
 export default function NotFound(){
     return (
         <BaseLayout>
-            <h1 className={"text"}>This page does not exist X﹏X</h1>
+            <div className={"padding-20px"}>
+                <h1 className={"text"}>This page does not exist X﹏X</h1>
+            </div>
         </BaseLayout>
     );
 }

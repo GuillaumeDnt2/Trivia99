@@ -78,6 +78,8 @@ export default function Game(){
         }
         
         function onEndGame(){
+            socket.emit("getGameStatus")
+            socket.emit("isUserLogged")
             navigate("/ranking");
         }
 

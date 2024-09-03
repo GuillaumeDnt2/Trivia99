@@ -1,5 +1,5 @@
 import { QuestionInQueue } from "./questionInQueue";
-import {ConfigService} from "@nestjs/config";
+import { ConfigService } from "@nestjs/config";
 
 export class Player {
   private name: string;
@@ -11,14 +11,19 @@ export class Player {
   private nbGoodAnswers: number;
   public isInTimeOut: NodeJS.Timeout;
   private id: string;
-  private rank: number; 
+  private rank: number;
   private currentSocket: any;
   private lastWrongAnswerTime: number;
   private currentQuestion: QuestionInQueue;
   //Configuration variables
   private STREAK: number;
 
-  constructor(name: string, id:string, socket: any, private configService: ConfigService) {
+  constructor(
+    name: string,
+    id: string,
+    socket: any,
+    private configService: ConfigService,
+  ) {
     this.name = name;
     this.queue = [];
     this.streak = 0;
@@ -36,12 +41,13 @@ export class Player {
   }
 
   /**
-   * 
+   *
    * @returns Player id
    */
-  public getId() : string{
+  public getId(): string {
     return this.id;
   }
+
 
   /**
    * Set a new time for the last time the player answered wrongly
@@ -60,11 +66,12 @@ export class Player {
 
   /**
    * Return the 1st question in the question queue
-   * @returns 
+   * @returns
    */
   public getCurrentQuestion() {
     return this.currentQuestion;
   }
+
 
   /**
    * Replace the current question by the next one in the queue
@@ -75,7 +82,7 @@ export class Player {
       console.log(question.isAttack)
         });*/
 
-    if(this.queue.length > 0){
+    if (this.queue.length > 0) {
       this.currentQuestion = this.queue.shift();
       return this.getCurrentQuestion();
     } else {
@@ -85,7 +92,7 @@ export class Player {
 
   /**
    * Return the nb of question in the question queue
-   * @returns 
+   * @returns
    */
   public getNbQuestionsInQueue() {
     return this.queue.length;
@@ -94,7 +101,7 @@ export class Player {
   /**
    * Unalive the player
    */
-  public unalive(rank:number) {
+  public unalive(rank: number) {
     this.isAlive = false;
     this.rank = rank;
   }
@@ -115,7 +122,7 @@ export class Player {
 
   /**
    * Return the value of the streak
-   * @returns 
+   * @returns
    */
   public getStreak() {
     return this.streak;
@@ -123,10 +130,10 @@ export class Player {
 
   /**
    * Add a new question to the question queue
-   * @param question 
+   * @param question
    */
   public addQuestion(question: any) {
-    if(this.currentQuestion == undefined){
+    if (this.currentQuestion == undefined) {
       this.currentQuestion = question;
     } else {
       this.queue.push(question);
@@ -134,7 +141,7 @@ export class Player {
   }
 
   /**
-   * Remove the first question from the question queue 
+   * Remove the first question from the question queue
    */
   public removeQuestion() {
     this.queue.shift();
@@ -142,7 +149,7 @@ export class Player {
 
   /**
    * Get player statistics and question queue
-   * @returns 
+   * @returns
    */
   public getUserInfo(): object {
     let info = {
@@ -152,9 +159,8 @@ export class Player {
       nbBadAnswers: this.nbBadAnswers,
       nbGoodAnswers: this.nbGoodAnswers,
       rank: this.rank,
-      questions: this.queue
+      questions: this.queue,
     };
-
 
     return info;
   }
@@ -193,7 +199,7 @@ export class Player {
 
   /**
    * Get player's name
-   * @returns 
+   * @returns
    */
   public getName() {
     return this.name;
@@ -201,15 +207,15 @@ export class Player {
 
   /**
    * Return player's number of good answers
-   * @returns 
+   * @returns
    */
   public getScore() {
     return this.nbGoodAnswers;
   }
 
   /**
-   * Return the state of the player 
-   * @returns 
+   * Return the state of the player
+   * @returns
    */
   public alive() {
     return this.isAlive;
@@ -219,7 +225,7 @@ export class Player {
     return this.nbGoodAnswers;
   }
 
-  public getBadAnswers() : number {
+  public getBadAnswers(): number {
     return this.nbBadAnswers;
   }
 
@@ -227,8 +233,7 @@ export class Player {
     this.nbBadAnswers++;
   }
 
-  public addGoodAnswer() : void {
+  public addGoodAnswer(): void {
     this.nbGoodAnswers++;
   }
-
 }
