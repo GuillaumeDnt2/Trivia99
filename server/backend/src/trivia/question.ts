@@ -1,5 +1,4 @@
 export class Question {
-
   private id: string;
   private category: string;
   private answers: string[];
@@ -17,8 +16,7 @@ export class Question {
     //Choose a random position to insert the correct answer among the incorrect ones
     this.correctAnsw = Math.floor(Math.random() * 4);
     for (var n = 0; n < 3; n++) {
-      if (n == this.correctAnsw) 
-        this.answers.push(data.correctAnswer);
+      if (n == this.correctAnsw) this.answers.push(data.correctAnswer);
       this.answers.push(data.incorrectAnswers[n]);
     }
     if (this.answers.length < 4) {
@@ -32,7 +30,7 @@ export class Question {
    * Id getter
    * @returns question's id
    */
-  public getId() : string{
+  public getId(): string {
     return this.id;
   }
 
@@ -40,7 +38,7 @@ export class Question {
    * Difficulty getter
    * @returns question's difficulty
    */
-  public getDifficulty() : string{
+  public getDifficulty(): string {
     return this.difficulty;
   }
 
@@ -48,7 +46,7 @@ export class Question {
    * Category getter
    * @returns question's category
    */
-  public getCategory() : string{
+  public getCategory(): string {
     return this.category;
   }
 
@@ -56,7 +54,7 @@ export class Question {
    * Answers getter
    * @returns question's answers
    */
-  public getAnswers() : string[]{
+  public getAnswers(): string[] {
     return this.answers;
   }
 
@@ -64,7 +62,7 @@ export class Question {
    * Correct answer getter
    * @returns question's correct answer
    */
-  public getCorrectAnswer() : number{
+  public getCorrectAnswer(): number {
     return this.correctAnsw;
   }
 
@@ -72,10 +70,7 @@ export class Question {
    * Question getter
    * @returns question's question
    */
-  public getQuestion() : string{
+  public getQuestion(): string {
     return this.question;
   }
-
-
-
 }

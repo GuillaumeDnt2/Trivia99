@@ -15,7 +15,7 @@ export class QuestionInQueue {
    * Id getter
    * @returns question's id
    */
-  public getId() : string{
+  public getId(): string {
     return this.id;
   }
 
@@ -23,14 +23,14 @@ export class QuestionInQueue {
    * Difficulty getter
    * @returns question's difficulty
    */
-  public getDifficulty() : string{
+  public getDifficulty(): string {
     return this.difficulty;
   }
 
   /**
    * Return if the question is from an attack
    */
-  public getIsAttack() : boolean{
+  public getIsAttack(): boolean {
     return this.isAttack;
   }
 }

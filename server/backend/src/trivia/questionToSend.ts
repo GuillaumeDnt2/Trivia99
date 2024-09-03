@@ -1,7 +1,6 @@
 import { QuestionInQueue } from "./questionInQueue";
 import { Question } from "./question";
 export class QuestionToSend extends QuestionInQueue {
-
   private category: string;
   private answers: string[];
   private question: string;
@@ -13,12 +12,11 @@ export class QuestionToSend extends QuestionInQueue {
     this.question = q.getQuestion();
   }
 
-
   /**
    * Category getter
    * @returns question's category
    */
-  public getCategory() : string{
+  public getCategory(): string {
     return this.category;
   }
 
@@ -26,7 +24,7 @@ export class QuestionToSend extends QuestionInQueue {
    * Answers getter
    * @returns question's answers
    */
-  public getAnswers() : string[]{
+  public getAnswers(): string[] {
     return this.answers;
   }
 
@@ -34,7 +32,7 @@ export class QuestionToSend extends QuestionInQueue {
    * Question getter
    * @returns question's question
    */
-  public getQuestion() : string{
+  public getQuestion(): string {
     return this.question;
   }
 }
