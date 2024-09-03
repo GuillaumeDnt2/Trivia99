@@ -59,6 +59,7 @@ export default function Game(){
 
         function onElimination(player){
             console.log("elimination");
+            console.log(player);
             document.getElementById(player)?.classList.add("eliminated");
         }
 
@@ -84,7 +85,10 @@ export default function Game(){
         }
 
         function onGameOver(data){
-            setRank(data.rank);
+            console.log("G-O");
+            console.log(data);
+            setAlive(false);
+            setRank(data);
         }
 
         socket.on("userInfo", onUserInfo);
