@@ -88,7 +88,7 @@ export class TriviaGateway implements OnModuleInit {
         let userId = this.getIdFromHeaders(socket);
 
         //If the user is in the game, set a timeout to remove him from the game after a certain time
-        if (this.gameManager.game.getPlayers().has(userId)){
+        if (this.gameManager.game.getPlayers().has(userId) && !this.gameManager.game.hasGameStarted()) {
           this.gameManager.game.getPlayers().get(userId).isInTimeOut = setTimeout(() => {
             console.log("User timed out");
             if (this.gameManager.game.getPlayers().has(userId)) {
