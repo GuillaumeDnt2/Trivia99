@@ -480,6 +480,8 @@ export class Game {
             //Add the player result to the leaderboard and send the a game over message
             this.leaderboard.push(rank);
             this.server.to(player.getId()).emit("gameOver", rank);
+            //Tell everyone the player has been eliminated
+            this.server.emit("elimination", player.getName());
             //End the game if there is one player left
             if(--this.nbPlayerAlive === 1){
 
