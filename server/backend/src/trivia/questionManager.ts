@@ -4,6 +4,7 @@ import { QuestionInQueue } from "./questionInQueue";
 import { ConfigService } from "@nestjs/config";
 
 import { Injectable } from "@nestjs/common";
+import {EventEmitter} from "events";
 
 @Injectable()
 export class QuestionManager {
@@ -17,6 +18,8 @@ export class QuestionManager {
   public easy_questions: Question[];
   public medium_questions: Question[];
   public hard_questions: Question[];
+  public isFetching: boolean = false;
+  private eventEmitter: EventEmitter;
 
   constructor(private configService: ConfigService) {
     this.qPool = new Map<string, Question>();
@@ -35,6 +38,9 @@ export class QuestionManager {
     this.HARD_Q = parseInt(this.configService.get<string>("HARD_QUESTION"));
     this.MEDIUM_Q = parseInt(this.configService.get<string>("MEDIUM_QUESTION"));
     this.API_URL = this.configService.get<string>("API_URL");
+
+
+    this.eventEmitter = new EventEmitter();
   }
 
   /**
@@ -45,6 +51,16 @@ export class QuestionManager {
     this.easy_questions = await this.fetchQuestions("easy");
     this.medium_questions = await this.fetchQuestions("medium");
     this.hard_questions = await this.fetchQuestions("hard");
+  }
+
+  async waitForQuestionsToBeFetched(): Promise<void> {
+    if(!this.isFetching) {
+      return Promise.resolve();
+    }
+      return new Promise((resolve) => {
+        this.eventEmitter.once('questionFetched', () => resolve());
+      });
+
   }
 
   getUnusedQuestions(): number {
@@ -130,6 +146,7 @@ export class QuestionManager {
     let questions: any[] = [];
 
     let list: Question[] = [];
+    this.isFetching = true;
     try {
       await fetch(url)
         .then((response) => response.json())
@@ -139,9 +156,11 @@ export class QuestionManager {
             list.push(new Question(question));
           });
         });
-
+      this.eventEmitter.emit("questionsFetched");
+      this.isFetching = false;
       return list;
     } catch (err) {
+      this.isFetching = false;
       console.error("Error reading or parsing questions:", err);
     }
   }
