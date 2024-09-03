@@ -171,6 +171,7 @@ export class Game {
   public addPlayer(id: string, name: string, socket: any) : Player {
       let player = new Player(name, id,socket, this.configService);
     this.players.set(id, player);
+    this.sendFeedUpdate(name + " joined the game");
     return player;
   }
 
@@ -384,6 +385,7 @@ export class Game {
     //     this.server.to(target.getSocket().id).emit("userInfo", target.getUserInfo());
     //     target.addAnsweredQuestion();
     // }
+    this.sendFeedUpdate("You have been attacked by " + attacker.getName(), target);
       this.server.to(target.getSocket().id).emit("userInfo", target.getUserInfo());
   }
 
@@ -479,7 +481,7 @@ export class Game {
         if(player.alive()){
             player.unalive(this.nbPlayerAlive);
             console.log(player.getName() + " is dead");
-
+            this.sendFeedUpdate(player.getName() + " has been eliminated");
             const rank = new Rank(player, this.nbPlayerAlive);
             this.leaderboard.push(rank);
             this.server.to(player.getId()).emit("gameOver", rank);
@@ -488,6 +490,21 @@ export class Game {
                 this.endGame();
             }
         }
+    }
+
+    /**
+     * Send a message to all sockets about events during the game
+     * @param text 
+     */
+    public sendFeedUpdate(text:string, player=undefined) : void{
+        if(player != undefined){
+            this.server.to(player.getSocket().id).emit("feedUpdate", text);
+        }
+        else{
+            this.server.emit("feedUpdate", text);
+        }
+
+
     }
 
     
