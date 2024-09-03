@@ -9,7 +9,6 @@ export class Player {
   public isReady: boolean;
   private nbBadAnswers: number;
   private nbGoodAnswers: number;
-  private nbAnsweredQuestions: number;
   public isInTimeOut: NodeJS.Timeout;
   private id: string;
   private rank: number; 
@@ -27,7 +26,6 @@ export class Player {
     this.isReady = false;
     this.nbBadAnswers = 0;
     this.nbGoodAnswers = 0;
-    this.nbAnsweredQuestions = 0;
     this.id = id;
     this.rank = 0;
     this.currentSocket = socket;
@@ -45,10 +43,17 @@ export class Player {
     return this.id;
   }
 
+  /**
+   * Set a new time for the last time the player answered wrongly
+   */
   public updateWrongAnswerTime(){
     this.lastWrongAnswerTime = Date.now();
   }
 
+  /**
+   * Return the last time the player answered wrongly to the question
+   * @returns 
+   */
   public getWrongAnswerTime(){
     return this.lastWrongAnswerTime;
   }
@@ -61,12 +66,14 @@ export class Player {
     return this.currentQuestion;
   }
 
+  /**
+   * Replace the current question by the next one in the queue
+   * @returns 
+   */
   public nextQuestion(): QuestionInQueue|void{
-    console.log("Queue length of " + this.name + ": " + this.queue.length)
-
-    this.queue.forEach((question: any) => {
+    /*this.queue.forEach((question: any) => {
       console.log(question.isAttack)
-        });
+        });*/
 
     if(this.queue.length > 0){
       this.currentQuestion = this.queue.shift();
@@ -144,26 +151,25 @@ export class Player {
       isAlive: this.isAlive,
       nbBadAnswers: this.nbBadAnswers,
       nbGoodAnswers: this.nbGoodAnswers,
-      nbAnsweredQuestions: this.nbAnsweredQuestions,
       rank: this.rank,
       questions: this.queue
     };
 
-    // this.queue.forEach((question: any) => {
-    //   info.questions.push(question);
-    // });
-    //
-
 
     return info;
   }
-
+  /**
+   * Passe à la prochaine question, augmente le compteur de bonne réponse et la streak
+   */
   public correctAnswer() : void {
     this.nextQuestion();
     this.addGoodAnswer();
     this.incrementStreak();
   }
 
+  /**
+   * Augmente le compteur de mauvaise réponse et réinitialise la streak
+   */
   public badAnswer() : void {
     this.addBadAnswer();
     this.resetStreak();
@@ -177,10 +183,10 @@ export class Player {
     this.currentSocket = socket;
   }
 
-    /**
-     * Get the current socket of the player
-     * @returns
-     */
+  /**
+   * Get the current socket of the player
+   * @returns
+   */
   public getSocket() {
     return this.currentSocket;
   }
@@ -209,10 +215,6 @@ export class Player {
     return this.isAlive;
   }
 
-  public getAnsweredQuestion() : number {
-    return this.nbAnsweredQuestions;
-  }
-
   public getGoodAnswers() : number {
     return this.nbGoodAnswers;
   }
@@ -221,9 +223,6 @@ export class Player {
     return this.nbBadAnswers;
   }
 
-  public addAnsweredQuestion() : void {
-    this.nbAnsweredQuestions++;
-  }
   public addBadAnswer() : void {
     this.nbBadAnswers++;
   }

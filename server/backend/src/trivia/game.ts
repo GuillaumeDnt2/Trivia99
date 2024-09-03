@@ -1,7 +1,6 @@
 import { Player } from "./player";
 import { QuestionManager } from "./questionManager";
 import { Server } from "socket.io";
-import { QuestionToSend } from "./questionToSend";
 import { QuestionInQueue } from "./questionInQueue";
 import { Injectable } from "@nestjs/common";
 import {ConfigService} from "@nestjs/config";
@@ -24,7 +23,6 @@ class Rank {
     this.rank = rank;
     this.goodAnswers = player.getGoodAnswers();
     this.badAnswers = player.getBadAnswers();
-    this.answeredQuestions = player.getAnsweredQuestion();
    
   }
 }
@@ -48,7 +46,6 @@ export class Game {
     private LEVEL2_t:number;
     private LEVEL3_t:number;
     private LEVEL4_t:number;
-    private END_OF_GAME_RANKING_COOLDOWN: number;
 
     public nbReady: number;
     private players: Map<string, Player>;
@@ -105,7 +102,6 @@ export class Game {
         this.LEVEL4_t = parseFloat(this.configService.get<string>("LEVEL4_T"));
         this.eventEmitter = new EventEmitter();
 
-        this.END_OF_GAME_RANKING_COOLDOWN = parseInt(this.configService.get<string>("END_OF_GAME_RANKING_COOLDOWN")) * 1000;
         this.eventEmitter = new EventEmitter();
 
     }
