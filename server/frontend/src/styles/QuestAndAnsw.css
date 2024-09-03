@@ -5,7 +5,7 @@
     margin: 2px;
 }
 
-@media screen and (max-width: 630px) {
+@media screen and (max-width: 700px) {
     .answers-grid{
         grid-template-columns: auto;
         grid-template-rows: auto auto auto auto;
