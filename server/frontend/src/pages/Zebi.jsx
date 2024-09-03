@@ -15,7 +15,6 @@ export default function Zebi(){
                 <PlayerList col="col1" players={["lksjd","dsfdfs","sdfdsf","sfwefef","SFF","dafaf"]}/>
                 <div className="content-column-box col2 game-container">
                     <Stats streak={123} accuracy={0.231} nbReponse={145}/>
-                    <div style={{margin: 19 + 'px'}}/>
                     <Queue state={[
     {
       "id": 1,
@@ -24,11 +23,21 @@ export default function Zebi(){
     },
     {
       "id": 2,
+      "difficulty": "medium",
+      "isAttack": false
+    },
+    {
+      "id": 3,
+      "difficulty": "hard",
+      "isAttack": false
+    },
+    {
+      "id": 3,
       "difficulty": "hard",
       "isAttack": true
     }
   ]} />
-                    <QuestAndAnsw isAlive={true} q={"Which of these Latin phrases means 'Words fly away, writings remain'?"} a={["Incepto ne desistam","Dies irae","Verba volant, scripta manent","Barba non facit philosophum"]}/>
+                    <QuestAndAnsw isAlive={true} q={"Which of these Latin phrases means 'Words fly away, writings remain'?"} a={["Incepto ne desistam","Dies irae","Verba volant, scripta manent","Barba non facit philosophum"]} atk={false} difficulty={'hard'}/>
                     <AttackBtn/>
                 </div>
                 <PlayerList col="col3" right={true} players={["lksjd","dsfdfs","sdfdsf","sfwefef","SFF","dafaf"]}/>

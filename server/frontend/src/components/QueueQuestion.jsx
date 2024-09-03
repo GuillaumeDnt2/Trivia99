@@ -7,20 +7,12 @@ export default function QueueQuestion(props){
     useEffect(() =>{
 
         if(props.attack){
-            setColor("red")
+            setColor("attack")
         }else{
-            switch(props.difficulty){
-                case "easy":
-                    setColor("green")
-                    break;
-                case "medium":
-                    setColor("blue")
-                    break;
-                case "hard":
-                    setColor("black")
-                    break;
-                default:
-                    throw new Error();
+            if(props.difficulty){
+                setColor(props.difficulty);
+            } else {
+                throw new Error();
             }
         }
     }, [props]);

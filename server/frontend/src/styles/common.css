@@ -6,6 +6,11 @@
     --grad-blue: #4E598C;
     --onyx: #353839;
     --light-onyx: #8E9090;
+
+    --easy: #5Cb44F;
+    --medium: #2E7AB4;
+    --hard: #934EA6;
+    --attack: #D42433;
 }
 
 .content-column-box {

@@ -46,7 +46,21 @@ export default function QuestAndAnsw(props){
         }
     })
 
-    useEffect(() => setWaiting(false), [props.q])
+    useEffect(() => {
+        setWaiting(false);
+        let color;
+        if(props.atk){
+            color = 'var(--attack)';
+        } else {
+            color = `var(--${props.difficulty})`;
+        }
+
+        let borders = document.getElementsByClassName("question-color");
+        for(let border of borders){
+            border.style.borderColor = color;
+        }
+        
+    }, [props.q])
 
 
     return <div className='content-column-box'>
@@ -57,9 +71,9 @@ export default function QuestAndAnsw(props){
 
                 <>
                 <h3 className='question-text'>{props.q}</h3>
-                <div className='answers-grid orange-border'>
+                <div className='answers-grid orange-border question-color'>
                     {props.a?.map((answer, key) =>
-                                <button className='answer-cell' key={'Answ'+key}
+                                <button className='answer-cell question-color' key={'Answ'+key}
                                         onClick={() => sendAnswer(key)}
                                         disabled={isTimeout}
                                         >{answer}

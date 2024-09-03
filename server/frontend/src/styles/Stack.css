@@ -11,26 +11,23 @@
     justify-content: left;
     align-items: center;
 
-    margin-left: calc(15% - 10px);
-
     min-height: 80px;
-    width: 70%;
 
     background-color: var(--white-orange);
 }
 
-.red {
-    background-color: red;
+.attack {
+    background-color: var(--attack);
 }
 
-.blue {
-    background-color: blue
+.medium {
+    background-color: var(--medium)
 }
 
-.green {
-    background-color: green;
+.easy {
+    background-color: var(--easy);
 }
 
-.black {
-    background-color: black;
+.hard {
+    background-color: var(--hard);
 }
