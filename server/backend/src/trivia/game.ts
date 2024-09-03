@@ -23,7 +23,6 @@ class Rank {
     this.rank = rank;
     this.goodAnswers = player.getGoodAnswers();
     this.badAnswers = player.getBadAnswers();
-    this.answeredQuestions = player.getAnsweredQuestion();
 
   }
 }
@@ -153,7 +152,7 @@ export class Game {
             }
         }
     }
-  }
+
 
   /**
    * Add a new player to players list
@@ -305,7 +304,7 @@ export class Game {
             },this.TIME_BETWEEN_QUESTION * modifier);
         }
     }
-  }
+
     /**
      * Check if the player has to be eliminated from the game
      * @param player : player to verify
@@ -361,7 +360,7 @@ export class Game {
             this.eliminatePlayer(player);
         }
     }
-  }
+
 
     /**
      * Send the current question to the player
@@ -375,7 +374,7 @@ export class Game {
             this.server.to(player.getSocket().id).emit("noMoreQuestions");
         }
     }
-  }
+
 
   /**
    * Add a new question to player triggered by an attack
