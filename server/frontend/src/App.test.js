@@ -5,8 +5,6 @@ import {
     createMemoryRouter,
 } from "react-router-dom";
 import routes from "./utils/routes.js";
-import {Server} from "socket.io"
-import Waiting from './pages/Waiting.jsx';
 
 const testPage = async (path) => {
     const router = createMemoryRouter(routes, {
@@ -19,10 +17,10 @@ const testPage = async (path) => {
 }
 
 describe('Routing', () => {
-    it("Should have the home page at path /", () => testPage("/"));
-    it("Should have the waiting page at path /waiting", () => testPage("/waiting"));
-    it("Should have the game page at path /game", () => testPage("/game"));
-    it("Should have the ranking page at path /ranking", () => testPage("/ranking"));
+    it("Should have the home page at path /", async () => testPage("/"));
+    it("Should have the waiting page at path /waiting", async () => testPage("/waiting"));
+    it("Should have the game page at path /game", async () => testPage("/game"));
+    it("Should have the ranking page at path /ranking", async () => testPage("/ranking"));
 });
 
 /*
