@@ -52,7 +52,7 @@ export default function Home(){
 
         return () => {
             socket.off("startGame", handleStart);
-            socket.off("ranking", handleRanking);
+            socket.off("ranking", handleEndGame);
             socket.off("gameStatus", handleGameStatus);
             socket.off("loggedInfo", handleLoggedInfo);
         }
