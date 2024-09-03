@@ -14,9 +14,18 @@
     text-align: center;
 }
 
+.answer-cell:disabled {
+    text-decoration: line-through;
+}
+
 .answer-cell:hover {
     background-color: var(--very-light-orange);
     cursor: pointer;
+}
+
+.answer-cell:disabled:hover {
+    background-color: var(--white-orange);
+    cursor: not-allowed;
 }
 
 .question-text {

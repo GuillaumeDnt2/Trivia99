@@ -18,26 +18,21 @@ export default function QuestAndAnsw(props){
     useEffect(() => {
         function onBadAnswer(){
             setIsTimeout(true);
-            console.log("timout");
             setBad(bad.map((val, key) => key === answer ? true : val));
             setTimeout(() => setIsTimeout(false), 2000);
         }
 
         function onGoodAnswer(){
             setBad([false,false,false,false]);
-            console.log("Good")
         }
 
         function onNoMoreQuestions(){
             setWaiting(true);
-            console.log(waiting);
         }
 
         socket.on("badAnswer", onBadAnswer);
         socket.on("goodAnswer", onGoodAnswer);
         socket.on("noMoreQuestions", onNoMoreQuestions);
-        console.log("Props q");
-        console.log(props.q);
 
         return () => {
             socket.off("badAnswer");
@@ -73,9 +68,9 @@ export default function QuestAndAnsw(props){
                 <h3 className='question-text'>{props.q}</h3>
                 <div className='answers-grid orange-border question-color'>
                     {props.a?.map((answer, key) =>
-                                <button className='answer-cell question-color' key={'Answ'+key}
+                                <button className='answer-cell question-color' key={'Answ'+ key}
                                         onClick={() => sendAnswer(key)}
-                                        disabled={isTimeout}
+                                        disabled={isTimeout || bad[key]}
                                         >{answer}
                                 </button>
                     )}
