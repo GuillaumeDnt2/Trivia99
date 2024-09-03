@@ -77,8 +77,10 @@ export default function QuestAndAnsw(props){
                 </div>
                 </>
                 )) : (
-
-                <h3>You lost !</h3>
+                <div className='centered'>
+                    <h3>You lost !</h3>
+                    <h4>{"Rank #" + props.rank}</h4>
+                </div>
             )
         }        
         </div>

@@ -98,3 +98,7 @@
 .orange-fade {
     background-image: linear-gradient(var(--light-orange), white, var(--light-orange));
 }
+
+.centered {
+    text-align: center;
+}
