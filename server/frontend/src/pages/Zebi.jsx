@@ -37,10 +37,10 @@ export default function Zebi(){
       "isAttack": true
     }
   ]} />
-                    <QuestAndAnsw isAlive={false} rank={99} q={"Which of these Latin phrases means 'Words fly away, writings remain' aslkjdldlsdjlksasjlasld jsadlskdlkADLSKDALDSKDLSAKJ LADLKSDLKASLKDJSLDK  SALJLDLKFlklgsjl trrtrgre ngagoigersadddd ddddddddddddd dddddddddd dddddd ddddd ddddddddd dddddddddddd?"} a={["Incepto ne desistamddddd ddddddddddddddddddddddddd ddddddddddd dddddddddddddd","Dies irasdaaaaaa aaaaaaaaaaaaaaa aaaa aaaaaaaaaaaaaaaaa aaae","Verba volanddddd dddddddddddd dddddd ddddddddddd ddddddddddd ddddddd ddddddddddd ddddddd ddddt, scripta maneddddddd dddddddddddddddddd ddddddddddd dddddddd dddddd dddddddddddddddddddddddddnt","Bddddddddddddddddddddddddddddddddddd dddddddddddddddddddddddddarba non facit philosophum"]} atk={false} difficulty={'hard'}/>
+                    <QuestAndAnsw isAlive={true} rank={99} q={"Which of these Latin phrases means 'Words fly away, writings remain' aslkjdldlsdjlksasjlasld jsadlskdlkADLSKDALDSKDLSAKJ LADLKSDLKASLKDJSLDK  SALJLDLKFlklgsjl trrtrgre ngagoigersadddd ddddddddddddd dddddddddd dddddd ddddd ddddddddd dddddddddddd?"} a={["Incepto ne desistamddddd ddddddddddddddddddddddddd ddddddddddd dddddddddddddd","Dies irasdaaaaaa aaaaaaaaaaaaaaa aaaa aaaaaaaaaaaaaaaaa aaae","Verba volanddddd dddddddddddd dddddd ddddddddddd ddddddddddd ddddddd ddddddddddd ddddddd ddddt, scripta maneddddddd dddddddddddddddddd ddddddddddd dddddddd dddddd dddddddddddddddddddddddddnt","Bddddddddddddddddddddddddddddddddddd dddddddddddddddddddddddddarba non facit philosophum"]} atk={false} difficulty={'hard'}/>
                     <AttackBtn canAttack={false}/>
                 </div>
-                <PlayerList col="col3" right={true} players={["lksjd","dsfdfs","sdfdsf","sfwefef","SFF","dafaf"]}/>
+                <PlayerList col="col3" right={true} players={["lksjd","dsfdfs","sdfdsf","sfwefef","SFF","dafaf","lksjd","dsfdfs","sdfdsf","sfwefef","SFF","dafaf","lksjd","dsfdfs","sdfdsf","sfwefef","SFF","dafaf","lksjd","dsfdfs","sdfdsf","sfwefef","SFF","dafaf","lksjd","dsfdfs","sdfdsf","sfwefef","SFF","dafaf","lksjd","dsfdfs","sdfdsf","sfwefef","SFF","dafaf"]}/>
             </div>   
         </BaseLayout>
     );

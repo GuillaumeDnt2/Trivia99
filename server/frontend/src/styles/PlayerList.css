@@ -47,8 +47,13 @@
     visibility: visible;
   }
 
-  @media screen and (max-width: 630px) {
+  @media screen and (max-width: 700px) {
     .players-container{
       width: calc(100% - 20px);
+      flex-direction: column;
+    }
+
+    .column {
+      flex-direction: row;
     }
   }
