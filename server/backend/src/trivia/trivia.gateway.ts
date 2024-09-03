@@ -177,6 +177,7 @@ export class TriviaGateway implements OnModuleInit {
     //Doesn't re-add the player if he's already in the game
     if(!this.gameManager.game.getPlayers().has(this.getIdFromHeaders(socket))) {
       let player = this.gameManager.game.addPlayer(this.getIdFromHeaders(socket), name, socket);
+      
       this.sendReadyInfo();
     }
   }
@@ -247,14 +248,17 @@ export class TriviaGateway implements OnModuleInit {
 
     if (this.gameManager.game.getNbPlayerAlive() > 1) {
       //Send the attack to the other players
-      for (let i = 0; i <= streak - this.STREAK; i++) {
+      const qSent = streak-this.STREAK;
+      this.gameManager.game.sendFeedUpdate(player.getName() + " attacked with " + qSent + " question(s)");
+      for (let i = 0; i <= qSent; i++) {
         console.log(player.getName() + " has attacked !");
         this.gameManager.game.attackPlayer(player);
       }
-      socket.emit("userInfo", player.getUserInfo());
+      
     }
     //Then reset the streak
     this.gameManager.game.getPlayerById(this.getIdFromHeaders(socket)).resetStreak();
+    socket.emit("userInfo", player.getUserInfo());
   }
 
   @SubscribeMessage("getAllInfo")

@@ -59,7 +59,7 @@ export class Game {
     private server: Server;
     private questionLoaded: boolean;
     private eventEmitter: any;
-    private intervalId: NodeJS.Timeout;
+
 
     private nbQuestionsSent:number;
     private continueSending:boolean;
@@ -169,8 +169,9 @@ export class Game {
    * @param socket
    */
   public addPlayer(id: string, name: string, socket: any) : Player {
-      let player = new Player(name, id,socket, this.configService);
+    let player = new Player(name, id,socket, this.configService);
     this.players.set(id, player);
+    this.sendFeedUpdate(name + " joined the game");
     return player;
   }
 
@@ -253,7 +254,6 @@ export class Game {
     private async sendQuestionToEveryone() : Promise<void> {
         console.log("Question number : " + this.nbQuestionsSent);
         let question = await this.qManager.newQuestion(false);
-        //console.log(question);
         this.players.forEach((_player: Player, id: string) => {
             if(this.players.get(id).alive()){
                 this.addQuestionToPlayer(id, question);
@@ -266,18 +266,13 @@ export class Game {
      */
     public async sendTimedQuestionToEveryone() : Promise<void> {
         console.log("Sending questions to everyone!");
+        //Wait a sec to be sure everyone has loaded the new page
         setTimeout(async () => {
             await this.sendQuestionToEveryone();
         },1000); 
-        //Wait a sec to be sure everyone has loaded the new page
-        
-        /*this.intervalId = setInterval(async () => {
-            await this.sendQuestionToEveryone();
-        }, this.TIME_BETWEEN_QUESTION);*/
-        //this.sendTimedQuestion(this.TIME_BETWEEN_QUESTION);
         
         
-        //setTimeout(this.sendTimedQuestion, this.TIME_BETWEEN_QUESTION);
+        
         setTimeout(async () => {
             await this.sendTimedQuestion();
         },this.TIME_BETWEEN_QUESTION);
@@ -378,13 +373,9 @@ export class Game {
     let target = this.getOtherRandomPlayer(attacker);
     console.log("The target is " + target.getName());
     await this.addQuestionToPlayer(target.getId(), await this.qManager.newQuestion(true));
-    // if(target.getCurrentQuestion() == undefined){
-    //     target.nextQuestion();
-    //     this.server.to(target.getSocket().id).emit("newQuestion",this.qManager.get(target.getCurrentQuestion()));
-    //     this.server.to(target.getSocket().id).emit("userInfo", target.getUserInfo());
-    //     target.addAnsweredQuestion();
-    // }
-      this.server.to(target.getSocket().id).emit("userInfo", target.getUserInfo());
+    this.sendFeedUpdate("You have been attacked by " + attacker.getName(), target);
+    
+    this.server.to(target.getSocket().id).emit("userInfo", target.getUserInfo());
   }
 
   /**
@@ -433,7 +424,7 @@ export class Game {
      * Send the leaderboard to all players
      */
     public sendLeaderboard() : void {
-      this.server.emit("ranking", this.leaderboard);
+        this.server.emit("ranking", this.leaderboard);
     }
 
     public emitLeaderboardToPlayer(player: Player){
@@ -446,7 +437,6 @@ export class Game {
      * @private
      */
     public getOtherRandomPlayer(attacker:Player) : Player{
-        let targetPlayer : Player;
         let map : Player[];
         map = [];
         let count = 0;
@@ -479,15 +469,30 @@ export class Game {
         if(player.alive()){
             player.unalive(this.nbPlayerAlive);
             console.log(player.getName() + " is dead");
-
+            this.sendFeedUpdate(player.getName() + " has been eliminated");
             const rank = new Rank(player, this.nbPlayerAlive);
             this.leaderboard.push(rank);
-            this.server.to(player.getId()).emit("gameOver", rank);
+            player.getSocket().emit("gameOver", rank);
             if(--this.nbPlayerAlive === 1){
 
                 this.endGame();
             }
         }
+    }
+
+    /**
+     * Send a message to all sockets about events during the game
+     * @param text 
+     */
+    public sendFeedUpdate(text:string, player=undefined) : void{
+        if(player != undefined){
+            this.server.to(player.getSocket().id).emit("feedUpdate", text);
+        }
+        else{
+            this.server.emit("feedUpdate", text);
+        }
+        
+        
     }
 
     
