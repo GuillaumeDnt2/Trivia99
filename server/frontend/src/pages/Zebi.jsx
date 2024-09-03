@@ -14,7 +14,7 @@ export default function Zebi(){
             <div className="content-row-box switch-vertical main-container">
                 <PlayerList col="col1" players={["lksjd","dsfdfs","sdfdsf","sfwefef","SFF","dafaf"]}/>
                 <div className="content-column-box col2 game-container">
-                    <Stats streak={12} accuracy={0.231} nbReponse={145}/>
+                    <Stats streak={12} accuracy={0.23187769} nbReponse={145}/>
                     <Queue state={[
     {
       "id": 1,

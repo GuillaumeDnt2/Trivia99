@@ -16,7 +16,7 @@
 .content-column-box {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    
 }
 
 .content-row-box {
@@ -71,6 +71,10 @@
 
 .gap-in-button {
     gap: 5px;
+}
+
+.gap-20px {
+    gap: 20px;
 }
 
 .orange-border {
