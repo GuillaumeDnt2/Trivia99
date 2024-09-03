@@ -8,11 +8,17 @@ console.log(process.env.LOCAL);
 
 export const socket = io(URL, {
     autoConnect: true,
+    /*
     transportOptions: {
         polling: {
             extraHeaders: {
                 authorization: document.cookie
             }
         }
+    }
+     */
+    transports: ['websocket'],
+    auth: {
+        token: document.cookie
     }
   });
