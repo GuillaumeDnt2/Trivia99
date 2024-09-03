@@ -63,6 +63,7 @@
     border: none;
     align-self: center;
     color: white;
+    cursor: pointer;
 }
 
 .orange-button:disabled {
