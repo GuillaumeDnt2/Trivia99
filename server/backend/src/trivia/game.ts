@@ -104,7 +104,6 @@ export class Game {
         this.LEVEL4_t = parseFloat(this.configService.get<string>("LEVEL4_T"));
         this.eventEmitter = new EventEmitter();
 
-        this.eventEmitter = new EventEmitter();
     }
 
   /**
@@ -118,16 +117,19 @@ export class Game {
   /**
    * Stop sending question to players and ask the game manager to reset the game in 60 seconds
    */
-  public stopGame(): void {
-    this.forceStopGame();
+  public async stopGame(): Promise<void> {
+    await this.forceStopGame();
     this.gameManager.resetGameInSomeTime();
   }
 
   /**
    * Stop sending question to players
    */
-  public forceStopGame(): void {
+  public async forceStopGame(): Promise<void> {
     this.continueSending = false;
+    if(this.qManager !== undefined) {
+        await this.qManager.waitForQuestionsToBeFetched();
+    }
   }
 
   /**
