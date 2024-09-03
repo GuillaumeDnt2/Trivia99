@@ -49,7 +49,9 @@ describe("TriviaGateway", () => {
     jest.clearAllTimers();
     gateway.gameManager.game.forceStopGame();
     await Promise.resolve();
+    jest.clearAllMocks();
   });
+
 
   it("should read from the .env file", () => {
     expect(configService.get("ENV_CONFIG_TRUE")).toBe("42");
