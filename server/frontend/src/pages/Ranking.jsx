@@ -11,6 +11,8 @@ export default function Ranking(){
     const [ranking, setRanking] = useState([]);
 
     const handleReturnHome = () => {
+        socket.emit("getGameStatus")
+        socket.emit("isUserLogged")
         socket.emit("deleteUser")
         navigate("/")
     }
@@ -43,12 +45,12 @@ export default function Ranking(){
             <div className="scroll-box disable-scrollbar">
                 <div className={"list-ranking"}>
                     {ranking.map((player) =>
-                        <div className={"item-ranking " + (player.rank % 2 !== 0 ? "colored-r" : "")}>
+                        <div className={"item-ranking " + (player.rank % 2 !== 0 ? "colored-r" : "")} key={player.rank}>
                             <span className={"rank-r"}>{player.rank}</span>
                             <span className={"name-r"}>{player.playerName}</span>
-                            <span className={"nb-quest-r align-center-text"}>{player.answeredQuestions}</span>
+                            <span className={"nb-quest-r align-center-text"}>{player.goodAnswers}</span>
                             <span
-                                className={"accu-r"}>{(player.goodAnswers / (player.badAnswers + player.goodAnswers) * 100).toFixed(2)}</span>
+                                className={"accu-r"}>{(player.goodAnswers / (player.badAnswers + player.goodAnswers) * 100).toFixed(2)}%</span>
                         </div>
                     )}
                 </div>

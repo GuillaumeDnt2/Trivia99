@@ -32,6 +32,8 @@ export default function ProtectedRoute({Component}){
         }
     }, []);
 
+
+
     if(loggedIn !== undefined && gameState === ""){
         return <Navigate to={location.pathname} />;
     }

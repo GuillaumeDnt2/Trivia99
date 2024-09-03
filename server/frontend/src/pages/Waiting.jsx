@@ -11,11 +11,14 @@ export default function Waiting(){
     const navigate = useNavigate();
 
     useEffect(() => {
-        function onPlayersConnected(newValue){
+        const onPlayersConnected = (newValue) =>{
             setPlayersInfo(newValue);
         }
 
-        function onStart(){
+        const onStart = () => {
+            console.log("Game starting")
+            socket.emit("getGameStatus")
+            socket.emit("isUserLogged")
             navigate("/game");
         }
 
@@ -25,12 +28,12 @@ export default function Waiting(){
         socket.emit("getReadyInfo")
 
         return () => {
-            socket.off("playersConnected");
-            socket.off("startGame");
+            socket.off("playersConnected", onPlayersConnected);
+            socket.off("startGame", onStart);
         }
     }, [navigate]);
 
-    function onClick() {
+    const onClick = () => {
         socket.emit("ready");
         setReady(true);
     }

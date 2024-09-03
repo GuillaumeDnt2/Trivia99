@@ -256,6 +256,7 @@ describe("TriviaGateway", () => {
         gateway.configService.get<string>("END_OF_GAME_RANKING_COOLDOWN"),
       ) * 1000,
     );
+
     await Promise.resolve();
     //await gateway.gameManager.waitingGameReset();
 

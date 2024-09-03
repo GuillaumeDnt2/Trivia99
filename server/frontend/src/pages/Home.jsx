@@ -33,11 +33,7 @@ export default function Home(){
         }
 
         const handleGameStatus = (state) => {
-            if(state==="started"){
-                setGameStarted(true)
-            }else{
-                setGameStarted(false)
-            }
+            setGameStarted(state==="started" || state==="ended")
         }
 
         const handleLoggedInfo = () => {
@@ -89,7 +85,7 @@ export default function Home(){
                             placeholder={placeholder}
                         />
                     </label>
-                    <button type="submit" className={"orange-button"}>Click to play !</button>
+                    <button type="submit" className={"orange-button"} disabled={gameStarted}>{gameStarted ? "Game in progress..." : "Click to play !"}</button>
                 </form>
                 <Link to="https://github.com/GuillaumeDnt2/Trivia99/tree/main">
                     <button type="button" className={"content-row-box center gap-in-button orange-button"}>GitHub<img src={github} alt="GitHub" className={"image-git"}/></button>

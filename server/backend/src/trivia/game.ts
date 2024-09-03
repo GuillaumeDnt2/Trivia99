@@ -137,7 +137,7 @@ export class Game {
    */
   public stopGame(): void {
     this.forceStopGame();
-    this.gameManager.resetGameIn60Seconds();
+    this.gameManager.resetGameInSomeTime();
   }
 
   /**
@@ -216,6 +216,19 @@ export class Game {
    */
   public getNbReady(): number {
     return this.nbReady;
+  }
+
+  public getGameStatus(): string {
+    let answer: string;
+    if (this.hasGameStarted()) {
+      answer = "started";
+    } else if (this.hasGameEnded()) {
+      answer = "ended";
+    } else {
+      answer = "waiting";
+    }
+
+    return answer;
   }
 
   /**
@@ -342,6 +355,7 @@ export class Game {
     });
 
     this.server.emit("endGame");
+    this.hasStarted = false;
     this.hasEnded = true;
     this.stopGame();
   }

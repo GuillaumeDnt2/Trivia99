@@ -10,12 +10,16 @@ export class GameManager {
   configService: ConfigService;
   howManyGamesHaveFinished: number = 0;
   hasGameFinishedResetting: boolean = false;
+  END_OF_GAME_RANKING_COOLDOWN: number;
   isGameResetting: boolean = false;
 
   constructor(server: Server, configService: ConfigService) {
     this.game = new Game(server, configService, this);
     this.server = server;
     this.configService = configService;
+    this.END_OF_GAME_RANKING_COOLDOWN = parseInt(
+      configService.get<string>("END_OF_GAME_RANKING_COOLDOWN"),
+    );
   }
 
   public getHowManyGamesHaveFinished() {
@@ -39,9 +43,9 @@ export class GameManager {
     this.hasGameFinishedResetting = true;
   }
 
-  resetGameIn60Seconds() {
+  resetGameInSomeTime() {
     setTimeout(() => {
       this.resetGame();
-    }, 60000);
+    }, this.END_OF_GAME_RANKING_COOLDOWN * 1000);
   }
 }

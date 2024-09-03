@@ -129,6 +129,7 @@ export class TriviaGateway implements OnModuleInit {
 
     socket.emit("setCookie", serializedCookie);
 
+    socket.handshake.auth.token = serializedCookie;
     return userId;
   }
 
@@ -192,6 +193,7 @@ export class TriviaGateway implements OnModuleInit {
         name,
         socket,
       );
+
       let loggedInfo = this.gameManager.game
         .getPlayers()
         .has(this.getIdFromHeaders(socket));
@@ -401,14 +403,6 @@ export class TriviaGateway implements OnModuleInit {
 
   @SubscribeMessage("getGameStatus")
   getGameStatus(@ConnectedSocket() socket: any) {
-    let answer;
-    if (this.gameManager.game.hasGameStarted()) {
-      answer = "started";
-    } else if (this.gameManager.game.hasGameEnded()) {
-      answer = "ended";
-    } else {
-      answer = "waiting";
-    }
-    socket.emit("gameStatus", answer);
+    socket.emit("gameStatus", this.gameManager.game.getGameStatus());
   }
 }
