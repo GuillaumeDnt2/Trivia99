@@ -10,16 +10,22 @@ export default function App() {
     const router = createBrowserRouter(routes);
 
     useEffect(() => {
-        socket.on('setCookie', (serializedCookie) => {
+        const handleCookie = (serializedCookie) => {
             const cookie = serializedCookie.split(';')[0];
             const [name, value] = cookie.split('=');
             setCookie(name, value, { path: '/' });
-        });
+        }
+
+        socket.on('setCookie', handleCookie);
+
+        return () => {
+            socket.off("setCookie", handleCookie)
+        }
     }, [setCookie]);
 
-  return (
-    <div className="App">
-      <RouterProvider router={router} />
-    </div>
-  );
+    return (
+        <div className="App">
+            <RouterProvider router={router} />
+        </div>
+    );
 }

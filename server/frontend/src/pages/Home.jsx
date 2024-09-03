@@ -13,7 +13,7 @@ import BaseLayout from "../components/BaseLayout";
  * @author Valentin Bonzon
  * @author Edwin Haeffner
  * @returns {JSX.Element}
- */
+*/
 
 export default function Home(){
 
@@ -21,29 +21,44 @@ export default function Home(){
     const [placeholder, setPlaceholder] = useState("Enter your name")
     const [gameStarted, setGameStarted] = useState(false);
 
+    const navigate = useNavigate();
+
     useEffect(() => {
-        socket.on("startGame", () => {
+        const handleStart = () => {
             setGameStarted(true)
-        })
+        }
 
-        socket.on("ranking", () => {
+        const handleRanking = () => {
             setGameStarted(false)
-        })
+        }
 
-        socket.on("startStatus", (started) => {
-            setGameStarted(started.status)
-        })
+        const handleGameStatus = (state) => {
+            setGameStarted(state==="started" || state==="ended")
+        }
 
-        socket.emit("isStarted")
+        const handleLoggedInfo = () => {
+            navigate('/waiting')
+        }
+
+        socket.on("startGame", handleStart)
+
+        socket.on("ranking", handleRanking)
+
+        socket.on("gameStatus", handleGameStatus)
+
+        socket.on("loggedInfo", handleLoggedInfo)
+
+        socket.emit("getGameStatus")
 
         return () => {
-            socket.off("startGame");
-            socket.off("ranking");
-            socket.off("startStatus");
+            socket.off("startGame", handleStart);
+            socket.off("ranking", handleRanking);
+            socket.off("gameStatus", handleGameStatus);
+            socket.off("loggedInfo", handleLoggedInfo);
         }
-    }, []);
+    }, [navigate]);
 
-    const navigate = useNavigate();
+
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -53,7 +68,6 @@ export default function Home(){
                 'login',
                 name
             )
-            navigate('/waiting')
         }else {
             // Set the colour of the placeholder to red and change text
             document.querySelector("input").style.setProperty("--c", "red");
@@ -71,7 +85,7 @@ export default function Home(){
                             placeholder={placeholder}
                         />
                     </label>
-                    <button type="submit" className={"orange-button"}>Click to play !</button>
+                    <button type="submit" className={"orange-button"} disabled={gameStarted}>{gameStarted ? "Game in progress..." : "Click to play !"}</button>
                 </form>
                 <Link to="https://github.com/GuillaumeDnt2/Trivia99/tree/main">
                     <button type="button" className={"content-row-box center gap-in-button orange-button"}>GitHub<img src={github} alt="GitHub" className={"image-git"}/></button>
@@ -79,3 +93,90 @@ export default function Home(){
             </div>
         </BaseLayout>
 }
+
+
+
+/*
+import "../styles/Home.css";
+import { socket } from "../utils/socket.js";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import github from "../assets/github-mark.svg";
+import BaseLayout from "../components/BaseLayout";
+
+export default function Home() {
+    const [name, setName] = useState("");
+    const [placeholder, setPlaceholder] = useState("Enter your name");
+    const [gameStarted, setGameStarted] = useState(false);
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const handleStartGame = () => setGameStarted(true);
+        const handleRanking = () => setGameStarted(false);
+        const handleGameStatus = (state) => {
+            if (state === "started") {
+                setGameStarted(true);
+
+            } else {
+                setGameStarted(false);
+            }
+        };
+        const handleLoggedInfo = () => navigate("/waiting");
+
+        socket.on("startGame", handleStartGame);
+        socket.on("ranking", handleRanking);
+        socket.on("gameStatus", handleGameStatus);
+        socket.on("loggedInfo", handleLoggedInfo);
+
+        socket.emit("getGameStatus");
+
+        return () => {
+            socket.off("startGame", handleStartGame);
+            socket.off("ranking", handleRanking);
+            socket.off("gameStatus", handleGameStatus);
+            socket.off("loggedInfo", handleLoggedInfo);
+        };
+    }, [navigate]);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (name.length !== 0) {
+            socket.emit("login", name);
+        } else {
+            document.querySelector("input").style.setProperty("--c", "red");
+            setPlaceholder("You must enter a name...");
+        }
+    };
+
+    return (
+        <BaseLayout>
+            <div className={"content-column-box center padding-20px"}>
+                <form onSubmit={handleSubmit} className="content-column-box">
+                    <label className={"content-row-box"}>
+                        <p className={"username-home"}>Username</p>
+                        <input
+                            type="text"
+                            onChange={(e) => setName(e.target.value)}
+                            placeholder={placeholder}
+                        />
+                    </label>
+                    <button type="submit" className={"orange-button"}>
+                        Click to play !
+                    </button>
+                </form>
+                <Link to="https://github.com/GuillaumeDnt2/Trivia99/tree/main">
+                    <button
+                        type="button"
+                        className={"content-row-box center gap-in-button orange-button"}
+                    >
+                        GitHub
+                        <img src={github} alt="GitHub" className={"image-git"} />
+                    </button>
+                </Link>
+            </div>
+        </BaseLayout>
+    );
+}
+
+ */
