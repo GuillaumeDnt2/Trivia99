@@ -1,15 +1,19 @@
 .dot {
-    height: 18px;
-    width: 18px;
-    background-color: #ebddff;
-    border-radius: 50%;
-    display: inline-block;
-    margin: 2px;
-  }
+  height: 18px;
+  width: 18px;
+  background-color: #ebddff;
+  border-radius: 50%;
+  display: inline-block;
+  margin: 2px;
+}
+
+.eliminated {
+  background-color: #cc4c4a;
+}
 
 .column {
-    display: flex;
-    flex-direction: column-reverse;
+  display: flex;
+  flex-direction: column-reverse;
 }
 
 .players-container{
