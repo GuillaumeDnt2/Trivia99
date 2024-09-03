@@ -28,7 +28,7 @@ export default function Home(){
             setGameStarted(true)
         }
 
-        const handleRanking = () => {
+        const handleEndGame = () => {
             setGameStarted(false)
         }
 
@@ -42,7 +42,7 @@ export default function Home(){
 
         socket.on("startGame", handleStart)
 
-        socket.on("ranking", handleRanking)
+        socket.on("endGame", handleEndGame)
 
         socket.on("gameStatus", handleGameStatus)
 
