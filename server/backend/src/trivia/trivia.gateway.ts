@@ -59,8 +59,8 @@ export class TriviaGateway implements OnModuleInit {
      * @description Event listener for the 'connection' event. This event is emitted when a new client connects to the server.
      */
     this.server.on("connection", (socket) => {
-      //console.log(socket.id);
-      //console.log("Connected");
+      console.log(socket.id);
+      console.log("Connected");
 
       let userId = this.getIdFromHeaders(socket);
 
@@ -82,15 +82,15 @@ export class TriviaGateway implements OnModuleInit {
        * @description Event listener for the 'disconnect' event. This event is emitted when a client disconnects from the server.
        */
       socket.on("disconnect", () => {
-        //console.log(socket.id);
-        //console.log("Disconnected");
+        console.log(socket.id);
+        console.log("Disconnected");
 
         let userId = this.getIdFromHeaders(socket);
 
         //If the user is in the game, set a timeout to remove him from the game after a certain time
         if (this.gameManager.game.getPlayers().has(userId)){
           this.gameManager.game.getPlayers().get(userId).isInTimeOut = setTimeout(() => {
-            //console.log("User timed out");
+            console.log("User timed out");
             if (this.gameManager.game.getPlayers().has(userId)) {
               if (this.gameManager.game.getPlayers().get(userId).isReady) {
                 --this.gameManager.game.nbReady;
@@ -143,7 +143,7 @@ export class TriviaGateway implements OnModuleInit {
    * @returns {string | null} The user ID, or null if no user ID was found.
    */
   getIdFromHeaders(socket: any): string | null {
-    const cookie = socket.handshake.headers.authorization;
+    const cookie = socket.handshake.auth.token;
 
     if(!cookie){
       console.log("No cookie found");

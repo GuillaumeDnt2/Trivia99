@@ -12,8 +12,21 @@ describe("TriviaGateway", () => {
   let gateway: TriviaGateway;
   let server: Server;
   let configService: ConfigService;
-  const player1 = { id: "1", send: jest.fn(), handshake: { headers: { authorization: serialize('userId', "1") } }  };
-  const player2 = { id: "2", send: jest.fn(), handshake: { headers: { authorization: serialize('userId', "2") } }  };
+  const player1 = {
+    id: "1",
+    send: jest.fn(),
+    handshake: {
+      auth: { token: serialize('userId', "1") }
+    }
+  };
+
+  const player2 = {
+    id: "2",
+    send: jest.fn(),
+    handshake: {
+      auth: { token: serialize('userId', "2") }
+    }
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

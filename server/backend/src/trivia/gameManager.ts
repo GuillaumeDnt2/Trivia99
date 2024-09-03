@@ -39,7 +39,6 @@ export class GameManager {
         this.hasGameFinishedResetting = true;
     }
 
-
     resetGameIn60Seconds() {
         setTimeout(() => {
             this.resetGame();
