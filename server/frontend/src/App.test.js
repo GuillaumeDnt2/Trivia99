@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/react';
 import App from './App';
 import {
     RouterProvider,
@@ -13,14 +13,18 @@ const testPage = async (path) => {
 
     render(<RouterProvider router={router} />);
     const notFound = screen.queryByText("This page does not exist");
-    expect(notFound).not.toBeInTheDocument();
+    await expect(notFound).not.toBeInTheDocument();
 }
 
 describe('Routing', () => {
-    it("Should have the home page at path /", async () => testPage("/"));
-    it("Should have the waiting page at path /waiting", async () => testPage("/waiting"));
-    it("Should have the game page at path /game", async () => testPage("/game"));
-    it("Should have the ranking page at path /ranking", async () => testPage("/ranking"));
+    afterAll(() => {
+        cleanup()
+    })
+
+    it("Should have the home page at path /", async () => await testPage("/"));
+    it("Should have the waiting page at path /waiting", async () => await testPage("/waiting"));
+    it("Should have the game page at path /game", async () => await testPage("/game"));
+    it("Should have the ranking page at path /ranking", async () => await testPage("/ranking"));
 });
 
 /*
