@@ -8,7 +8,6 @@ console.log(process.env.LOCAL);
 
 export const socket = io(URL, {
     autoConnect: true,
-    transports: ['websocket'],
     auth: {
         token: document.cookie
     }
