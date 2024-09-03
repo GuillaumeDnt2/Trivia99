@@ -15,7 +15,6 @@
 .answer-cell {
     border: 1px;
     border-style: solid;
-    border-color: var(--strong-orange);
     padding: 10px;
     background-color: var(--white-orange);
     text-align: center;

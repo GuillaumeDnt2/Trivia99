@@ -24,7 +24,9 @@ export default function Game(){
     const [rank, setRank] = useState(0);
 
     const [question, setQuestion] = useState("");
-    const [answers, setAnswers] = useState([])
+    const [answers, setAnswers] = useState([]);
+    const [attack, setAttack] = useState(false);
+    const [difficulty, setDifficulty] = useState("easy");
 
     const navigate = useNavigate();
 
@@ -50,8 +52,9 @@ export default function Game(){
         function onNewQuestion(question){
             setQuestion(question.question.text);
             setAnswers(question.answers);
-            console.log("Question received: " )
-            console.log(question.question.text)
+            setAttack(question.isAttack);
+            setDifficulty(question.difficulty);
+            console.log(question);
         }
 
         function onElimination(player){
@@ -113,7 +116,7 @@ export default function Game(){
                 <div className="content-column-box col2 game-container">
                     <Queue state={queue} />
                     <Stats streak={streak} accuracy={accuracy} nbReponse={nbResponse}/>
-                    <QuestAndAnsw isAlive={isAlive} q={question.text} a={question.answers} atk={question.isAttack} difficulty={question.difficulty} rank={rank}/>
+                    <QuestAndAnsw isAlive={isAlive} q={question} a={answers} atk={attack} difficulty={difficulty} rank={rank}/>
                     <AttackBtn canAttack={canAttack}/>
                 </div>
                 <PlayerList col="col3" players={playersRight}/>

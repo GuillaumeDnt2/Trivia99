@@ -7,18 +7,19 @@ export default function QuestAndAnsw(props){
 
     const [isTimeout, setIsTimeout] = useState(false);
     const [bad, setBad] = useState([false,false,false,false]);
-    const [waiting, setWaiting] = useState(false);
-    const [answer, setAnswer] = useState(null);
+    const [waiting, setWaiting] = useState(true);
+    const [lastAnswer, setLastAnswer] = useState(null);
+    const [answers, setAnswers] = useState([]);
 
     function sendAnswer(val){
-        setAnswer(val);
+        setLastAnswer(val);
         socket.emit("answer", val);
     }
 
     useEffect(() => {
         function onBadAnswer(){
             setIsTimeout(true);
-            setBad(bad.map((val, key) => key === answer ? true : val));
+            setBad(bad.map((val, key) => key === lastAnswer ? true : val));
             setTimeout(() => setIsTimeout(false), 2000);
         }
 
@@ -28,6 +29,7 @@ export default function QuestAndAnsw(props){
 
         function onNoMoreQuestions(){
             setWaiting(true);
+            setAnswers(["","","",""]);
         }
 
         socket.on("badAnswer", onBadAnswer);
@@ -43,22 +45,53 @@ export default function QuestAndAnsw(props){
 
     useEffect(() => {
         setWaiting(false);
+        setAnswers(props.a);
         let color;
         if(props.atk){
             color = 'var(--attack)';
         } else {
             color = `var(--${props.difficulty})`;
         }
-
         let borders = document.getElementsByClassName("question-color");
         for(let border of borders){
+            console.log("Change color");
             border.style.borderColor = color;
         }
         
-    }, [props.q])
+    }, [props.difficulty, props.atk, props.q, props.a])
 
 
-    return <div className='content-column-box'>
+    return (<div className='content-column-box'>
+            {props.isAlive ? (
+            <div>
+                {
+                    waiting ? (<h3>Waiting for question...</h3>)
+                    : <h3 className='question-text'>{props.q}</h3>
+                }
+                <div className='answers-grid orange-border question-color'>
+                    {answers.map((answer, key) =>
+                                <button className='answer-cell question-color' key={'Answ'+ key}
+                                        onClick={() => sendAnswer(key)}
+                                        disabled={isTimeout || bad[key]}
+                                        >{answer}
+                                </button>
+                    )}
+                </div>
+            </div>
+
+            ) : (
+            <div className='centered'>
+                    <h3>You lost !</h3>
+                    <h4>{"Rank #" + props.rank}</h4>
+            </div>
+            )}
+        </div>)
+
+
+
+
+
+/*
             {props.isAlive ? (
                 waiting ? (
                     <h3>Waiting for question...</h3>
@@ -66,6 +99,7 @@ export default function QuestAndAnsw(props){
 
                 <>
                 <h3 className='question-text'>{props.q}</h3>
+                ) +
                 <div className='answers-grid orange-border question-color'>
                     {props.a?.map((answer, key) =>
                                 <button className='answer-cell question-color' key={'Answ'+ key}
@@ -76,12 +110,12 @@ export default function QuestAndAnsw(props){
                     )}
                 </div>
                 </>
-                )) : (
+                : (
                 <div className='centered'>
                     <h3>You lost !</h3>
                     <h4>{"Rank #" + props.rank}</h4>
                 </div>
             )
         }        
-        </div>
+        </div>*/
 }
