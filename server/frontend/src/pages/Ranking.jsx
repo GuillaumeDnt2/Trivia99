@@ -29,7 +29,7 @@ export default function Ranking(){
     }, []);
 
     return <BaseLayout>
-        <div className={"content-column-box padding-20px"}>
+        <div className={"content-column-box gap-20px padding-20px"}>
             <div className={"center-text"}>
                 <h2>{ranking[0]?.playerName} won!</h2>
             </div>

@@ -21,6 +21,7 @@ export default function Game(){
     const [nbResponse, setNbResponse] = useState(0);
     const [isAlive, setAlive] = useState(true);
     const [canAttack, setCanAttack] = useState(false);
+    const [rank, setRank] = useState(0);
 
     const [question, setQuestion] = useState("");
     const [answers, setAnswers] = useState([])
@@ -77,11 +78,16 @@ export default function Game(){
             navigate("/ranking");
         }
 
+        function onGameOver(data){
+            setRank(data.rank);
+        }
+
         socket.on("userInfo", onUserInfo);
         socket.on("newQuestion", onNewQuestion);
         socket.on("elimination", onElimination);
         socket.on("players", onPlayers);
         socket.on("endGame", onEndGame);
+        socket.on("gameOver", onGameOver);
 
         console.log("emit all");
         socket.emit("getAllInfo");
@@ -92,6 +98,7 @@ export default function Game(){
             socket.off("elimination");
             socket.off("players");
             socket.off("endGame");
+            socket.off("gameOver");
         }
     }, []);
 
@@ -99,12 +106,12 @@ export default function Game(){
 
     return (
         <BaseLayout>
-            <div className="content-row-box switch-vertical hsize">
+            <div className="content-row-box switch-vertical main-container">
                 <PlayerList col="col1" players={playersLeft}/>
-                <div id="content-column-box col2">
+                <div className="content-column-box col2 game-container">
                     <Queue state={queue} />
                     <Stats streak={streak} accuracy={accuracy} nbReponse={nbResponse}/>
-                    <QuestAndAnsw isAlive={isAlive} q={question} a={answers}/>
+                    <QuestAndAnsw isAlive={isAlive} q={question.text} a={question.answers} atk={question.isAttack} difficulty={question.difficulty} rank={rank}/>
                     <AttackBtn canAttack={canAttack}/>
                 </div>
                 <PlayerList col="col3" players={playersRight}/>

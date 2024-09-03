@@ -6,12 +6,17 @@
     --grad-blue: #4E598C;
     --onyx: #353839;
     --light-onyx: #8E9090;
+
+    --easy: #5Cb44F;
+    --medium: #2E7AB4;
+    --hard: #934EA6;
+    --attack: #D42433;
 }
 
 .content-column-box {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    
 }
 
 .content-row-box {
@@ -25,7 +30,7 @@
 }
 
 .background {
-    height: 100vh;
+    min-height: 100vh;
     background-image: linear-gradient(var(--grad-blue), var(--strong-orange));
 }
 
@@ -68,6 +73,10 @@
     gap: 5px;
 }
 
+.gap-20px {
+    gap: 20px;
+}
+
 .orange-border {
     border: 8px;
     border-style: solid;
@@ -88,4 +97,8 @@
 
 .orange-fade {
     background-image: linear-gradient(var(--light-orange), white, var(--light-orange));
+}
+
+.centered {
+    text-align: center;
 }

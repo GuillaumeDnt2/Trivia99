@@ -14,8 +14,7 @@ export default function Zebi(){
             <div className="content-row-box switch-vertical main-container">
                 <PlayerList col="col1" players={["lksjd","dsfdfs","sdfdsf","sfwefef","SFF","dafaf"]}/>
                 <div className="content-column-box col2 game-container">
-                    <Stats streak={123} accuracy={0.231} nbReponse={145}/>
-                    <div style={{margin: 19 + 'px'}}/>
+                    <Stats streak={12} accuracy={0.23187769} nbReponse={145}/>
                     <Queue state={[
     {
       "id": 1,
@@ -24,14 +23,24 @@ export default function Zebi(){
     },
     {
       "id": 2,
+      "difficulty": "medium",
+      "isAttack": false
+    },
+    {
+      "id": 3,
+      "difficulty": "hard",
+      "isAttack": false
+    },
+    {
+      "id": 3,
       "difficulty": "hard",
       "isAttack": true
     }
   ]} />
-                    <QuestAndAnsw isAlive={true} q={"Which of these Latin phrases means 'Words fly away, writings remain'?"} a={["Incepto ne desistam","Dies irae","Verba volant, scripta manent","Barba non facit philosophum"]}/>
-                    <AttackBtn/>
+                    <QuestAndAnsw isAlive={true} rank={99} q={"Which of these Latin phrases means 'Words fly away, writings remain' aslkjdldlsdjlksasjlasld jsadlskdlkADLSKDALDSKDLSAKJ LADLKSDLKASLKDJSLDK  SALJLDLKFlklgsjl trrtrgre ngagoigersadddd ddddddddddddd dddddddddd dddddd ddddd ddddddddd dddddddddddd skdajlsjd  lajdsajdlkjd lkajdlasjdlsaj l ladljs dada?"} a={["Incepto ne desistamddddd ddddddddddddddddddddddddd ddddddddddd dddddddddddddd","Dies irasdaaaaaa aaaaaaaaaaaaaaa aaaa aaaaaaaaaaaaaaaaa aaae","Verba volanddddd dddddddddddd dddddd ddddddddddd ddddddddddd ddddddd ddddddddddd ddddddd ddddt, scripta maneddddddd ddd","Bddddddddddddddddddddddddddddddddddd dddddddddddddddddddddddddarba non facit philosophum"]} atk={false} difficulty={'hard'}/>
+                    <AttackBtn canAttack={false}/>
                 </div>
-                <PlayerList col="col3" right={true} players={["lksjd","dsfdfs","sdfdsf","sfwefef","SFF","dafaf"]}/>
+                <PlayerList col="col3" right={true} players={["lksjd","dsfdfs","sdfdsf","sfwefef","SFF","dafaf","lksjd","dsfdfs","sdfdsf","sfwefef","SFF","dafaf","lksjd","dsfdfs","sdfdsf","sfwefef","SFF","dafaf","lksjd","dsfdfs","sdfdsf","sfwefef","SFF","dafaf","lksjd","dsfdfs","sdfdsf","sfwefef","SFF","dafaf","lksjd","dsfdfs","sdfdsf","sfwefef","SFF","dafaf"]}/>
             </div>   
         </BaseLayout>
     );
