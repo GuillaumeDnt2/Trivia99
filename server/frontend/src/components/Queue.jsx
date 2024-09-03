@@ -1,4 +1,4 @@
-import "../styles/Stack.css";
+import "../styles/Queue.css";
 import QueueQuestion from "./QueueQuestion";
 
 export default function Queue(props){

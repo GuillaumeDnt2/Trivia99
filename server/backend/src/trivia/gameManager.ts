@@ -1,7 +1,9 @@
 import {Game} from "./game";
 import {Server} from "socket.io";
 import {ConfigService} from "@nestjs/config";
+import {Injectable} from "@nestjs/common";
 
+@Injectable()
 export class GameManager {
     public game: Game;
     server: Server;

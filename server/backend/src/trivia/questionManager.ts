@@ -10,19 +10,28 @@ import {Injectable} from "@nestjs/common";
 export class QuestionManager {
   private qPool: Map<string, Question>;
 
-  public qList: Question[];
   private QUESTION_MIN: number;
   private Q_FETCH_SIZE: number;
+  private HARD_Q:number;
+  private MEDIUM_Q:number;
   private API_URL: string;
+  public easy_questions: Question[];
+  public medium_questions: Question[];
+  public hard_questions: Question[];
 
   constructor(private configService: ConfigService) {
 
     this.qPool = new Map<string, Question>();
-    this.qList = [];
+
+    this.easy_questions = [];
+    this.medium_questions = [];
+    this.hard_questions = [];
  
     //Env variables
     this.QUESTION_MIN = parseInt(this.configService.get<string>("QUESTION_MIN"));
     this.Q_FETCH_SIZE = parseInt(this.configService.get<string>("Q_FETCH_SIZE"));
+    this.HARD_Q = parseInt(this.configService.get<string>("HARD_QUESTION"));
+    this.MEDIUM_Q = parseInt(this.configService.get<string>("MEDIUM_QUESTION"));
     this.API_URL = this.configService.get<string>("API_URL");
   }
 
@@ -30,8 +39,14 @@ export class QuestionManager {
    * Fetch trivia questions from API for the 1st time
    */
   async initializeQuestions() : Promise<void>{
-    await this.fetchQuestions();
-    console.log("length " + this.qList.length);
+    //this.qList = await this.fetchQuestions();
+    this.easy_questions = await this.fetchQuestions("easy");
+    this.medium_questions = await this.fetchQuestions("medium");
+    this.hard_questions = await this.fetchQuestions("hard");
+  }
+
+  getUnusedQuestions() : number{
+    return this.easy_questions.length + this.medium_questions.length + this.hard_questions.length;
   }
 
   
@@ -67,13 +82,35 @@ export class QuestionManager {
    * @returns : the new question without question text and answers (to be stored in player's queue)
    */
   public async newQuestion(isAttack: boolean) : Promise<QuestionInQueue>{
-    let q: Question;
-    do {
-      if (this.qList.length < this.QUESTION_MIN) {
-        await this.fetchQuestions();
-      }
-      q = this.qList.shift();
-    } while (this.qPool.has(q.getId()));
+    
+    let rnd = Math.floor(Math.random() * 10);
+    
+    let q : Question;
+    if(rnd >= this.HARD_Q || isAttack){
+      do {
+        if (this.hard_questions.length < this.QUESTION_MIN) {
+          await this.fetchQuestions("hard");
+        }
+        q = this.hard_questions.shift();
+      } while (this.qPool.has(q.getId()));
+    }
+    else if(rnd >= this.MEDIUM_Q){
+      do {
+        if (this.medium_questions.length < this.QUESTION_MIN) {
+          await this.fetchQuestions("medium");
+        }
+        q = this.medium_questions.shift();
+      } while (this.qPool.has(q.getId()));
+    }
+    else{
+      do {
+        if (this.easy_questions.length < this.QUESTION_MIN) {
+          await this.fetchQuestions("easy");
+        }
+        q = this.easy_questions.shift();
+      } while (this.qPool.has(q.getId()));
+    }
+    
     this.qPool.set(q.getId(), q);
     return new QuestionInQueue(q, isAttack);
   }
@@ -81,20 +118,30 @@ export class QuestionManager {
   /**
    * Call the trivia api and fetch the questions to store them in the question list
    */
-  private async fetchQuestions() : Promise<void>{
+  private async fetchQuestions(difficulty = undefined) : Promise<Question[]>{
+    
+    let url = this.API_URL+"?limit=" + this.Q_FETCH_SIZE;
+    if(difficulty != undefined){
+      url += "&difficulties="+difficulty;
+    }
+
     const fs = require("fs");
     let questions: any[] = [];
-    let data: any;
+
+    let list: Question[] = [];
     try {
-      await fetch(this.API_URL+"&limit=" + this.Q_FETCH_SIZE)
+      await fetch(url)
         .then((response) => response.json())
         .then((json) => {
+          
           questions = json;
           questions.forEach((question: any) => {
-            this.qList.push(new Question(question));
+            list.push(new Question(question));
             
           });
         });
+  
+        return list;
   
     } catch (err) {
       console.error("Error reading or parsing questions:", err);
