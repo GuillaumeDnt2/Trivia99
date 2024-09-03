@@ -149,8 +149,10 @@ describe("TriviaGateway", () => {
     gateway.gameManager.game.addPlayer("belmondo", "jean-paul", null);
     gateway.gameManager.game.addPlayer("jarre", "jean-michel", null);
     gateway.gameManager.game.addPlayer("jeunet", "jean-pierre", null);
-    const attacker = gateway.gameManager.game.getPlayerById("belmondo");
-    let target = gateway.gameManager.game.getOtherRandomPlayer(attacker);
+
+    const attacker = gateway.gameManager.game.getPlayerById("belmondo")
+    let target = gateway.gameManager.game.getRandomPlayer(attacker);
+
 
     expect(target).toBeDefined();
     expect(target).not.toBe(attacker);

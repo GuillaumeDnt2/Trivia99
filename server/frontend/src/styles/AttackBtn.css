@@ -3,7 +3,14 @@
     align-self: stretch;
     border-radius: 6px;
     font-weight: bolder;
-    background-color: var(--grad-blue);
+    color: white;
+    background-color: var(--attack);
     cursor: pointer;
     width: 100%;
+}
+
+#attack-button:disabled {
+    cursor: not-allowed;
+    background-color: #91474d;
+    color: grey;
 }

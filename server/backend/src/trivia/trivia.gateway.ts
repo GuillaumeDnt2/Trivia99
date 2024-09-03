@@ -270,16 +270,17 @@ export class TriviaGateway implements OnModuleInit {
 
     if (this.gameManager.game.getNbPlayerAlive() > 1) {
       //Send the attack to the other players
-      for (let i = 0; i <= streak - this.STREAK; i++) {
+      const qSent = streak-this.STREAK;
+      this.gameManager.game.sendFeedUpdate(player.getName() + " attacked with " + qSent + " question(s)");
+      for (let i = 0; i <= qSent; i++) {
         console.log(player.getName() + " has attacked !");
-        this.gameManager.game.attackPlayer(player);
+        this.gameManager.game.attack(player);
       }
-      socket.emit("userInfo", player.getUserInfo());
+      
     }
     //Then reset the streak
-    this.gameManager.game
-      .getPlayerById(this.getIdFromHeaders(socket))
-      .resetStreak();
+    this.gameManager.game.getPlayerById(this.getIdFromHeaders(socket)).resetStreak();
+    socket.emit("userInfo", player.getUserInfo());
   }
 
   @SubscribeMessage("getAllInfo")
@@ -324,7 +325,8 @@ export class TriviaGateway implements OnModuleInit {
         return;
       }
       //Check if the answer is correct
-      if (this.gameManager.game.checkPlayerAnswer(player, body)) {
+      if(this.gameManager.game.checkPlayerAnswer(player, body)){
+
         //Send correct answer msg
         socket.emit("goodAnswer");
       } else {

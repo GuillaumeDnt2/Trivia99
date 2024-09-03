@@ -8,11 +8,11 @@ export default function Stats(props){
         <div className='content-row-box orange-border stat-container'>
             <div className='content-column-box spaced'>
                 <h3>Score</h3>
-                <p>{props.nbReponse}</p>
+                <p class="centered">{props.nbReponse}</p>
             </div>
             <div className='content-column-box spaced'>
                 <h3>Accuracy</h3>
-                <p>{props.accuracy}</p>
+                <p class="centered">{(props.accuracy * 100).toFixed(2) + "%"}</p>
             </div>
             <div className='spaced'>
                 <h3>Streak</h3>

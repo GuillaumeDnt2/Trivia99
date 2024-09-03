@@ -1,7 +1,6 @@
 import { Player } from "./player";
 import { QuestionManager } from "./questionManager";
 import { Server } from "socket.io";
-import { QuestionToSend } from "./questionToSend";
 import { QuestionInQueue } from "./questionInQueue";
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
@@ -25,6 +24,7 @@ class Rank {
     this.goodAnswers = player.getGoodAnswers();
     this.badAnswers = player.getBadAnswers();
     this.answeredQuestions = player.getAnsweredQuestion();
+
   }
 }
 
@@ -35,94 +35,78 @@ class Rank {
  */
 @Injectable()
 export class Game {
-  private TIME_BETWEEN_QUESTION: number;
-  private READY_PLAYERS_THRESHOLD: number;
-  private NB_MIN_READY_PLAYERS: number;
-  private SIZE_OF_QUESTION_QUEUE: number;
-  private LEVEL1: number;
-  private LEVEL2: number;
-  private LEVEL3: number;
-  private LEVEL4: number;
-  private LEVEL1_t: number;
-  private LEVEL2_t: number;
-  private LEVEL3_t: number;
-  private LEVEL4_t: number;
-  private END_OF_GAME_RANKING_COOLDOWN: number;
+    private TIME_BETWEEN_QUESTION: number;
+    private READY_PLAYERS_THRESHOLD: number;
+    private NB_MIN_READY_PLAYERS: number;
+    private SIZE_OF_QUESTION_QUEUE: number;
+    private LEVEL1:number;
+    private LEVEL2:number;
+    private LEVEL3:number;
+    private LEVEL4:number;
+    private LEVEL1_t:number;
+    private LEVEL2_t:number;
+    private LEVEL3_t:number;
+    private LEVEL4_t:number;
 
-  public nbReady: number;
-  private players: Map<string, Player>;
-  private leaderboard: Rank[];
-  private nbPlayerAlive: number;
-  private hasStarted: boolean;
-  private hasEnded: boolean;
-  private qManager: QuestionManager;
-  private server: Server;
-  private questionLoaded: boolean;
-  private eventEmitter: any;
-  //private intervalIdd: NodeJS.Timeout;
+    public nbReady: number;
+    private players: Map<string, Player>;
+    private leaderboard: Rank[];
+    private nbPlayerAlive: number;
+    private hasStarted: boolean;
+    private hasEnded: boolean;
+    private qManager: QuestionManager;
+    private server: Server;
+    private questionLoaded: boolean;
+    private eventEmitter: any;
 
-  private nbQuestionsSent: number;
-  private continueSending: boolean;
+    private nbQuestionsSent:number;
+    private continueSending:boolean;
+ 
 
-  private readonly configService: ConfigService;
-  private gameManager: GameManager;
+    private readonly configService: ConfigService;
+    private gameManager : GameManager;
 
-  /**
-   * Game constructor
-   * @constructor
-   * @param server the server all the sockets are connected to
-   * @param configService the configuration service to enable us to use the .env file
-   * @param gameManager
-   */
-  constructor(
-    server: Server,
-    configService: ConfigService,
-    gameManager: GameManager,
-  ) {
-    this.nbReady = 0;
-    this.nbPlayerAlive = 0;
-    this.players = new Map<string, Player>();
-    this.hasStarted = false;
-    this.hasEnded = false;
-    this.server = server;
-    this.configService = configService;
-    this.gameManager = gameManager;
-    this.questionLoaded = false;
-    this.eventEmitter = new EventEmitter();
-    this.continueSending = true;
-    this.nbQuestionsSent = 0;
 
-    // Load the configuration values from the .env file
-    this.TIME_BETWEEN_QUESTION =
-      parseInt(this.configService.get<string>("TIME_BETWEEN_QUESTION")) * 1000;
-    this.READY_PLAYERS_THRESHOLD = parseInt(
-      this.configService.get<string>("READY_PLAYERS_THRESHOLD"),
-    );
-    this.NB_MIN_READY_PLAYERS = parseInt(
-      this.configService.get<string>("NB_MIN_READY_PLAYERS"),
-    );
-    this.SIZE_OF_QUESTION_QUEUE = parseInt(
-      this.configService.get<string>("SIZE_OF_QUESTION_QUEUE"),
-    );
+    /**
+     * Game constructor
+     * @constructor
+     * @param server the server all the sockets are connected to
+     * @param configService the configuration service to enable us to use the .env file
+     * @param gameManager
+     */
+    constructor(server: Server, configService: ConfigService, gameManager: GameManager) {
 
-    this.LEVEL1 = parseInt(this.configService.get<string>("LEVEL1"));
-    this.LEVEL2 = parseInt(this.configService.get<string>("LEVEL2"));
-    this.LEVEL3 = parseInt(this.configService.get<string>("LEVEL3"));
-    this.LEVEL4 = parseInt(this.configService.get<string>("LEVEL4"));
-    this.LEVEL1_t = parseFloat(this.configService.get<string>("LEVEL1_T"));
-    this.LEVEL2_t = parseFloat(this.configService.get<string>("LEVEL2_T"));
-    this.LEVEL3_t = parseFloat(this.configService.get<string>("LEVEL3_T"));
-    this.LEVEL4_t = parseFloat(this.configService.get<string>("LEVEL4_T"));
-    this.eventEmitter = new EventEmitter();
+        this.nbReady = 0;
+        this.nbPlayerAlive = 0;
+        this.players = new Map<string, Player>();
+        this.hasStarted = false;
+        this.hasEnded = false;
+        this.server = server;
+        this.configService = configService;
+        this.gameManager = gameManager;
+        this.questionLoaded = false;
+        this.eventEmitter = new EventEmitter();
+        this.continueSending = true;
+        this.nbQuestionsSent = 0;
 
-    //this.qManager = new QuestionManager(configService);
-    //this.qManager.initializeQuestions();
+        // Load the configuration values from the .env file
+        this.TIME_BETWEEN_QUESTION = parseInt(this.configService.get<string>("TIME_BETWEEN_QUESTION")) * 1000;
+        this.READY_PLAYERS_THRESHOLD = parseInt(this.configService.get<string>("READY_PLAYERS_THRESHOLD"));
+        this.NB_MIN_READY_PLAYERS = parseInt(this.configService.get<string>("NB_MIN_READY_PLAYERS"));
+        this.SIZE_OF_QUESTION_QUEUE = parseInt(this.configService.get<string>("SIZE_OF_QUESTION_QUEUE"));
 
-    this.END_OF_GAME_RANKING_COOLDOWN =
-      parseInt(this.configService.get<string>("END_OF_GAME_RANKING_COOLDOWN")) *
-      1000;
-    this.eventEmitter = new EventEmitter();
-  }
+        this.LEVEL1 = parseInt(this.configService.get<string>("LEVEL1"));
+        this.LEVEL2 = parseInt(this.configService.get<string>("LEVEL2"));
+        this.LEVEL3 = parseInt(this.configService.get<string>("LEVEL3"));
+        this.LEVEL4 = parseInt(this.configService.get<string>("LEVEL4"));
+        this.LEVEL1_t = parseFloat(this.configService.get<string>("LEVEL1_T"));
+        this.LEVEL2_t = parseFloat(this.configService.get<string>("LEVEL2_T"));
+        this.LEVEL3_t = parseFloat(this.configService.get<string>("LEVEL3_T"));
+        this.LEVEL4_t = parseFloat(this.configService.get<string>("LEVEL4_T"));
+        this.eventEmitter = new EventEmitter();
+
+        this.eventEmitter = new EventEmitter();
+    }
 
   /**
    * Ask if game has started
@@ -155,19 +139,19 @@ export class Game {
     return this.qManager.getUnusedQuestions();
   }
 
-  /**
-   * Check if the game can start and start it if it can
-   * The game can start if the number of ready players is greater than the threshold
-   */
-  public checkAndStartGame() {
-    if (!this.hasStarted) {
-      if (
-        this.getNbReady() >= this.NB_MIN_READY_PLAYERS &&
-        //this.getNbReady() >= this.players.size * this.READY_PLAYERS_THRESHOLD
-        this.getNbReady() == this.getNbPlayers()
-      ) {
-        this.startGame().then(() => console.log("Game started"));
-      }
+    /**
+     * Check if the game can start and start it if it can
+     * The game can start if the number of ready players is greater than the threshold
+     */
+    public checkAndStartGame() {
+        if (!this.hasStarted) {
+            if (
+                this.getNbReady() >= this.NB_MIN_READY_PLAYERS &&
+                this.getNbReady() == this.getNbPlayers()
+            ) {
+                this.startGame().then(() => console.log("Game started"));
+            }
+        }
     }
   }
 
@@ -180,6 +164,7 @@ export class Game {
   public addPlayer(id: string, name: string, socket: any): Player {
     let player = new Player(name, id, socket, this.configService);
     this.players.set(id, player);
+    this.sendFeedUpdate(name + " joined the game");
     return player;
   }
 
@@ -241,19 +226,15 @@ export class Game {
     await this.qManager.initializeQuestions();
     this.questionLoaded = true;
     this.eventEmitter.emit("loaded");
-
     this.nbPlayerAlive = this.players.size;
     this.server.emit("startGame", {
       msg: "The game has started",
     });
 
-    //Send the player list
-    //setTimeout(()=> this.server.emit("players", this.getAllPlayerList()),300);
     await this.sendTimedQuestionToEveryone();
 
     this.leaderboard = [];
   }
-
   /**
    * Creates a list of players to be then used in the player list in the frontend
    */
@@ -268,79 +249,71 @@ export class Game {
     });
     return list;
   }
+    /**
+     * Send a question to every connected and alive player
+     */
+    private async sendQuestionToEveryone() : Promise<void> {
+        console.log("Question number : " + this.nbQuestionsSent);
+        let question = await this.qManager.newQuestion(false);
+   
+        this.players.forEach((_player: Player, id: string) => {
+            if(this.players.get(id).alive()){
+                this.addQuestionToPlayer(id, question);
+            }
+        });
+    }
 
-  /**
-   * Send a question to every connected and alive player
-   */
-  private async sendQuestionToEveryone(): Promise<void> {
-    console.log("Question number : " + this.nbQuestionsSent);
-    let question = await this.qManager.newQuestion(false);
-    //console.log(question);
-    this.players.forEach((_player: Player, id: string) => {
-      if (this.players.get(id).alive()) {
-        this.addQuestionToPlayer(id, question);
-      }
-    });
-  }
-
-  /**
-   * Starts a loop that add a new question to player's queue every x seconds
-   */
-  public async sendTimedQuestionToEveryone(): Promise<void> {
-    console.log("Sending questions to everyone!");
-    setTimeout(async () => {
-      await this.sendQuestionToEveryone();
-    }, 1000);
-    //Wait a sec to be sure everyone has loaded the new page
-
-    /*this.intervalId = setInterval(async () => {
+    /**
+     * Starts a loop that add a new question to player's queue every x seconds
+     */
+    public async sendTimedQuestionToEveryone() : Promise<void> {
+        console.log("Sending questions to everyone!");
+        setTimeout(async () => {
             await this.sendQuestionToEveryone();
-        }, this.TIME_BETWEEN_QUESTION);*/
-    //this.sendTimedQuestion(this.TIME_BETWEEN_QUESTION);
+        },1000); 
+   
+        setTimeout(async () => {
+            await this.sendTimedQuestion();
+        },this.TIME_BETWEEN_QUESTION);
+    }
 
-    //setTimeout(this.sendTimedQuestion, this.TIME_BETWEEN_QUESTION);
-    setTimeout(async () => {
-      await this.sendTimedQuestion();
-    }, this.TIME_BETWEEN_QUESTION);
-  }
+    /**
+     * Set a timeout to wait the right amount of time to send the next question
+     */
+    private async sendTimedQuestion(){
 
-  private async sendTimedQuestion() {
-    await this.sendQuestionToEveryone();
-    ++this.nbQuestionsSent;
-    let level: number = 1;
-    if (this.continueSending) {
-      if (this.nbQuestionsSent >= this.LEVEL4) {
-        level = this.LEVEL4_t;
-      } else if (this.nbQuestionsSent >= this.LEVEL3) {
-        level = this.LEVEL3_t;
-      } else if (this.nbQuestionsSent >= this.LEVEL2) {
-        level = this.LEVEL2_t;
-      } else if (this.nbQuestionsSent >= this.LEVEL1) {
-        level = this.LEVEL1_t;
-      }
-      console.log(
-        "Next question in " + this.TIME_BETWEEN_QUESTION * level + "ms",
-      );
-      //setTimeout(this.sendTimedQuestion, this.TIME_BETWEEN_QUESTION * level);
-      setTimeout(async () => {
-        await this.sendTimedQuestion();
-      }, this.TIME_BETWEEN_QUESTION * level);
+        await this.sendQuestionToEveryone();
+        ++this.nbQuestionsSent;
+        let modifier:number = 1;
+        if(this.continueSending){
+            //Chose a modifier related to the amount of question sent
+            if(this.nbQuestionsSent >= this.LEVEL4){
+                modifier = this.LEVEL4_t;
+            }
+            else if(this.nbQuestionsSent >= this.LEVEL3){
+                modifier = this.LEVEL3_t;
+            }
+            else if(this.nbQuestionsSent >= this.LEVEL2){
+                modifier = this.LEVEL2_t;
+            }
+            else if(this.nbQuestionsSent >= this.LEVEL1){
+                modifier = this.LEVEL1_t;
+            }
+            
+            setTimeout(async () => {
+                await this.sendTimedQuestion();
+            },this.TIME_BETWEEN_QUESTION * modifier);
+        }
     }
   }
-
-  /**
-   * Check if the player has to be eliminated from the game
-   * @param player : player to verify
-   * @returnes if the player is eliminated
-   */
-  public checkQuestionQueue(player: Player): boolean {
-    if (player.getNbQuestionsInQueue() >= this.SIZE_OF_QUESTION_QUEUE) {
-      this.eliminatePlayer(player);
-
-      return true;
+    /**
+     * Check if the player has to be eliminated from the game
+     * @param player : player to verify
+     * @returnes if the player is eliminated
+     */
+    public isQueueFull(player: Player) : boolean {
+        return player.getNbQuestionsInQueue() >= this.SIZE_OF_QUESTION_QUEUE;
     }
-    return false;
-  }
 
   /**
    * Ending game procedure : send the ranking to all players
@@ -364,35 +337,43 @@ export class Game {
     return this.hasEnded;
   }
 
-  /**
-   * Add a new question to the player's question queue
-   * @param id : player id
-   * @param question : question to add
-   */
-  public async addQuestionToPlayer(id: string, question: QuestionInQueue) {
-    let player = this.players.get(id);
-    if (!this.checkQuestionQueue(player)) {
-      player.addQuestion(question);
-      let info = player.getUserInfo();
-      this.server.to(player.getSocket().id).emit("userInfo", info);
 
-      //Wait for the game to be started before sending question
-      await this.waitForTheGameToBeStarted();
-      //console.log(player.getCurrentQuestion());
-      //Send question to player if queue was empty before
+    /**
+     * Add a new question to the player's question queue
+     * @param id : player id
+     * @param question : question to add
+     */
+    public async addQuestionToPlayer(id: string, question: QuestionInQueue) {
+        let player = this.players.get(id);
+        if(!this.isQueueFull(player)){
+            player.addQuestion(question);
+            let info = player.getUserInfo();
+            this.server.to(player.getSocket().id).emit("userInfo", info);
 
-      this.server
-        .to(player.getSocket().id)
-        .emit("newQuestion", this.qManager.get(player.getCurrentQuestion()));
-      this.server.to(player.getSocket().id).emit("userInfo", info);
+            //Wait for the game to be started before sending question
+            await this.waitForTheGameToBeStarted();
+
+            this.emitCurrentQuestionOf(player);
+            this.server.to(player.getSocket().id).emit("userInfo", info);
+
+        }
+        else{
+            this.eliminatePlayer(player);
+        }
     }
   }
 
-  public emitCurrentQuestionOf(player: Player) {
-    if (player.getCurrentQuestion() !== undefined) {
-      this.server
-        .to(player.getSocket().id)
-        .emit("newQuestion", this.qManager.get(player.getCurrentQuestion()));
+    /**
+     * Send the current question to the player
+     * @param player 
+     */
+    public emitCurrentQuestionOf(player: Player){
+        if(player.getCurrentQuestion() !== undefined){
+            this.server.to(player.getSocket().id).emit("newQuestion",this.qManager.get(player.getCurrentQuestion()));
+        }
+        else{
+            this.server.to(player.getSocket().id).emit("noMoreQuestions");
+        }
     }
   }
 
@@ -400,22 +381,13 @@ export class Game {
    * Add a new question to player triggered by an attack
    * @param attacker The player who attacks
    */
-  public async attackPlayer(attacker: Player): Promise<void> {
-    let target = this.getOtherRandomPlayer(attacker);
-    console.log("The target is " + target.getName());
-    await this.addQuestionToPlayer(
-      target.getId(),
-      await this.qManager.newQuestion(true),
-    );
-    // if(target.getCurrentQuestion() == undefined){
-    //     target.nextQuestion();
-    //     this.server.to(target.getSocket().id).emit("newQuestion",this.qManager.get(target.getCurrentQuestion()));
-    //     this.server.to(target.getSocket().id).emit("userInfo", target.getUserInfo());
-    //     target.addAnsweredQuestion();
-    // }
-    this.server
-      .to(target.getSocket().id)
-      .emit("userInfo", target.getUserInfo());
+  public async attack(attacker: Player) : Promise<void> {
+    let target = this.getRandomPlayer(attacker);
+    
+    await this.addQuestionToPlayer(target.getId(), await this.qManager.newQuestion(true));
+   
+    this.sendFeedUpdate("You have been attacked by " + attacker.getName(), target);
+    this.server.to(target.getSocket().id).emit("userInfo", target.getUserInfo());
   }
 
   /**
@@ -424,32 +396,22 @@ export class Game {
    * @param answer : the answer number
    * @returns if the answer is correct or not
    */
-  public checkPlayerAnswer(player: Player, answer: number) {
-    //console.log(this.qManager.get(player.getCurrentQuestion()).getQuestion());
-    if (this.qManager.check(player.getCurrentQuestion(), answer)) {
-      //Correct answer
+  public checkPlayerAnswer(player:Player, answer:number){
 
-      player.correctAnswer();
+      
+    if(this.qManager.check(player.getCurrentQuestion(),answer)){
+        //Correct answer
+        player.correctAnswer();
 
-      this.server
-        .to(player.getSocket().id)
-        .emit("userInfo", player.getUserInfo());
-      if (player.getCurrentQuestion() !== undefined) {
-        const qToSend = this.qManager.get(player.getCurrentQuestion());
-        this.server.to(player.getSocket().id).emit("newQuestion", qToSend);
-        player.addAnsweredQuestion();
-      } else {
-        this.server.to(player.getSocket().id).emit("noMoreQuestions");
-      }
-      return true;
-    } else {
-      //Bad answer
-      player.addBadAnswer();
-      player.resetStreak();
-      this.server
-        .to(player.getSocket().id)
-        .emit("userInfo", player.getUserInfo());
-      return false;
+        this.server.to(player.getSocket().id).emit("userInfo", player.getUserInfo());
+        this.emitCurrentQuestionOf(player);
+        return true;
+    }
+    else{
+        //Bad answer
+        player.badAnswer();
+        this.server.to(player.getSocket().id).emit("userInfo", player.getUserInfo());
+        return false;
     }
   }
 
@@ -473,51 +435,70 @@ export class Game {
     player.getSocket().emit("ranking", this.leaderboard.reverse());
   }
 
-  /**
-   * Return a random alive player that isn't the attacker
-   * @param attacker player who attack
-   * @private
-   */
-  public getOtherRandomPlayer(attacker: Player): Player {
-    let targetPlayer: Player;
-    let map: Player[];
-    map = [];
-    let count = 0;
 
-    this.players.forEach((player: Player) => {
-      if (player.alive() && player.getId() != attacker.getId()) {
-        count++;
-        map.push(player);
-      }
-    });
-    const rnd = Math.floor(Math.random() * map.length);
-    return map.at(rnd);
-  }
-  /**
-   * Wait for the questionLoaded flag to be set to true
-   */
-  public async waitForTheGameToBeStarted(): Promise<boolean> {
-    if (this.questionLoaded) return true;
-    return new Promise((resolve) => {
-      this.eventEmitter.once("loaded", () => resolve(true));
-    });
-  }
-
-  /**
-   * Eliminate a player from the game, send game over message
-   * @param player : player to eliminate
-   */
-  private eliminatePlayer(player: Player): void {
-    if (player.alive()) {
-      player.unalive(this.nbPlayerAlive);
-      console.log(player.getName() + " is dead");
-
-      const rank = new Rank(player, this.nbPlayerAlive);
-      this.leaderboard.push(rank);
-      this.server.to(player.getId()).emit("gameOver", rank);
-      if (--this.nbPlayerAlive === 1) {
-        this.endGame();
-      }
+    /**
+     * Return a random alive player that isn't the attacker
+     * @param attacker : player who attack
+     * @private
+     */
+    public getRandomPlayer(attacker:Player) : Player{
+        
+        //Make a list of player that can be attacked (alive and not the attacker)
+        let availablePlayers : Player[];
+        availablePlayers = [];
+        this.players.forEach((player:Player) => {
+            if(player.alive() && player.getId() != attacker.getId()){
+                availablePlayers.push(player);
+            }
+        });
+        //Choose a random player from this list
+        const rnd = Math.floor(Math.random() * availablePlayers.length);
+        return availablePlayers.at(rnd);
     }
-  }
+
+    /**
+     * Wait for the question to be loaded
+     */
+    public async waitForTheGameToBeStarted() : Promise<boolean>{
+        if (this.questionLoaded) return true;
+        return new Promise((resolve) => {
+            this.eventEmitter.once('loaded', () => resolve(true));
+        });
+    }
+
+    /**
+     * Eliminate a player from the game, send game over message
+     * @param player : player to eliminate
+     */
+    private eliminatePlayer(player: Player) : void {
+        if(player.alive()){
+            player.unalive(this.nbPlayerAlive);
+            this.sendFeedUpdate(player.getName() + " has been eliminated");
+            //Create the final stats for the player
+            const rank = new Rank(player, this.nbPlayerAlive);
+            //Add the player result to the leaderboard and send the a game over message
+            this.leaderboard.push(rank);
+            this.server.to(player.getId()).emit("gameOver", rank);
+            //End the game if there is one player left
+            if(--this.nbPlayerAlive === 1){
+
+                this.endGame();
+            }
+        }
+    }
+
+    /**
+     * Send a message to all sockets about events occuring during the game
+     * @param text 
+     */
+    public sendFeedUpdate(text:string, player=undefined) : void{
+        //Send a message to one player or everyone
+        if(player != undefined){
+            this.server.to(player.getSocket().id).emit("feedUpdate", text);
+        }
+        else{
+            this.server.emit("feedUpdate", text);
+        }
+
+    }
 }

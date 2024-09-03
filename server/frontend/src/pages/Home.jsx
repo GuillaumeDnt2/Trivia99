@@ -76,8 +76,8 @@ export default function Home(){
     }
 
     return <BaseLayout>
-            <div className={"content-column-box center padding-20px"}>
-                <form onSubmit={handleSubmit} className="content-column-box">
+            <div className={"content-column-box center padding-20px gap-20px"}>
+                <form onSubmit={handleSubmit} className="content-column-box gap-20px">
                     <label className={"content-row-box"}><p className={"username-home"}>Username</p>
                         <input
                             type="text"
