@@ -164,6 +164,11 @@ export class Player {
     this.incrementStreak();
   }
 
+  public badAnswer() : void {
+    this.addBadAnswer();
+    this.resetStreak();
+  }
+
   /**
    * Change the socket of the player
    * @param socket to change to

@@ -251,7 +251,7 @@ export class TriviaGateway implements OnModuleInit {
       this.gameManager.game.sendFeedUpdate(player.getName() + " attacked with " + qSent + " question(s)");
       for (let i = 0; i <= qSent; i++) {
         console.log(player.getName() + " has attacked !");
-        this.gameManager.game.attackPlayer(player);
+        this.gameManager.game.attack(player);
       }
       
     }
@@ -294,6 +294,7 @@ export class TriviaGateway implements OnModuleInit {
         return;
       }
       //Check if the answer is correct
+      
       if(this.gameManager.game.checkPlayerAnswer(player, body)){
         //Send correct answer msg
         socket.emit("goodAnswer");
