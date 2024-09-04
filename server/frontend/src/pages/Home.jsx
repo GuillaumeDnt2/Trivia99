@@ -19,17 +19,19 @@ export default function Home(){
 
     const [name, setName] = useState("");
     const [placeholder, setPlaceholder] = useState("Enter your name")
+    const [gameFull, setGameFull] = useState(false)
     const [gameStarted, setGameStarted] = useState(false);
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        const handleGameStartedTrue = () => {
+        const handleGameStart = () => {
             setGameStarted(true)
         }
 
-        const handleGameStartedFalse = () => {
+        const gameResetGame = () => {
             setGameStarted(false)
+            setGameFull(false)
         }
 
         const handleGameStatus = (state) => {
@@ -40,21 +42,31 @@ export default function Home(){
             navigate('/waiting')
         }
 
-        socket.on("startGame", handleGameStartedTrue)
+        const handleGameFull = () => {
+            setGameFull(true)
+        }
 
-        socket.on("gameReset", handleGameStartedFalse)
+        const handleGameNotFull = () => {
+            setGameFull(false)
+        }
 
+        socket.on("startGame", handleGameStart)
+        socket.on("gameReset", gameResetGame)
         socket.on("gameStatus", handleGameStatus)
-
         socket.on("loggedInfo", handleLoggedInfo)
+        socket.on("gameFull", handleGameFull)
+        socket.on("gameNotFull" , handleGameNotFull)
 
         socket.emit("getGameStatus")
+        socket.emit("isGameFull")
 
         return () => {
-            socket.off("startGame", handleGameStartedTrue);
-            socket.off("gameReset", handleGameStartedFalse)
+            socket.off("startGame", handleGameStart);
+            socket.off("gameReset", gameResetGame)
             socket.off("gameStatus", handleGameStatus);
             socket.off("loggedInfo", handleLoggedInfo);
+            socket.off("gameFull", handleGameFull)
+            socket.off("gameNotFull", handleGameNotFull)
         }
     }, [navigate]);
 
@@ -85,7 +97,7 @@ export default function Home(){
                             placeholder={placeholder}
                         />
                     </label>
-                    <button type="submit" className={"orange-button"} disabled={gameStarted}>{gameStarted ? "Game in progress..." : "Click to play !"}</button>
+                    <button type="submit" className={"orange-button"} disabled={gameStarted || gameFull}>{gameStarted ? "Game in progress..." : gameFull ? "No more places left" : "Click to play !"}</button>
                 </form>
                 <button onClick={() => navigate("/about") } className={"content-row-box center gap-in-button orange-button"}>Rules</button>
                 <Link to="https://guillaumednt2.github.io/Trivia99/" className="no-underline" target="_blank">

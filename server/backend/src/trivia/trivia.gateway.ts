@@ -105,6 +105,7 @@ export class TriviaGateway implements OnModuleInit {
                   --this.gameManager.game.nbReady;
                 }
                 this.gameManager.game.getPlayers().delete(userId);
+                this.sendReadyInfo()
                 if(this.gameManager.game.getNbPlayers() === this.MAX_PLAYER - 1){
                   this.server.emit("gameNotFull");
                 }
@@ -421,5 +422,14 @@ export class TriviaGateway implements OnModuleInit {
   @SubscribeMessage("getGameStatus")
   getGameStatus(@ConnectedSocket() socket: any) {
     socket.emit("gameStatus", this.gameManager.game.getGameStatus());
+  }
+
+  @SubscribeMessage("isGameFull")
+  isGameFull(@ConnectedSocket() socket: any) {
+    if(this.gameManager.game.getNbPlayers() === this.MAX_PLAYER){
+      socket.emit("gameFull");
+    }else{
+      socket.emit("gameNotFull")
+    }
   }
 }
