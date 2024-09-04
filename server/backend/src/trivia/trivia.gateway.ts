@@ -33,6 +33,7 @@ export class TriviaGateway implements OnModuleInit {
   gameManager: GameManager;
   private STREAK: number;
   private WRONG_ANSWER_COOLDOWN: number;
+  private MAX_PLAYER: number;
 
   /**
    * @constructor
@@ -43,6 +44,7 @@ export class TriviaGateway implements OnModuleInit {
     this.WRONG_ANSWER_COOLDOWN = parseInt(
       this.configService.get<string>("WRONG_ANSWER_COOLDOWN"),
     );
+    this.MAX_PLAYER = parseInt(this.configService.get<string>("MAX_PLAYER"));
   }
 
   /**
@@ -103,6 +105,10 @@ export class TriviaGateway implements OnModuleInit {
                   --this.gameManager.game.nbReady;
                 }
                 this.gameManager.game.getPlayers().delete(userId);
+                this.sendReadyInfo()
+                if(this.gameManager.game.getNbPlayers() === this.MAX_PLAYER - 1){
+                  this.server.emit("gameNotFull");
+                }
               }
             }, 5000);
         }
@@ -184,6 +190,11 @@ export class TriviaGateway implements OnModuleInit {
    */
   @SubscribeMessage("login")
   onLogin(@MessageBody() name: string, @ConnectedSocket() socket: any) {
+    //If the game is full
+    if(this.gameManager.game.getNbPlayers() >= this.MAX_PLAYER){
+      return;
+    }
+
     //Doesn't re-add the player if he's already in the game
     if (
       !this.gameManager.game.getPlayers().has(this.getIdFromHeaders(socket))
@@ -193,6 +204,11 @@ export class TriviaGateway implements OnModuleInit {
         name,
         socket,
       );
+
+      //If the game is full, tells it to everyone connected
+      if(this.gameManager.game.getNbPlayers() === this.MAX_PLAYER){
+        this.server.emit("gameFull");
+      }
 
       let loggedInfo = this.gameManager.game
         .getPlayers()
@@ -406,5 +422,14 @@ export class TriviaGateway implements OnModuleInit {
   @SubscribeMessage("getGameStatus")
   getGameStatus(@ConnectedSocket() socket: any) {
     socket.emit("gameStatus", this.gameManager.game.getGameStatus());
+  }
+
+  @SubscribeMessage("isGameFull")
+  isGameFull(@ConnectedSocket() socket: any) {
+    if(this.gameManager.game.getNbPlayers() === this.MAX_PLAYER){
+      socket.emit("gameFull");
+    }else{
+      socket.emit("gameNotFull")
+    }
   }
 }

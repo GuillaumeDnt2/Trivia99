@@ -22,7 +22,6 @@ export default function ProtectedRoute({Component}){
         }
 
         socket.on("gameStatus", handleGameStatus)
-
         socket.on("loggedInfo", handleLoggedInfo)
 
         console.log("Emitting getGameStatus")
