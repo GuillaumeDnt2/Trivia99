@@ -120,7 +120,7 @@ export class TriviaGateway implements OnModuleInit {
     const userId = socket.id;
     const cookieOptions = {
       httpOnly: true,
-      maxAge: 1000 * 60 * 60, // 1 hour
+      maxAge: 60 * 60, // 1 hour
       sameSite: "strict" as const,
       path: "/",
     };

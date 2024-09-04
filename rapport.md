@@ -4,7 +4,7 @@ ___
 ___
 # Trivia 99
 
-<img src="./Trivia_99.png" width="500">
+<img src="./Trivia_99.png" width="500" alt="logo">
 
 ___
 # Description du projet
@@ -12,7 +12,7 @@ ___
 ## Problématique
 Les jeux télévisés de culture générale, qui étaient autrefois majoritairement populaire au sein des EMS et du troisième âge, retrouvent aujourd'hui un second souffle. 
 La culture générale est en train de devenir une tendance, car elle permet de satisfaire la curiosité, d'entrainer la mémoire et d'apprendre sur notre monde.
-Cependant, il est encore difficile de participer aux jeux comme "Question pour un champion" ou "Le Grand Slam", car le niveau y reste extrêmement élevé. 
+Cependant, il est encore difficile de participer aux jeux comme "Question pour un champion" ou "Le Grand Slam", parce que le niveau y reste extrêmement élevé. 
 
 Ces jeux télévisés arrivent souvent à insuffler un bon esprit de compétition et du suspense, car les joueurs peuvent être éliminés s'ils ne sont pas assez rapides ou ne connaissent pas la réponse. 
 Il existe déjà plusieurs jeux de culture générale sur internet que l'on peut faire avec des amis ou le monde entier, mais rares sont ceux qui proposent cette même expérience de compétition. 
@@ -35,7 +35,7 @@ Pour pimenter la partie, les joueurs qui répondent correctement à plusieurs qu
 
 ## Exigences Non-Fonctionnelles
 - **Jeu rapide** : Les parties doivent être rapides et dynamiques, les joueurs ne doivent pas attendre trop longtemps entre les questions et le site doit pouvoir distribuer rapidement et efficacement les questions à tous les utilisateurs.
-- **Sécurité** : Les joueurs n'auront pas leurs addresses IPs exposées, les données personnelles seront protégées et le protocole du site est en HTTPS.
+- **Sécurité** : Les joueurs n'auront pas leurs addresses IPs exposées, les données personnelles seront protégées.
 - **Responsiveness** : Le site doit être utilisable sur mobile, tablette et ordinateur.
 - **Intuitif** : Le jeu doit être facile à comprendre et à prendre en main pour les nouveaux joueurs.
 
@@ -49,11 +49,9 @@ Le frontend ne gérera que l'interface qui réagit dynamiquement aux information
 
 Le frontend et backend communiqueront grâce à des websockets ce qui permet une communication simple et rapide. Le canal bidirectionnel ouvert, quand une connection entre websocket est établie, est adaptée à notre échange d'informations présenté plus haut.
 
-Docker nous permet d'avoir deux images différentes une pour le backend et une pour le frontend qui tourneront dans deux container différent.
+Docker nous permet d'avoir deux images différentes une pour le backend et une pour le frontend qui tourneront dans deux conteneurs différents.
 
-Ces deux containers tourneront sur une instance Google Compute Engine qui aura une IP statique et des règles de pare-feu qui autoriseront les accès HTTP et au Websocket du backend.
-
-Une fois intégré le reverse proxy traefik nous permettra de ne passer que par le port HTTP pour accéder au frontend et permettre la communication avec le backend.
+Ces deux conteneurs tourneront sur une instance Google Compute Engine qui aura une IP statique et des règles de pare-feu qui autoriseront les accès HTTP et au Websocket du backend.
 
 ![Architecture](Trivia99Architecture.svg)
 
@@ -66,15 +64,15 @@ Accessible depuis ce lien : https://guillaumednt2.github.io/Trivia99/
 
 ## Description des choix techniques 
 
-Nous avons décidé d'utiliser NestJS car ce framework nous a été recommandé et nous voulions expérimenter avec cette nouvelle technologie. En plus, après quelques recherche il s'est avéré que la mise ne place de websocket avec NestJS est simplifié.
+Nous avons décidé d'utiliser NestJS car ce framework nous a été recommandé et nous voulions expérimenter avec cette nouvelle technologie. En plus, après quelque recherche, il s'est avéré que la mise ne place de websocket avec NestJS est simplifié.
 
-SocketIo à été choisi pour la technologie WebSocket car elle est compatible avec NestJS et est une version des websockets que nous n'avions pas encore utilisée.
+SocketIo a été choisi pour la technologie WebSocket car elle est compatible avec NestJS et est une version des websockets que nous n'avions pas encore utilisée.
 
 Nous utilisons Docker pour faire tourner notre backend et frontend sur l'Instance Google Compute Engine. Nous avons tous dans le groupe utiliser auparavant Docker donc nous savions comment le mettre en place et cela semblait être la solution la plus simple pour faire tourner notre site sur l'instance.
 
 Watchtower nous permet de facilement récupérer les images de notre site s'il y a une nouvelle version en surveillant les repos de nos deux images Docker.
 
-Pour le choix du fournisseur Cloud, nous avons décidé d'utiliser Google Compute Engine car leur offres d'essai nous permet d'utiliser cette technologie sans coûts.
+Pour le choix du fournisseur Cloud, nous avons décidé d'utiliser Google Compute Engine car leur offre d'essai nous permet d'utiliser cette technologie sans coûts.
 
 Nous nous sommes tournés vers React afin de créer l'interface utilisateur pour sa simplicité d'utilisation et le fait que nous sommes, pour certains, déjà familier avec.
 
@@ -94,13 +92,76 @@ Pour la suite du projet, nous allons nous répartir ainsi :
 - **Arthur** : Dev frontend
 - **Edwin** : Dev backend et frontend
 - **Guillaume** : Dev côté frontend
-- **Valentin** : Dev backend et maintient du déployement
+- **Valentin** : Dev backend et maintien du déploiement
   
 Cette répartition du travail peut légèrement changer au cours des prochaines semaines.
 
-Pour la collaboration dans le code, pour chaque fonctionnalité, nous allons créer une nouvelle issue et l'implémenter dans une branche dédiée. Une fois fonctionnelle, nous allons la fusionner avec la branche main grâce à une pull request.
+Pour la collaboration dans le code, pour chaque fonctionnalité, nous allons créer une nouvelle issue et l'implémenter dans une branche dédiée. Une fois fonctionnelle, nous allons la fusionner avec la branche main grâce à un pull request.
 
-La pipeline CI/CD mise en place nous permet d'automatiser les tests, le build et le déploiement sur DockerHub de l'image du frontend et du backend.
+Le pipeline CI/CD mise en place nous permet d'automatiser les tests, le build et le déploiement sur DockerHub de l'image du frontend et du backend.
 
 Finalement, nous récupérons automatiquement, grâce à Watchtower, les deux images dockers depuis DockerHub sur une VM Google Compute Engine afin de nous permettre de les héberger.
+
+## Choix d'implémentations
+
+### Protected Routes
+Nous avons décidé de mettre en place dans le router de `react-router-dom` des routes protégées pour les pages du site afin, par exemple, qu'une personne qui n'a pas rejoint la partie à temps ne puisse pas accéder à la page `/game`.
+
+Nous utilisons les différents états de la partie (récupéré depuis le frontend en passant par le websocket) et le fait que l'utilisateur soit login (choisi un pseudo et rentré dans la partie) ou non pour définir quelle page est accessible à l'utilisateur actuel.
+
+Les conditions sont les suivants pour chaque route protégée :
+- `/` : accessible si et seulement si l'utilisateur n'est pas login.
+-  `/waiting` : accessible si et seulement si l'utilisateur est login et que la partie est dans l'état `waiting`.
+- `/game`: accessible si et seulement si l'utilisateur est login et si la partie est dans l'état `started`.
+- `/ranking`: accessible si et seulement si l'utilisateur est login et si la partie est dans l'état `ended`.
+
+La route `/about` n'est pas protégée et est accessible à tous.
+
+### Système de "session"
+
+Pour nous permettre de garder dans la partie un utilisateur qui perd la connexion, nous avons mis en place un système de "session" en utilisant les cookies.
+
+Quand un nouvel utilisateur se connecte à notre site, il lui est attribué un id de websocket unique grâce à SocketIo. Ce premier id de socket, généré dans le backend, est envoyé au frontend qui va le stocker dans un cookie.
+
+Si notre utilisateur perd la connexion à un moment et rouvre une nouvelle connexion websocket, il va envoyer dans le handshake de cette nouvelle connexion le cookie qui contient l'id de son premier socket enregistré ce qui permettra de l'identifier à nouveau.
+
+````js
+// Frontend
+// ./server/frontend/src/App.js
+// Set du cookie
+const handleCookie = (serializedCookie) => {
+    let [cookie, maxAge, path, , sameSite] = serializedCookie.split(";")
+    const [name, value] = cookie.split("=")
+    maxAge = maxAge.split("=")[1]
+    path = path.split("=")[1]
+    sameSite = sameSite.split("=")[1]
+    setCookie(name, value, { path: path, maxAge: maxAge, sameSite: sameSite});
+}
+
+socket.on('setCookie', handleCookie);
+
+// ./server/frontend/src/utils/socket.js
+// Envoi du cookie dans le handshake
+export const socket = io(URL, {
+    autoConnect: true,
+    auth: {
+        token: document.cookie
+    }
+});
+
+// Backend
+// ./server/backend/src/trivia/trivia.gateway.ts
+// Creation du cookie et envoi
+const userId = socket.id;
+const cookieOptions = {
+    httpOnly: true,
+    maxAge: 60 * 60, // 1 hour
+    sameSite: "strict" as const,
+    path: "/",
+};
+
+const serializedCookie = serialize("userId", userId, cookieOptions);
+
+socket.emit("setCookie", serializedCookie);
+````
 
