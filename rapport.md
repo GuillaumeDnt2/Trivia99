@@ -4,7 +4,7 @@ ___
 ___
 # Trivia 99
 
-<img src="./Trivia_99.png" width="500">
+<img src="Images/Trivia_99.png" width="500">
 
 ___
 # Description du projet
@@ -55,7 +55,7 @@ Ces deux containers tourneront sur une instance Google Compute Engine qui aura u
 
 Une fois intégré le reverse proxy traefik nous permettra de ne passer que par le port HTTP pour accéder au frontend et permettre la communication avec le backend.
 
-![Architecture](Trivia99Architecture.svg)
+![Architecture](Images/Trivia99Architecture.svg)
 
 ## Mockups
 
