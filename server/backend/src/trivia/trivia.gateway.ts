@@ -33,6 +33,7 @@ export class TriviaGateway implements OnModuleInit {
   gameManager: GameManager;
   private STREAK: number;
   private WRONG_ANSWER_COOLDOWN: number;
+  private MAX_PLAYER: number;
 
   /**
    * @constructor
@@ -43,6 +44,7 @@ export class TriviaGateway implements OnModuleInit {
     this.WRONG_ANSWER_COOLDOWN = parseInt(
       this.configService.get<string>("WRONG_ANSWER_COOLDOWN"),
     );
+    this.MAX_PLAYER = parseInt(this.configService.get<string>("MAX_PLAYER"));
   }
 
   /**
@@ -103,7 +105,7 @@ export class TriviaGateway implements OnModuleInit {
                   --this.gameManager.game.nbReady;
                 }
                 this.gameManager.game.getPlayers().delete(userId);
-                if(this.gameManager.game.getNbPlayers() === 98){
+                if(this.gameManager.game.getNbPlayers() === this.MAX_PLAYER - 1){
                   this.server.emit("gameNotFull");
                 }
               }
@@ -188,7 +190,7 @@ export class TriviaGateway implements OnModuleInit {
   @SubscribeMessage("login")
   onLogin(@MessageBody() name: string, @ConnectedSocket() socket: any) {
     //If the game is full
-    if(this.gameManager.game.getNbPlayers() >= 99){
+    if(this.gameManager.game.getNbPlayers() >= this.MAX_PLAYER){
       return;
     }
 
@@ -203,7 +205,7 @@ export class TriviaGateway implements OnModuleInit {
       );
 
       //If the game is full, tells it to everyone connected
-      if(this.gameManager.game.getNbPlayers() === 99){
+      if(this.gameManager.game.getNbPlayers() === this.MAX_PLAYER){
         this.server.emit("gameFull");
       }
 
