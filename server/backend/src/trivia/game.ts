@@ -479,7 +479,7 @@ export class Game {
             const rank = new Rank(player, this.nbPlayerAlive);
             //Add the player result to the leaderboard and send the a game over message
             this.leaderboard.push(rank);
-            this.server.to(player.getId()).emit("gameOver", rank.rank);
+            this.server.to(player.getSocket().id).emit("gameOver", rank.rank);
             //Tell everyone the player has been eliminated
             this.server.emit("elimination", player.getName());
             //End the game if there is one player left
