@@ -427,7 +427,6 @@ export class TriviaGateway implements OnModuleInit {
   @SubscribeMessage("isGameFull")
   isGameFull(@ConnectedSocket() socket: any) {
     if(this.gameManager.game.getNbPlayers() === this.MAX_PLAYER){
-
       socket.emit("gameFull");
     }else{
       socket.emit("gameNotFull")
