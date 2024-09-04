@@ -4,6 +4,11 @@
 
 Trivia 99 is a battle royal game with up to 99 players. To survive, you have to answer multiple choice trivia questions. But be careful, if you wait for to long, some questions will add up to your question's queue and if the queue number exceeds 7, you lose the game! Try to chain the right answers to grow your streak and attack your friends.
 
+## Summary
+
+- [Setup guide](#setup-guide)
+- [How to contribute](#how-to-contribute)
+
 ## Setup guide
 
 ### Prerequisites
@@ -92,3 +97,43 @@ To test if your modification are working, you can run the tests. The test in the
 ```bash
 npm test
 ```
+
+## How to contribute
+
+### Create an issue
+
+To contribute to Trivia 99, you can first open an issue to describe what feature you want to add. To do so, you can go on our [repo page](https://github.com/GuillaumeDnt2/Trivia99), go to the `Issue` tab (1) and click on `New` (2).
+
+<img src="Images/newIssue.png" alt="New issue" width=500>
+
+Then, write a title and a description of your feature and press on `Submit new issue`.
+
+<img src="Images/issue.png" alt="Describe issue" width=500>
+
+### Fork the repo
+
+To begin to add your contribution you have to fork our repo. To do so, you can on our [repo page](https://github.com/GuillaumeDnt2/Trivia99) and click on the `Fork` button (1) and the click on `Create a new fork` (2).
+
+<img src="Images/forkBtn.png" alt="Fork" width=500>
+
+Then on the next page, click on `Create fork`.
+
+<img src="Images/CreateFork.png" alt="Create fork" width=500>
+
+Now you can clone your freshly created repo and start adding feature to your project. 
+
+### Open pull request
+
+Once you are done with your modifications, you can go on the github page of your fork and click on `Contribute` (1) and then `Open pull request` (2).
+
+<img src="Images/contribute.png" alt="Contribute" width=500>
+
+On the next page, you can write the description (don't forget to add link to your issue (1)) of your pull request and then press `Create pull request` (2).
+
+<img src="Images/pullRequest.png" alt="Open pull request" width=500>
+
+If your pull request is accepted, it will be merged into the project!
+
+<img src="Images/accepted.png" alt="Accepted" width=500>
+
+Once the merged is done, the CI/CD pipeline will automatically create a new image of the application and deploy it on our server.
