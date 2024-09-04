@@ -37,7 +37,7 @@ export default function Game(){
             console.log(userInfo.questions);
             setAlive(userInfo.isAlive);
             setStreak(userInfo.streak);
-            setAccuracy(userInfo.nbGoodAnswers / (userInfo.nbGoodAnswers + userInfo.nbBadAnswers));
+            setAccuracy(userInfo.nbGoodAnswers === 0 ? 0 : userInfo.nbGoodAnswers / (userInfo.nbGoodAnswers + userInfo.nbBadAnswers));
             setNbResponse(userInfo.nbGoodAnswers);
             setCanAttack(userInfo.canAttack);
 

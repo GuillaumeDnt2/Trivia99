@@ -27,3 +27,7 @@ label {
 .username-home {
     color: var(--light-onyx)
 }
+
+.no-underline {
+    text-decoration: none;
+}

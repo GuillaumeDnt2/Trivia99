@@ -50,7 +50,8 @@ export default function Ranking(){
                             <span className={"name-r"}>{player.playerName}</span>
                             <span className={"nb-quest-r align-center-text"}>{player.goodAnswers}</span>
                             <span
-                                className={"accu-r"}>{(player.goodAnswers / (player.badAnswers + player.goodAnswers) * 100).toFixed(2)}%</span>
+                                className={"accu-r"}>{
+                                    (player.goodAnswers === 0 ? 0 : player.goodAnswers / (player.badAnswers + player.goodAnswers) * 100).toFixed(2)}%</span>
                         </div>
                     )}
                 </div>

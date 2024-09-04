@@ -87,8 +87,11 @@ export default function Home(){
                     </label>
                     <button type="submit" className={"orange-button"} disabled={gameStarted}>{gameStarted ? "Game in progress..." : "Click to play !"}</button>
                 </form>
-                <button onClick={() => navigate("/about") } className={"content-row-box center gap-in-button orange-button"}>About the game</button>
-                <Link to="https://github.com/GuillaumeDnt2/Trivia99/tree/main">
+                <button onClick={() => navigate("/about") } className={"content-row-box center gap-in-button orange-button"}>Rules</button>
+                <Link to="https://guillaumednt2.github.io/Trivia99/" className="no-underline" target="_blank">
+                    <button className={"content-row-box center gap-in-button orange-button"}>About</button>
+                </Link>
+                <Link to="https://github.com/GuillaumeDnt2/Trivia99/tree/main" className="no-underline" target="_blank">
                     <button type="button" className={"content-row-box center gap-in-button orange-button"}>GitHub<img src={github} alt="GitHub" className={"image-git"}/></button>
                 </Link>
             </div>

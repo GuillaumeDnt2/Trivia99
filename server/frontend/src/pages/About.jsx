@@ -25,7 +25,7 @@ export default function About(){
             <p>The streak is the number of correct answers without a bad one. When the streak reach <b>3</b>, you may attack the other players by pressing the "attack" button. It will send a hard question to random players. The number of sent question depends of the streak, a streak of 3 will send 1 questions,  4 will send 2 questions, 5 will send 3 questions and so on ...</p>
             <p>Attacking resets your streak to 0. So you have the choice, either grow your streak to attack more people or securing your attack before committing an error.</p>
             <h3 id="end">Game ending</h3>
-            <p>When the <a href="queue">queue</a> of a player reach 8 questions, he lose the game. His rank is equal to the number of remaining player. When only 1 player is alive, he win the game! The ranking is determined by the elimination's order and not the score (number of correct answer).</p>
+            <p>When the <a href="#queue">queue</a> of a player reach 8 questions, he lose the game. His rank is equal to the number of remaining player. When only 1 player is alive, he win the game! The ranking is determined by the elimination's order and not the score (number of correct answer).</p>
             <h2>Have fun!</h2>
             <a href="/">&lt;- back to home page</a>
         </div>
