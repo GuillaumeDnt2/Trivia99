@@ -128,7 +128,7 @@ Once you are done with your modifications, you can go on the github page of your
 
 <img src="Images/contribute.png" alt="Contribute" width=500>
 
-On the next page, you can write the description (don't forget to add link to your issue (1)) of your pull request and then press `Create pull request` (2).
+On the next page, you can write the description (don't forget to **add link to your issue** (1)) of your pull request and then press `Create pull request` (2).
 
 <img src="Images/pullRequest.png" alt="Open pull request" width=500>
 
