@@ -2,7 +2,7 @@
 
 <img src="./Images/Trivia_99.png" alt="Trivia 99 logo" width=175/>
 
-Trivia 99 is a battle royal game with up to 99 players. To survive, you have to answer multiple choice trivia questions. But be careful, if you wait for to long, some questions will add up to your question's queue and if the queue number exceeds 7, you lose the game! Try to chain the right answers to grow your streak and attack your friends.
+Trivia 99 is a battle royal game with up to 99 players. To survive, you have to answer multiple-choice trivia questions. But be careful, if you wait too long, some questions will add up to your question's queue and if the queue number exceeds 7, you lose the game! Try to chain the right answers to grow your streak and attack your friends.
 
 ## Summary
 
@@ -13,11 +13,11 @@ Trivia 99 is a battle royal game with up to 99 players. To survive, you have to 
 
 ### Prerequisites
 
-To try Trivia 99 on your computer, you must have [git](https://github.com/git-guides/install-git) and [npm with Node](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) installed.
+To run Trivia 99 on your computer, you must have [git](https://github.com/git-guides/install-git) and [npm with Node](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) installed.
 
-### Download code
+### Download source code of the project
 
-To download the source code, you should clone the repo
+To download the source code, clone the repo by executing the following command in your bash terminal:
 
 ```bash
 git clone https://github.com/GuillaumeDnt2/Trivia99.git
@@ -25,13 +25,13 @@ git clone https://github.com/GuillaumeDnt2/Trivia99.git
 
 ### Download dependencies
 
-The project is composed in two parts: the frontend and the backend. Both are located in the `server` directory. Firstly, we are going to the backend directory:
+The project is composed in two parts: the frontend and the backend. Both are located in the `server` directory. First, navigate to the backend directory:
 
 ```bash
 cd server/backend
 ```
 
-To download the dependencies with npm you can execute the following command:
+Then download the dependencies with npm by executing the following command:
 
 ```bash
 npm install
@@ -43,7 +43,7 @@ or
 npm i
 ```
 
-We are going to do same in the frontend directory :
+Do same in the frontend directory :
 
 ```bash
 cd ../frontend
@@ -52,7 +52,7 @@ npm install
 
 ### Start the project
 
-To start the project, you first need to change the address to which the frontend try to connect. To do so, you need to go in the `utils` directory (from `frontend`) :
+To start the project, you first need to change the address of the backend server. To do so, you need to go in the `utils` directory (from `frontend`) :
 
 ```bash
 cd src/utils
