@@ -187,9 +187,8 @@ export class TriviaGateway implements OnModuleInit {
    */
   @SubscribeMessage("login")
   onLogin(@MessageBody() name: string, @ConnectedSocket() socket: any) {
-    //If the game is full, don't add the player and send a message to the client
+    //If the game is full
     if(this.gameManager.game.getNbPlayers() >= 99){
-      this.server.to(socket.id).emit("gameFull");
       return;
     }
 
@@ -202,6 +201,11 @@ export class TriviaGateway implements OnModuleInit {
         name,
         socket,
       );
+
+      //If the game is full, tells it to everyone connected
+      if(this.gameManager.game.getNbPlayers() === 99){
+        this.server.emit("gameFull");
+      }
 
       let loggedInfo = this.gameManager.game
         .getPlayers()
