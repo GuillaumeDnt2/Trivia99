@@ -24,11 +24,11 @@ export default function Home(){
     const navigate = useNavigate();
 
     useEffect(() => {
-        const handleStart = () => {
+        const handleGameStartedTrue = () => {
             setGameStarted(true)
         }
 
-        const handleEndGame = () => {
+        const handleGameStartedFalse = () => {
             setGameStarted(false)
         }
 
@@ -40,9 +40,9 @@ export default function Home(){
             navigate('/waiting')
         }
 
-        socket.on("startGame", handleStart)
+        socket.on("startGame", handleGameStartedTrue)
 
-        socket.on("endGame", handleEndGame)
+        socket.on("gameReset", handleGameStartedFalse)
 
         socket.on("gameStatus", handleGameStatus)
 
@@ -51,8 +51,8 @@ export default function Home(){
         socket.emit("getGameStatus")
 
         return () => {
-            socket.off("startGame", handleStart);
-            socket.off("ranking", handleEndGame);
+            socket.off("startGame", handleGameStartedTrue);
+            socket.off("gameReset", handleGameStartedFalse)
             socket.off("gameStatus", handleGameStatus);
             socket.off("loggedInfo", handleLoggedInfo);
         }

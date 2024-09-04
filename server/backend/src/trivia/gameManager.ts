@@ -41,6 +41,7 @@ export class GameManager {
     this.game = new Game(this.server, this.configService, this);
     ++this.howManyGamesHaveFinished;
     this.hasGameFinishedResetting = true;
+    this.server.emit("gameReset")
   }
 
   resetGameInSomeTime() {
