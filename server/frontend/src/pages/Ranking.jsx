@@ -11,9 +11,9 @@ export default function Ranking(){
     const [ranking, setRanking] = useState([]);
 
     const handleReturnHome = () => {
+        socket.emit("deleteUser")
         socket.emit("getGameStatus")
         socket.emit("isUserLogged")
-        socket.emit("deleteUser")
         navigate("/")
     }
 

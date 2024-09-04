@@ -11,15 +11,19 @@ export default function ProtectedRoute({Component}){
 
     useEffect(() => {
 
-        socket.on("gameStatus", (state) => {
+        const handleGameStatus = (state) => {
             console.log("Game status: " + state)
             setGameState(state)
-        })
+        }
 
-        socket.on("loggedInfo", (state) => {
+        const handleLoggedInfo = (state) => {
             console.log("Logged info: " + state)
             setLoggedIn(state)
-        })
+        }
+
+        socket.on("gameStatus", handleGameStatus)
+
+        socket.on("loggedInfo", handleLoggedInfo)
 
         console.log("Emitting getGameStatus")
         socket.emit("getGameStatus")
@@ -27,8 +31,8 @@ export default function ProtectedRoute({Component}){
         socket.emit("isUserLogged")
 
         return () => {
-            socket.off("gameStatus")
-            socket.off("loggedInfo")
+            socket.off("gameStatus", handleGameStatus)
+            socket.off("loggedInfo", handleLoggedInfo)
         }
     }, []);
 
