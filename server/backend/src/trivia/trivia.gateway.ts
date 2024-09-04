@@ -103,6 +103,9 @@ export class TriviaGateway implements OnModuleInit {
                   --this.gameManager.game.nbReady;
                 }
                 this.gameManager.game.getPlayers().delete(userId);
+                if(this.gameManager.game.getNbPlayers() === 98){
+                  this.server.emit("gameNotFull");
+                }
               }
             }, 5000);
         }
