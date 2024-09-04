@@ -1,0 +1,39 @@
+config:
+  target: "http://trivia99.zapto.org:4000"
+  phases:
+    - duration: 120
+      arrivalRate: 90
+      maxVusers: 120
+  engines:
+    socketio-v3: { }
+
+scenarios:
+  - name: Players login
+    engine: socketio-v3
+    flow:
+      # wait for the WebSocket upgrade (optional)
+      - think: 10
+
+      - emit:
+          channel: "login"
+          data: "test"
+
+      - think: 30
+
+
+  - name: Players ready
+    engine: socketio-v3
+    flow:
+      # wait for the WebSocket upgrade (optional)
+      - think: 10
+
+      - emit:
+          channel: "login"
+          data: "test"
+
+      - think: 20
+
+      - emit:
+          channel: "ready"
+
+      - think: 40
