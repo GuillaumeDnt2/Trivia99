@@ -184,6 +184,12 @@ export class TriviaGateway implements OnModuleInit {
    */
   @SubscribeMessage("login")
   onLogin(@MessageBody() name: string, @ConnectedSocket() socket: any) {
+    //If the game is full, don't add the player and send a message to the client
+    if(this.gameManager.game.getNbPlayers() >= 99){
+      this.server.to(socket.id).emit("gameFull");
+      return;
+    }
+
     //Doesn't re-add the player if he's already in the game
     if (
       !this.gameManager.game.getPlayers().has(this.getIdFromHeaders(socket))
