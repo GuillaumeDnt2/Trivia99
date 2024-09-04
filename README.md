@@ -84,3 +84,11 @@ npm start
 Now the home page should be available.
 
 <img src="./Images/home.png" alt="Home page" width=500/>
+
+### Testing modifications
+
+To test if your modification are working, you can run the tests. The test in the frontend only check if the routes to the different pages exist but the backend's test are more complex. To run the tests you can do the following command either in the `frontend` or the `backend` directory:
+
+```bash
+npm test
+```
