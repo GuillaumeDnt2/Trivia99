@@ -53,7 +53,7 @@ Docker nous permet d'avoir deux images différentes une pour le backend et une p
 
 Ces deux conteneurs tourneront sur une instance Google Compute Engine qui aura une IP statique et des règles de pare-feu qui autoriseront les accès HTTP et au Websocket du backend.
 
-![Architecture](Trivia99Architecture.svg)
+![Architecture](Images/Trivia99Architecture.svg)
 
 ## Mockups
 
