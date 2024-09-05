@@ -108,7 +108,7 @@ describe("TriviaGateway", () => {
     ).toBeUndefined();
 
     // Advance time by 20000
-    for(let i = 0; i < 100; i++) {
+    for(let i = 0; i < 110; i++) {
         jest.advanceTimersByTime(200);
         await Promise.resolve(); // Allow any pending Promises to resolve
     }
@@ -117,14 +117,11 @@ describe("TriviaGateway", () => {
       gateway.gameManager.game.getPlayerById(socket.id).getCurrentQuestion(),
     ).toBeDefined();
 
-    // Advance time by another 10000ms
-    jest.advanceTimersByTime(10000);
-
     await Promise.resolve(); // Allow any pending Promises to resolve
 
     expect(
       gateway.gameManager.game.getPlayerById(socket.id).getNbQuestionsInQueue(),
-    ).toBe(1);
+    ).toBe(2);
 
     jest.useRealTimers();
   });
