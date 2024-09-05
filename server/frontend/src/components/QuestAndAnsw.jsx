@@ -65,7 +65,7 @@ export default function QuestAndAnsw(props){
             socket.off("goodAnswer");
             socket.off("noMoreQuestions");
         }
-    }, [])
+    })
 
     // When a new question arrives
     useEffect(() => {
