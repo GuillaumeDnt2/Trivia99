@@ -2,6 +2,14 @@ import '../styles/common.css';
 import '../styles/Stats.css';
 import flame from '../assets/flame.png';
 
+/**
+ * Box containing the stats of the player (score, accuracy, streak)
+ * 
+ * @version 05.09.2024
+ * 
+ * @author Arthur Junod, Guillaume Dunant, Valentin Bonzon, Edwin Haeffner
+ * @returns {JSX.Element}
+*/
 export default function Stats(props){
 
     return(

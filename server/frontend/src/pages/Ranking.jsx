@@ -4,11 +4,19 @@ import BaseLayout from "../components/BaseLayout";
 import "../styles/Ranking.css"
 import {useNavigate} from "react-router-dom";
 
+/**
+ * Page to display the ranking of the players at the end of the game
+ * 
+ * @version 05.09.2024
+ * 
+ * @author Arthur Junod, Guillaume Dunant, Valentin Bonzon, Edwin Haeffner
+ * @returns {JSX.Element}
+*/
 export default function Ranking(){
 
     const navigate = useNavigate()
 
-    const [ranking, setRanking] = useState([]);
+    const [ranking, setRanking] = useState([]); // Players  ranking
 
     const handleReturnHome = () => {
         socket.emit("deleteUser")
@@ -19,7 +27,6 @@ export default function Ranking(){
 
     useEffect(() => {
         function onRanking(sentRanking){
-            console.log(sentRanking);
             setRanking(sentRanking);
             socket.off("ranking");
         }
