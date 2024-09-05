@@ -1,3 +1,11 @@
+/**
+ * Style for the Queue component
+ * 
+ * @version 05.09.2024
+ * 
+ * @author Arthur Junod, Guillaume Dunant, Valentin Bonzon, Edwin Haeffner
+*/
+
 .square {
     border-radius: 20px;
     min-height: 98%;

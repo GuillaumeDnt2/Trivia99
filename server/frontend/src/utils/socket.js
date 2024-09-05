@@ -1,10 +1,15 @@
 import { io } from 'socket.io-client';
 
-// "undefined" means the URL will be computed from the `window.location` object
-//const URL = process.env.LOCAL === 'true' ? 'http://localhost:4000' : 'http://localhost:4000';
+/**
+ * Initialize the socket to communicate with the backend
+ * 
+ * @version 05.09.2024
+ * 
+ * @author Arthur Junod, Guillaume Dunant, Valentin Bonzon, Edwin Haeffner
+*/
+
+//const URL = 'http://localhost:4000';
 const URL = 'http://trivia99.zapto.org:4000';
-console.log(URL);
-console.log(process.env.LOCAL);
 
 export const socket = io(URL, {
     autoConnect: true,

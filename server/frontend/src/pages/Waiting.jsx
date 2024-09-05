@@ -4,9 +4,17 @@ import { socket } from "../utils/socket.js";
 import '../styles/Waiting.css';
 import BaseLayout from "../components/BaseLayout";
 
+/**
+ * Page to display for the player when he's waiting for the game to start
+ * 
+ * @version 05.09.2024
+ * 
+ * @author Arthur Junod, Guillaume Dunant, Valentin Bonzon, Edwin Haeffner
+ * @returns {JSX.Element}
+*/
 export default function Waiting(){
-    const [playersInfo, setPlayersInfo] = useState({nbReady: 0, nbPlayers: 0});
-    const [ready, setReady] = useState(false);
+    const [playersInfo, setPlayersInfo] = useState({nbReady: 0, nbPlayers: 0}); // Data about ready players
+    const [ready, setReady] = useState(false);  // True when ready
 
     const navigate = useNavigate();
 

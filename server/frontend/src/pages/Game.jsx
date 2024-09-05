@@ -11,60 +11,72 @@ import {useNavigate} from "react-router-dom";
 import "../styles/Game.css";
 import AttackBtn from "../components/AttackBtn";
 
+/**
+ * Main page of the game
+ * 
+ * @version 05.09.2024
+ * 
+ * @author Arthur Junod, Guillaume Dunant, Valentin Bonzon, Edwin Haeffner
+ * @returns {JSX.Element}
+*/
 export default function Game(){
-    const [playersLeft, setPlayersLeft] = useState([]);
-    const [playersRight, setPlayersRight] = useState([]);
+    const [playersLeft, setPlayersLeft] = useState([]); // Players in the left column
+    const [playersRight, setPlayersRight] = useState([]);// Players in the right column
 
-    const [queue, setQueue] = useState([]);
-    const [streak, setStreak] = useState(0);
-    const [accuracy, setAccuracy] = useState(0);
-    const [nbResponse, setNbResponse] = useState(0);
-    const [isAlive, setAlive] = useState(true);
-    const [canAttack, setCanAttack] = useState(false);
-    const [rank, setRank] = useState(0);
+    const [queue, setQueue] = useState([]);             // Questions in the queue
+    const [streak, setStreak] = useState(0);            // Streak of the player
+    const [accuracy, setAccuracy] = useState(0);        // Accuracy of the player
+    const [nbResponse, setNbResponse] = useState(0);    // Score of the player
+    const [isAlive, setAlive] = useState(true);         // Determine if the player is alive
+    const [canAttack, setCanAttack] = useState(false);  // True when the player has a streak big enough to attack
+    const [rank, setRank] = useState(0);                // Rank when eliminated
 
-    const [question, setQuestion] = useState("");
-    const [answers, setAnswers] = useState([]);
+    const [question, setQuestion] = useState("");       // Text of the question
+    const [answers, setAnswers] = useState([]);         // Text of the answers
     const [attack, setAttack] = useState(false);
-    const [difficulty, setDifficulty] = useState("easy");
+    const [difficulty, setDifficulty] = useState("easy");// Difficulty of the actual question
 
     const navigate = useNavigate();
 
     useEffect(() => {
 
+        /**
+         * Parse the data receive in the userInfo message
+         * @param {*} userInfo 
+         */
         function onUserInfo(userInfo) {
-            console.log("Our user info questions: ")
-            console.log(userInfo.questions);
             setAlive(userInfo.isAlive);
             setStreak(userInfo.streak);
             setAccuracy(userInfo.nbGoodAnswers === 0 ? 0 : userInfo.nbGoodAnswers / (userInfo.nbGoodAnswers + userInfo.nbBadAnswers));
             setNbResponse(userInfo.nbGoodAnswers);
             setCanAttack(userInfo.canAttack);
-
-
-
             setQueue(userInfo.questions);
-            console.log("State of queue: ")
-            console.log(queue)
-            console.log(userInfo.questions);
         }
 
+        /**
+         * Parse the received question
+         * @param {*} question 
+         */
         function onNewQuestion(question){
             setQuestion(question.question.text);
             setAnswers(question.answers);
             setAttack(question.isAttack);
             setDifficulty(question.difficulty);
-            console.log(question);
         }
 
+        /**
+         * Change the color of the dot representing the eliminated player
+         * @param {string} player 
+         */
         function onElimination(player){
-            console.log("elimination");
-            console.log(player);
             document.getElementById(player)?.classList.add("eliminated");
         }
 
+        /**
+         * Dispatch the players in both columns
+         * @param {*} players 
+         */
         function onPlayers(players){
-            console.log("Players");
             let plyrLeft = [];
             let plyrRight = [];
             for(let i = 0; i < players.length; ++i){
@@ -78,15 +90,20 @@ export default function Game(){
             setPlayersRight(plyrRight);
         }
         
+        /**
+         * Navigate to the ranking
+         */
         function onEndGame(){
             socket.emit("getGameStatus")
             socket.emit("isUserLogged")
             navigate("/ranking");
         }
 
+        /**
+         * Set the rank of the player
+         * @param {*} data 
+         */
         function onGameOver(data){
-            console.log("G-O");
-            console.log(data);
             setAlive(false);
             setRank(data);
         }
@@ -97,8 +114,8 @@ export default function Game(){
         socket.on("players", onPlayers);
         socket.on("endGame", onEndGame);
         socket.on("gameOver", onGameOver);
-
-        console.log("emit all");
+        
+        // Get the data of the player
         socket.emit("getAllInfo");
 
         return () => {
@@ -112,7 +129,6 @@ export default function Game(){
     }, []);
 
     
-
     return (
         <BaseLayout>
             <div className="content-row-box switch-vertical main-container">
