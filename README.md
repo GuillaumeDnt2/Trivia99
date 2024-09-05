@@ -24,7 +24,68 @@ This project has been developed during the course of the [HEIG-VD](https://heig-
 
 To run Trivia 99 on your computer, you must have [git](https://github.com/git-guides/install-git) and [npm with Node](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) installed.
 
-### Download source code of the project
+### Quick Start
+
+To run this application, you must have ports 3000 and 4000 available on your machine. You can check if these ports are in use by running `netstat -tuln | grep '3000\|4000'` on UNIX systems or `netstat -ano | findstr :3000 :4000` on Windows.
+
+#### UNIX Systems (Linux or macOS)
+
+Open a terminal and copy-paste the following commands:
+
+```bash
+git clone https://github.com/GuillaumeDnt2/Trivia99.git
+cd ./Trivia99/server/frontend/src/utils
+sed -i 's/trivia99.zapto.org/localhost/g' socket.js
+cd ../..
+npm i
+npm run start&
+
+cd ../backend
+npm i
+npm run start&
+cd ../../..
+```
+
+#### Windows Systems
+
+Open a PowerShell terminal and copy-paste the following commands:
+
+```bash
+git clone https://github.com/GuillaumeDnt2/Trivia99.git
+cd .\Trivia99\server\frontend\src\utils
+(Get-Content socket.js) -replace 'trivia99.zapto.org', 'localhost' | Set-Content socket.js
+cd ..\..\
+npm install
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "npm run start"
+
+cd ..\backend
+npm install
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "npm run start"
+cd ..\..\..
+```
+
+After running these commands, wait for about a minute. The backend and frontend should be running in the background. The frontend should have also opened a page in your default web browser.
+
+### Playing with Friends
+
+If you want to play with friends on your local network:
+
+1. Forward ports 4000 and 3000 on your router.
+2. For security, consider using a VPN solution like TailScale to avoid making these ports publicly accessible.
+
+
+If you have any issue with this quick start, please do check the step by step tutorial below
+
+### Testing modifications
+
+To test if your changes are working, you can run the tests. The test in the frontend only check if the routes to the different pages exist. The backend's test are more complex. To run the tests, you can do the following command either in the `frontend` or the `backend` directory:
+
+```bash
+npm run test
+```
+### Step by step setup of the projet
+
+#### Download source code of the project
 
 To download the source code, clone the repo by executing the following command in your bash terminal:
 
@@ -32,7 +93,7 @@ To download the source code, clone the repo by executing the following command i
 git clone https://github.com/GuillaumeDnt2/Trivia99.git
 ```
 
-### Download dependencies
+#### Download dependencies
 
 The project is composed in two parts: the frontend and the backend. Both are located in the `server` directory. First, navigate to the backend directory:
 
@@ -59,7 +120,7 @@ cd ../frontend
 npm install
 ```
 
-### Start the project
+#### Start the project
 
 To start the project, you first need to change the address of the backend server. To do so, you need to go in the `utils` directory (from `frontend`) :
 
@@ -98,14 +159,6 @@ npm run start
 Now the home page should be available.
 
 <img src="./Images/home.png" alt="Home page" width=500/>
-
-### Testing modifications
-
-To test if your changes are working, you can run the tests. The test in the frontend only check if the routes to the different pages exist. The backend's test are more complex. To run the tests, you can do the following command either in the `frontend` or the `backend` directory:
-
-```bash
-npm run test
-```
 
 ## How to contribute
 
