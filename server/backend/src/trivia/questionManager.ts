@@ -44,6 +44,7 @@ export class QuestionManager {
 
 
     this.eventEmitter = new EventEmitter();
+    this.eventEmitter.setMaxListeners(1000);
   }
 
   /**
