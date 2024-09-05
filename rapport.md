@@ -4,7 +4,7 @@ ___
 ___
 # Trivia 99
 
-<img src="./Trivia_99.png" width="500" alt="logo">
+<img src="Images/Trivia_99.png" width="500" alt="logo">
 
 ___
 # Description du projet
