@@ -19,8 +19,8 @@ const cors =
     : "http://localhost:3000";
 
 /**
+ * This class is responsible for handling WebSocket connections and events for trivia99.
  * @class TriviaGateway
- * @description This class is responsible for handling WebSocket connections and events for trivia99.
  */
 @WebSocketGateway({
   cors: {
@@ -92,7 +92,7 @@ export class TriviaGateway implements OnModuleInit {
 
         let userId = this.getIdFromHeaders(socket);
 
-        //If the user is in the game, set a timeout to remove him from the game after a certain time
+        //If the user is in the game, set a timeout to remove them from the game after a certain time
         if (
           this.gameManager.game.getPlayers().has(userId) &&
           !this.gameManager.game.hasGameStarted()
@@ -100,13 +100,18 @@ export class TriviaGateway implements OnModuleInit {
           this.gameManager.game.getPlayers().get(userId).isInTimeOut =
             setTimeout(() => {
               console.log("User timed out");
+
+              //Unready the player
               if (this.gameManager.game.getPlayers().has(userId)) {
                 if (this.gameManager.game.getPlayers().get(userId).isReady) {
                   --this.gameManager.game.nbReady;
                 }
                 this.gameManager.game.getPlayers().delete(userId);
-                this.sendReadyInfo()
-                if(this.gameManager.game.getNbPlayers() === this.MAX_PLAYER - 1){
+                this.sendReadyInfo();
+                if (
+                  this.gameManager.game.getNbPlayers() ===
+                  this.MAX_PLAYER - 1
+                ) {
                   this.server.emit("gameNotFull");
                 }
               }
@@ -191,7 +196,7 @@ export class TriviaGateway implements OnModuleInit {
   @SubscribeMessage("login")
   onLogin(@MessageBody() name: string, @ConnectedSocket() socket: any) {
     //If the game is full
-    if(this.gameManager.game.getNbPlayers() >= this.MAX_PLAYER){
+    if (this.gameManager.game.getNbPlayers() >= this.MAX_PLAYER) {
       return;
     }
 
@@ -206,7 +211,7 @@ export class TriviaGateway implements OnModuleInit {
       );
 
       //If the game is full, tells it to everyone connected
-      if(this.gameManager.game.getNbPlayers() === this.MAX_PLAYER){
+      if (this.gameManager.game.getNbPlayers() === this.MAX_PLAYER) {
         this.server.emit("gameFull");
       }
 
@@ -286,16 +291,19 @@ export class TriviaGateway implements OnModuleInit {
 
     if (this.gameManager.game.getNbPlayerAlive() > 1) {
       //Send the attack to the other players
-      const qSent = streak-this.STREAK;
-      this.gameManager.game.sendFeedUpdate(player.getName() + " attacked with " + qSent + " question(s)");
+      const qSent = streak - this.STREAK;
+      this.gameManager.game.sendFeedUpdate(
+        player.getName() + " attacked with " + qSent + " question(s)",
+      );
       for (let i = 0; i <= qSent; i++) {
         console.log(player.getName() + " has attacked !");
         this.gameManager.game.attack(player);
       }
-      
     }
     //Then reset the streak
-    this.gameManager.game.getPlayerById(this.getIdFromHeaders(socket)).resetStreak();
+    this.gameManager.game
+      .getPlayerById(this.getIdFromHeaders(socket))
+      .resetStreak();
     socket.emit("userInfo", player.getUserInfo());
   }
 
@@ -341,8 +349,7 @@ export class TriviaGateway implements OnModuleInit {
         return;
       }
       //Check if the answer is correct
-      if(this.gameManager.game.checkPlayerAnswer(player, body)){
-
+      if (this.gameManager.game.checkPlayerAnswer(player, body)) {
         //Send correct answer msg
         socket.emit("goodAnswer");
       } else {
@@ -426,10 +433,10 @@ export class TriviaGateway implements OnModuleInit {
 
   @SubscribeMessage("isGameFull")
   isGameFull(@ConnectedSocket() socket: any) {
-    if(this.gameManager.game.getNbPlayers() === this.MAX_PLAYER){
+    if (this.gameManager.game.getNbPlayers() === this.MAX_PLAYER) {
       socket.emit("gameFull");
-    }else{
-      socket.emit("gameNotFull")
+    } else {
+      socket.emit("gameNotFull");
     }
   }
 }

@@ -1,9 +1,15 @@
 import { QuestionInQueue } from "./questionInQueue";
 import { Question } from "./question";
+
+/**
+ * The question to be sent to the player without the good answer being highlighted.
+ * @class QuestionToSend
+ * @Authors : Neroil, Tasticoco, VBonzon et GuillaumeDnt2
+ */
 export class QuestionToSend extends QuestionInQueue {
-  private category: string;
-  private answers: string[];
-  private question: string;
+  private readonly category: string;
+  private readonly answers: string[];
+  private readonly question: string;
 
   constructor(q: Question, attack: boolean) {
     super(q, attack);

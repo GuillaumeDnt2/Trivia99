@@ -14,7 +14,6 @@ describe("AppController", () => {
     appController = app.get<AppController>(AppController);
   });
 
-  //Todo: Add actual tests
   describe("root", () => {
     it("should be defined", () => {
       expect(appController).toBeDefined();

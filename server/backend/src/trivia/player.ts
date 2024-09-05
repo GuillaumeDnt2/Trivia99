@@ -1,8 +1,16 @@
 import { QuestionInQueue } from "./questionInQueue";
 import { ConfigService } from "@nestjs/config";
 
+/**
+ * This class is a Player.
+ * It has all necessary attributes and methods to manage a player.
+ *
+ * @class Player
+ * @Authors : Neroil, Tasticoco, VBonzon et GuillaumeDnt2
+ */
 export class Player {
-  private name: string;
+  private readonly name: string;
+  private readonly id: string;
   private queue: QuestionInQueue[];
   private streak: number;
   private isAlive: boolean;
@@ -10,13 +18,12 @@ export class Player {
   private nbBadAnswers: number;
   private nbGoodAnswers: number;
   public isInTimeOut: NodeJS.Timeout;
-  private id: string;
   private rank: number;
   private currentSocket: any;
   private lastWrongAnswerTime: number;
   private currentQuestion: QuestionInQueue;
   //Configuration variables
-  private STREAK: number;
+  private readonly STREAK: number;
 
   constructor(
     name: string,
@@ -41,47 +48,37 @@ export class Player {
   }
 
   /**
-   *
-   * @returns Player id
+   * Return the player's id
    */
   public getId(): string {
     return this.id;
   }
 
-
   /**
    * Set a new time for the last time the player answered wrongly
    */
-  public updateWrongAnswerTime(){
+  public updateWrongAnswerTime() {
     this.lastWrongAnswerTime = Date.now();
   }
 
   /**
    * Return the last time the player answered wrongly to the question
-   * @returns 
    */
-  public getWrongAnswerTime(){
+  public getWrongAnswerTime() {
     return this.lastWrongAnswerTime;
   }
 
   /**
    * Return the 1st question in the question queue
-   * @returns
    */
   public getCurrentQuestion() {
     return this.currentQuestion;
   }
 
-
   /**
    * Replace the current question by the next one in the queue
-   * @returns 
    */
-  public nextQuestion(): QuestionInQueue|void{
-    /*this.queue.forEach((question: any) => {
-      console.log(question.isAttack)
-        });*/
-
+  public nextQuestion(): QuestionInQueue | void {
     if (this.queue.length > 0) {
       this.currentQuestion = this.queue.shift();
       return this.getCurrentQuestion();
@@ -99,7 +96,7 @@ export class Player {
   }
 
   /**
-   * Unalive the player
+   * Unalives the player
    */
   public unalive(rank: number) {
     this.isAlive = false;
@@ -122,7 +119,6 @@ export class Player {
 
   /**
    * Return the value of the streak
-   * @returns
    */
   public getStreak() {
     return this.streak;
@@ -130,7 +126,7 @@ export class Player {
 
   /**
    * Add a new question to the question queue
-   * @param question
+   * @param question the question to add
    */
   public addQuestion(question: any) {
     if (this.currentQuestion == undefined) {
@@ -152,7 +148,7 @@ export class Player {
    * @returns
    */
   public getUserInfo(): object {
-    let info = {
+    return {
       streak: this.streak,
       canAttack: this.streak >= this.STREAK,
       isAlive: this.isAlive,
@@ -161,28 +157,27 @@ export class Player {
       rank: this.rank,
       questions: this.queue,
     };
-
-    return info;
   }
+
   /**
-   * Passe à la prochaine question, augmente le compteur de bonne réponse et la streak
+   * Move to the next question, increase the good answer counter and the streak
    */
-  public correctAnswer() : void {
+  public correctAnswer(): void {
     this.nextQuestion();
     this.addGoodAnswer();
     this.incrementStreak();
   }
 
   /**
-   * Augmente le compteur de mauvaise réponse et réinitialise la streak
+   * Increases the bad answer counter and resets the streak
    */
-  public badAnswer() : void {
+  public badAnswer(): void {
     this.addBadAnswer();
     this.resetStreak();
   }
 
   /**
-   * Change the socket of the player
+   * Change the socket linked to the player
    * @param socket to change to
    */
   public changeSocket(socket: any) {
@@ -191,7 +186,6 @@ export class Player {
 
   /**
    * Get the current socket of the player
-   * @returns
    */
   public getSocket() {
     return this.currentSocket;
@@ -207,7 +201,6 @@ export class Player {
 
   /**
    * Return player's number of good answers
-   * @returns
    */
   public getScore() {
     return this.nbGoodAnswers;
@@ -215,24 +208,35 @@ export class Player {
 
   /**
    * Return the state of the player
-   * @returns
    */
   public alive() {
     return this.isAlive;
   }
 
-  public getGoodAnswers() : number {
+  /**
+   * Return the number of rightly answered questions
+   */
+  public getGoodAnswers(): number {
     return this.nbGoodAnswers;
   }
 
+  /**
+   * Returns the amount of bad answers given by the player
+   */
   public getBadAnswers(): number {
     return this.nbBadAnswers;
   }
 
-  public addBadAnswer() : void {
+  /**
+   * Increments the amount of bad answers by one
+   */
+  public addBadAnswer(): void {
     this.nbBadAnswers++;
   }
 
+  /**
+   * Increments the amount of good answers by one
+   */
   public addGoodAnswer(): void {
     this.nbGoodAnswers++;
   }
