@@ -32,9 +32,7 @@ export default function ProtectedRoute({Component}){
         socket.on("gameStatus", handleGameStatus)
         socket.on("loggedInfo", handleLoggedInfo)
 
-        console.log("Emitting getGameStatus")
         socket.emit("getGameStatus")
-        console.log("Emitting isUserLogged")
         socket.emit("isUserLogged")
 
         return () => {

@@ -27,7 +27,6 @@ export default function Ranking(){
 
     useEffect(() => {
         function onRanking(sentRanking){
-            console.log(sentRanking);
             setRanking(sentRanking);
             socket.off("ranking");
         }
