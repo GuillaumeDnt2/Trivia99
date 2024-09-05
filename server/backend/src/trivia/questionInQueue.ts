@@ -1,9 +1,14 @@
 import { Question } from "./question";
 
+/**
+ * This class represents a question with only its id and difficulty, used in the frontend to display the question queue.
+ * @class QuestionInQueue
+ * @Authors : Neroil, Tasticoco, VBonzon et GuillaumeDnt2
+ */
 export class QuestionInQueue {
-  private id: string;
-  private difficulty;
-  private isAttack: boolean;
+  private readonly id: string;
+  private readonly difficulty: any;
+  private readonly isAttack: boolean;
 
   constructor(q: Question, attack: boolean) {
     this.id = q.getId();
@@ -13,7 +18,7 @@ export class QuestionInQueue {
 
   /**
    * Id getter
-   * @returns question's id
+   * Returns the question's id
    */
   public getId(): string {
     return this.id;
@@ -21,7 +26,7 @@ export class QuestionInQueue {
 
   /**
    * Difficulty getter
-   * @returns question's difficulty
+   * Returns the question's difficulty
    */
   public getDifficulty(): string {
     return this.difficulty;
