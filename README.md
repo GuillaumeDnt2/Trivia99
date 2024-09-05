@@ -4,6 +4,15 @@
 
 Trivia 99 is a battle royal game with up to 99 players. To survive, you have to answer multiple-choice trivia questions. But be careful, if you wait too long, some questions will add up to your question's queue and if the queue number exceeds 7, you lose the game! Try to chain the right answers to grow your streak and attack your friends.
 
+## Authors
+
+- [GuillaumeDnt2](https://github.com/GuillaumeDnt2)
+- [Neroil](https://github.com/Neroil)
+- [VBonzon](https://github.com/vbonzon)
+- [Tasticoco](https://github.com/Tasticoco)
+
+This project has been developed during the course of the [HEIG-VD](https://heig-vd.ch) in the context of ***PDG***.
+
 ## Summary
 
 - [Setup guide](#setup-guide)
@@ -76,14 +85,14 @@ Now you can run the project by returning to the frontend folder and doing this:
 
 ```bash
 cd ../..
-npm start
+npm run start
 ```
 
 If it runs correctly, you should be able to see a blank page at `http://localhost:3000/`. To display the actual home page you have to start the backend:
 
 ```bash
-cd ../backend
-npm start
+cd ../backend # You should be in ./server/backend now
+npm run start
 ```
 
 Now the home page should be available.
@@ -92,10 +101,10 @@ Now the home page should be available.
 
 ### Testing modifications
 
-To test if your modification are working, you can run the tests. The test in the frontend only check if the routes to the different pages exist but the backend's test are more complex. To run the tests you can do the following command either in the `frontend` or the `backend` directory:
+To test if your changes are working, you can run the tests. The test in the frontend only check if the routes to the different pages exist. The backend's test are more complex. To run the tests, you can do the following command either in the `frontend` or the `backend` directory:
 
 ```bash
-npm test
+npm run test
 ```
 
 ## How to contribute
@@ -120,11 +129,11 @@ Then on the next page, click on `Create fork`.
 
 <img src="Images/CreateFork.png" alt="Create fork" width=500>
 
-Now you can clone your freshly created repo and start adding feature to your project. 
+Now you can clone your freshly created repo and start adding feature to our project. 
 
 ### Open pull request
 
-Once you are done with your modifications, you can go on the github page of your fork and click on `Contribute` (1) and then `Open pull request` (2).
+Once you are done with your changes, you can go on the GitHub page of your fork and click on `Contribute` (1) and then `Open pull request` (2).
 
 <img src="Images/contribute.png" alt="Contribute" width=500>
 
@@ -137,3 +146,6 @@ If your pull request is accepted, it will be merged into the project!
 <img src="Images/accepted.png" alt="Accepted" width=500>
 
 Once the merged is done, the CI/CD pipeline will automatically create a new image of the application and deploy it on our server.
+
+
+### Thanks for contributing to Trivia 99! 🎉
