@@ -26,7 +26,7 @@ To run Trivia 99 on your computer, you must have [git](https://github.com/git-gu
 
 ### Quick Start
 
-To run this application, you must have ports 3000 and 4000 available on your machine. You can check if these ports are in use by running `netstat -tuln | grep '3000\|4000'` on UNIX systems or `netstat -ano | findstr :3000 :4000` on Windows.
+To run this application, you must have ports 3000 and 4000 available on your machine. You can check if these ports are in use by running `netstat -tuln | grep '3000\|4000'` on UNIX systems or `netstat -ano | findstr ":3000 :4000"` on Windows.
 
 #### UNIX Systems (Linux or macOS)
 
