@@ -1,10 +1,15 @@
+/**
+ * This class represents a question
+ * @class Question
+ * @Authors : Neroil, Tasticoco, VBonzon et GuillaumeDnt2
+ */
 export class Question {
-  private id: string;
-  private category: string;
-  private answers: string[];
-  private correctAnsw: number;
-  private question: string;
-  private difficulty: string;
+  private readonly id: string;
+  private readonly category: string;
+  private readonly answers: string[];
+  private readonly correctAnsw: number;
+  private readonly question: string;
+  private readonly difficulty: string;
 
   constructor(data: any) {
     this.answers = [];
@@ -22,13 +27,11 @@ export class Question {
     if (this.answers.length < 4) {
       this.answers.push(data.correctAnswer);
     }
-
-    //console.log(this);
   }
 
   /**
    * Id getter
-   * @returns question's id
+   * Returns question's id
    */
   public getId(): string {
     return this.id;
@@ -36,7 +39,7 @@ export class Question {
 
   /**
    * Difficulty getter
-   * @returns question's difficulty
+   * Returns question's difficulty
    */
   public getDifficulty(): string {
     return this.difficulty;
@@ -44,7 +47,7 @@ export class Question {
 
   /**
    * Category getter
-   * @returns question's category
+   * Returns question's category
    */
   public getCategory(): string {
     return this.category;
@@ -52,7 +55,7 @@ export class Question {
 
   /**
    * Answers getter
-   * @returns question's answers
+   * Returns question's answers
    */
   public getAnswers(): string[] {
     return this.answers;
@@ -60,7 +63,7 @@ export class Question {
 
   /**
    * Correct answer getter
-   * @returns question's correct answer
+   * Returns question's correct answer
    */
   public getCorrectAnswer(): number {
     return this.correctAnsw;
@@ -68,7 +71,7 @@ export class Question {
 
   /**
    * Question getter
-   * @returns question's question
+   * Returns question's question
    */
   public getQuestion(): string {
     return this.question;

@@ -1,15 +1,21 @@
 import "../styles/common.css";
 import "../styles/PlayerList.css";
 
+/**
+ * Component to display the players in the game
+ * 
+ * @version 05.09.2024
+ * 
+ * @author Arthur Junod, Guillaume Dunant, Valentin Bonzon, Edwin Haeffner
+ * @returns {JSX.Element}
+*/
 export default function PlayerList(props){
-    // 1 lines of 1 player
-    // 2 lines of 2 players
-    // 13 lines of 3 players
-    // 2 lines of 2 players
-    // 1 line of 1 player
 
-    //const list = props.map(player => <li id={player}>player</li>)
-
+    /**
+     * Display the people in a single
+     * @param {Number} colId [0-3]
+     * @returns 
+     */
     function displayColumn(colId){
       return props.players?.map((plyr, key) => 
         key % 4 === colId ? <span id={plyr} className="dot tooltip" key={"Player"+plyr+key}>

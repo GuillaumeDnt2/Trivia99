@@ -5,11 +5,15 @@ import Ranking from "../pages/Ranking";
 import About from "../pages/About";
 import React from "react";
 import NotFound from "../pages/NotFound";
-import Test from "../pages/Test";
-import Zebi from "../pages/Zebi";
 import ProtectedRoute from "../components/ProtectedRoute";
 
-
+/**
+ * Routes for the website
+ * 
+ * @version 05.09.2024
+ * 
+ * @author Arthur Junod, Guillaume Dunant, Valentin Bonzon, Edwin Haeffner
+*/
 const routes = [
     {
         path: "/",
@@ -31,14 +35,6 @@ const routes = [
     {
         path: "/about",
         element: <About />
-    },
-    {
-        path: "/test",
-        element: <Test />
-    },
-    {
-        path: "/zebi",
-        element: <Zebi />
     }
 ];
 

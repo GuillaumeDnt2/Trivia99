@@ -6,21 +6,19 @@ import github from "../assets/github-mark.svg"
 import BaseLayout from "../components/BaseLayout";
 
 /**
- * React file for the home page of Trivia99
- *
- * @author Arthur Junod
- * @author Guillaume Dunant
- * @author Valentin Bonzon
- * @author Edwin Haeffner
+ * Home page of the application
+ * 
+ * @version 05.09.2024
+ * 
+ * @author Arthur Junod, Guillaume Dunant, Valentin Bonzon, Edwin Haeffner
  * @returns {JSX.Element}
 */
-
 export default function Home(){
 
-    const [name, setName] = useState("");
-    const [placeholder, setPlaceholder] = useState("Enter your name")
-    const [gameFull, setGameFull] = useState(false)
-    const [gameStarted, setGameStarted] = useState(false);
+    const [name, setName] = useState("");                   // Name enter by the player
+    const [placeholder, setPlaceholder] = useState("Enter your name");// Display when no name entered
+    const [gameFull, setGameFull] = useState(false);        // True if the limits reach his max
+    const [gameStarted, setGameStarted] = useState(false);  // True if a game has started
 
     const navigate = useNavigate();
 

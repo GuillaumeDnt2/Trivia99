@@ -1,5 +1,13 @@
 import {useEffect, useState} from "react";
 
+/**
+ * Square representing the questions
+ * 
+ * @version 05.09.2024
+ * 
+ * @author Arthur Junod, Guillaume Dunant, Valentin Bonzon, Edwin Haeffner
+ * @returns {JSX.Element}
+*/
 export default function QueueQuestion(props){
 
     const [color, setColor] = useState("");

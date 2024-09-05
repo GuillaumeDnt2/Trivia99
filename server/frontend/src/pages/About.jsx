@@ -1,6 +1,14 @@
 import BaseLayout from "../components/BaseLayout";
 import "../styles/About.css";
 
+/**
+ * Page to explain the rule of the game
+ * 
+ * @version 05.09.2024
+ * 
+ * @author Arthur Junod, Guillaume Dunant, Valentin Bonzon, Edwin Haeffner
+ * @returns {JSX.Element}
+*/
 export default function About(){
     return <BaseLayout>
         <div className="about-container">

@@ -1,3 +1,11 @@
+/**
+ * Style common at the whole app
+ * 
+ * @version 05.09.2024
+ * 
+ * @author Arthur Junod, Guillaume Dunant, Valentin Bonzon, Edwin Haeffner
+*/
+
 :root {
     --strong-orange: #FF8C42;
     --light-orange: #FCAF58;

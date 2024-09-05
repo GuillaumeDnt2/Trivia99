@@ -1,3 +1,11 @@
+/**
+ * Style for the waiting page
+ * 
+ * @version 05.09.2024
+ * 
+ * @author Arthur Junod, Guillaume Dunant, Valentin Bonzon, Edwin Haeffner
+*/
+
 .waiting-container{
     width: 200px;
     height: 100px;

@@ -3,6 +3,14 @@ import {Navigate} from "react-router-dom";
 import {socket} from "../utils/socket";
 import {useLocation} from "react-router-dom";
 
+/**
+ * The protected routes avoid the unconnected player to access some pages
+ * 
+ * @version 05.09.2024
+ * 
+ * @author Arthur Junod, Guillaume Dunant, Valentin Bonzon, Edwin Haeffner
+ * @returns {JSX.Element}
+*/
 export default function ProtectedRoute({Component}){
 
     const [gameState, setGameState] = useState("")
@@ -24,9 +32,7 @@ export default function ProtectedRoute({Component}){
         socket.on("gameStatus", handleGameStatus)
         socket.on("loggedInfo", handleLoggedInfo)
 
-        console.log("Emitting getGameStatus")
         socket.emit("getGameStatus")
-        console.log("Emitting isUserLogged")
         socket.emit("isUserLogged")
 
         return () => {
