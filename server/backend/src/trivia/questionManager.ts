@@ -19,6 +19,9 @@ export class QuestionManager {
   public medium_questions: Question[];
   public hard_questions: Question[];
   public isFetching: boolean = false;
+  public isFetchingEasy: boolean = false;
+    public isFetchingMedium: boolean = false;
+    public isFetchingHard: boolean = false;
   private eventEmitter: EventEmitter;
 
   constructor(private configService: ConfigService) {
@@ -51,7 +54,52 @@ export class QuestionManager {
     this.easy_questions = await this.fetchQuestions("easy");
     this.medium_questions = await this.fetchQuestions("medium");
     this.hard_questions = await this.fetchQuestions("hard");
+
+    this.eventEmitter.emit("questionsFetched");
   }
+
+  async waitForEasyQuestionsToBeFetched(): Promise<void> {
+    if(!this.isFetchingEasy) {
+      return Promise.resolve();
+    }
+
+    console.log("Waiting for easy questions to be fetched");
+      return new Promise((resolve) => {
+        this.eventEmitter.once('easyQuestionsFetched', () =>
+        {
+          console.log("Easy questions fetched");
+            resolve();
+        });
+      });
+  }
+
+    async waitForMediumQuestionsToBeFetched(): Promise<void> {
+        if(!this.isFetchingMedium) {
+        return Promise.resolve();
+        }
+      console.log("Waiting for medium questions to be fetched");
+        return new Promise((resolve) => {
+            this.eventEmitter.once('mediumQuestionsFetched', () =>
+            {
+              console.log("Medium questions fetched");
+              resolve();
+            });
+        });
+    }
+
+    async waitForHardQuestionsToBeFetched(): Promise<void> {
+        if(!this.isFetchingHard) {
+        return Promise.resolve();
+        }
+      console.log("Waiting for hard questions to be fetched");
+        return new Promise((resolve) => {
+            this.eventEmitter.once('hardQuestionsFetched', () =>
+            {
+              console.log("Hard questions fetched");
+              resolve();
+            });
+        });
+    }
 
   async waitForQuestionsToBeFetched(): Promise<void> {
     if(!this.isFetching) {
@@ -104,30 +152,58 @@ export class QuestionManager {
    */
   public async newQuestion(isAttack: boolean): Promise<QuestionInQueue> {
     let rnd = Math.floor(Math.random() * 10);
+    let q: Question | undefined;
 
-    let q: Question;
-    if (rnd >= this.HARD_Q || isAttack) {
-      do {
-        if (this.hard_questions.length < this.QUESTION_MIN) {
-          await this.fetchQuestions("hard");
+    const fetchAndGetQuestion = async (
+        questionArray: Question[],
+        difficulty: string
+    ): Promise<Question | undefined> => {
+      if (questionArray.length < this.QUESTION_MIN) {
+        if (difficulty == "hard") {
+          //console.log("A hard question is missing, fetching more");
+          this.isFetchingHard = true;
+        } else if (difficulty == "medium") {
+            //console.log("A medium question is missing, fetching more");
+          this.isFetchingMedium = true;
+        } else {
+            //console.log("An easy question is missing, fetching more");
+          this.isFetchingEasy = true;
         }
-        q = this.hard_questions.shift();
-      } while (this.qPool.has(q.getId()));
-    } else if (rnd >= this.MEDIUM_Q) {
-      do {
-        if (this.medium_questions.length < this.QUESTION_MIN) {
-          await this.fetchQuestions("medium");
-        }
-        q = this.medium_questions.shift();
-      } while (this.qPool.has(q.getId()));
-    } else {
-      do {
-        if (this.easy_questions.length < this.QUESTION_MIN) {
-          await this.fetchQuestions("easy");
-        }
-        q = this.easy_questions.shift();
-      } while (this.qPool.has(q.getId()));
-    }
+        //console.log("Fetching questions");
+        questionArray = await this.fetchQuestions(difficulty);
+
+      }
+      return questionArray.shift();
+    };
+
+
+    do {
+      //console.log("Checking if we need to fetch");
+      if((rnd >= this.HARD_Q || isAttack) && this.isFetchingHard){
+        await this.waitForHardQuestionsToBeFetched();
+      } else if((rnd >= this.MEDIUM_Q) && this.isFetchingMedium){
+        await this.waitForMediumQuestionsToBeFetched();
+      } else if(this.isFetchingEasy) {
+        await this.waitForEasyQuestionsToBeFetched();
+      }
+
+      if (rnd >= this.HARD_Q || isAttack) {
+        if(this.isFetchingHard) continue;
+        q = await fetchAndGetQuestion(this.hard_questions, "hard");
+      } else if (rnd >= this.MEDIUM_Q) {
+        if(this.isFetchingMedium) continue;
+        q = await fetchAndGetQuestion(this.medium_questions, "medium");
+      } else {
+        if(this.isFetchingEasy) continue;
+        q = await fetchAndGetQuestion(this.easy_questions, "easy");
+      }
+
+      // If we couldn't get a question, wait a bit and try again
+      if (!q) {
+        //console.log("No question fetched, waiting a bit");
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+    } while (!q || this.qPool.has(q.getId()));
 
     this.qPool.set(q.getId(), q);
     return new QuestionInQueue(q, isAttack);
@@ -142,26 +218,37 @@ export class QuestionManager {
       url += "&difficulties=" + difficulty;
     }
 
-    const fs = require("fs");
-    let questions: any[] = [];
+
+
+    //console.log("Fetching questions with difficulty: " + difficulty);
 
     let list: Question[] = [];
     this.isFetching = true;
     try {
-      await fetch(url)
-        .then((response) => response.json())
-        .then((json) => {
-          questions = json;
-          questions.forEach((question: any) => {
-            list.push(new Question(question));
-          });
-        });
-      this.eventEmitter.emit("questionsFetched");
-      this.isFetching = false;
+      const response = await fetch(url);
+      const json = await response.json();
+      list = json.map((question: any) => new Question(question));
+
+      //console.log(`Fetched ${list.length} questions with difficulty: ${difficulty}`);
+      //this.eventEmitter.emit("questionsFetched");
+      //this.eventEmitter.emit(difficulty + "QuestionsFetched");
+      if(difficulty == "easy") {
+        this.isFetchingEasy = false;
+        this.eventEmitter.emit("easyQuestionsFetched");
+      } else if(difficulty == "medium") {
+        this.isFetchingMedium = false;
+        this.eventEmitter.emit("mediumQuestionsFetched");
+      } else if(difficulty == "hard") {
+        this.isFetchingHard = false;
+        this.eventEmitter.emit("hardQuestionsFetched");
+      }
+
       return list;
     } catch (err) {
+      console.error("Error fetching or parsing questions:", err);
+      return []; // Return an empty array instead of undefined
+    } finally {
       this.isFetching = false;
-      console.error("Error reading or parsing questions:", err);
     }
   }
 }
