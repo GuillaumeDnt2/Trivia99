@@ -88,13 +88,14 @@ Pour les premiers jours, voici la répartition :
 
 La rédaction du rapport se fait en commun.
 
-Pour la suite du projet, nous allons nous répartir ainsi :
+Pour la suite du projet, nous nous sommes répartis ainsi :
 - **Arthur** : Dev frontend
-- **Edwin** : Dev backend et frontend
-- **Guillaume** : Dev côté frontend
-- **Valentin** : Dev backend et maintien du déploiement
+- **Guillaume** : Dev frontend
+- **Edwin** : Dev backend
+- **Valentin** : Dev backend
   
-Cette répartition du travail peut légèrement changer au cours des prochaines semaines.
+Cette répartition du travail est restée telle pendant les semaines de développement du projet. Mais nous collaborions étroitement entre l'équipe backend et frontend tout du long. Notamment pour les messages, certains affichages, etc.
+Il fallait aussi des fois se mettre tous ensemble pour débugger des features de Trivia99.
 
 Pour la collaboration dans le code, pour chaque fonctionnalité, nous allons créer une nouvelle issue et l'implémenter dans une branche dédiée. Une fois fonctionnelle, nous allons la fusionner avec la branche main grâce à un pull request.
 
@@ -165,3 +166,26 @@ const serializedCookie = serialize("userId", userId, cookieOptions);
 socket.emit("setCookie", serializedCookie);
 ````
 
+## Difficultés rencontrées
+
+### Backend
+#### Gestion de l'asynchronisme dans NestJS.
+
+Vu que nous devons faire des requêtes à une API pour pouvoir avoir nos questions. Nous avons dû gérer beaucoup d'asynchronicité dans notre code. Notamment lors des tests, faire attention à ce que la logique du jeu se lance après que les questions soient récupérées. Beaucoup d'heure perdue à comprendre comment gérer cela correctement, mais au final nous avons réussi à mettre en place un système qui semble fonctionner sans trop d'accrocs.
+
+#### Gestion des sockets dans NestJS.
+
+On explique plus haut comment le système de session fonctionne, mais le développer était complexe. Trouver un moyen de faire une communication entre le backend et le frontend pour pouvoir creer une session pour l'utilisateur nous a mis beaucoup de batons dans les roues. Et même maintenant, il arrive que pour des raisons pour le moment encore inconnues des joueurs soient déconnectés.
+
+
+
+
+## Améliorations futures
+
+- **Rendre le backend stateless** : Actuellement, on garde les informations liées à la partie directement sur le backend mais il serait bien, au cas où on aurait beaucoup de joueurs, de stocker ces informations dans une base de données pour ensuite faire du scaling horizontal. 
+- **Ajouter des animations** : Afin de rendre le jeu plus dynamique, il serait bien d'ajouter des animations lorsqu'un joueur répond à une question, lorsqu'il attaque un autre joueur, etc.
+- **Avoir une API avec des questions de meilleures qualités** : Les questions sont très centrées sur la culture américaine. Donc la difficulté et la qualité des questions n'est pas toujours au rendez-vous, surtout pour un public européen. Il serait bien de trouver une API qui propose de meilleures questions ou même encore mieux, de créer notre propre API de questions, mais c'est un projet à part entière.
+
+## Conclusion
+
+Nous sommes content du résultat produit. Le jeu fonctionne même s'il reste quelques bugs à corriger. Tel que les déconnections qui semblent aléatoires de certains joueurs. Nous avons aussi fait très peu de test avec beaucoup de monde. 
