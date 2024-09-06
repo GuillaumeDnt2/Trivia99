@@ -28,6 +28,8 @@ To run Trivia 99 on your computer, you must have [git](https://github.com/git-gu
 
 To run this application, you must have ports 3000 and 4000 available on your machine. You can check if these ports are in use by running `netstat -tuln | grep '3000\|4000'` on UNIX systems or `netstat -ano | findstr ":3000 :4000"` on Windows.
 
+In case you don't have netstat installed, please check how to install `net-tools` on your machine.
+
 #### UNIX Systems (Linux or macOS)
 
 Open a terminal and copy-paste the following commands:
@@ -45,6 +47,7 @@ npm i
 npm run start&
 cd ../../..
 ```
+Since the node servers are being run in the background, an easy way to close them is to run this `pkill -f node` in your terminal. Warning: It will close ALL currently running node servers!
 
 #### Windows Systems
 
