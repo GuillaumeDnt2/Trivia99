@@ -69,15 +69,14 @@ cd ..\..\..
 
 After running these commands, wait for about a minute. The backend and frontend should be running in the background. The frontend should have also opened a page in your default web browser.
 
+**/!\ If you have any issue with this quick start procedure, please do check the step by step tutorial below /!\\**
+
 ### Playing with Friends
 
 If you want to play with friends on your local network:
 
 1. Forward ports 4000 and 3000 on your router.
 2. For security, consider using a VPN solution like TailScale to avoid making these ports publicly accessible.
-
-
-If you have any issue with this quick start, please do check the step by step tutorial below
 
 ### Testing modifications
 
