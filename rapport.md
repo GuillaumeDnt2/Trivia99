@@ -189,3 +189,5 @@ On explique plus haut comment le système de session fonctionne, mais le dévelo
 ## Conclusion
 
 Nous sommes content du résultat produit. Le jeu fonctionne même s'il reste quelques bugs à corriger. Tel que les déconnections qui semblent aléatoires de certains joueurs. Nous avons aussi fait très peu de test avec beaucoup de monde. 
+Chaque membre de l'équipe a pu apprendre quelque chose de nouveau. Que ce soit des processus DevOps, de nouveau framework ou tout simplement le Javascript. 
+Nous sommes encore motivé par le projet et nous aimerions beaucoup le développer d'avantage (si le temps le permet) pour en faire quelque chose d'unique dans le monde de la culture générale.
